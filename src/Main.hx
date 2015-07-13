@@ -15,6 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 import test.DisplayComponent;
+import test.TodoList;
 
 class Main
 {
@@ -22,5 +23,6 @@ class Main
     {
 		// Acts the same as System.import
 		new DisplayComponent();
+		new TodoList();
     }
 }

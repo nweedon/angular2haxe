@@ -58,7 +58,7 @@ class AngularElement
 					
 					// Transform appInjector to resolve to the
 					// correct JavaScript classes.
-					if (field[0].appInjector != null)
+					if (parameters != null && field[0].appInjector != null)
 					{
 						var serviceParams : Array<Dynamic> = [];
 						
@@ -74,16 +74,30 @@ class AngularElement
 							}
 						}
 						
-						parameters.push(serviceParams);
+						if (serviceParams.length > 0)
+						{
+							parameters.push(serviceParams);
+						}
 					}
 					
 					annotations.push(Type.createInstance(validAnnotations[name], [field[0]]));
+				}
+				else
+				{
+					untyped
+					{
+						console.error(name + " is not a valid annotation.");
+					}
 				}
 			}
 			
 			// Add event listener for Angular Bootstrap
 			js.Browser.document.addEventListener("DOMContentLoaded", function()
 			{
+				var className = Type.getClassName(cl);
+				trace('--- Bootstrapping ${className} ---');
+				trace('Annotations:\n${annotations}');
+				trace('Parameters:\n${parameters}');
 				Angular.bootstrap(cl);
 			});
 		}
