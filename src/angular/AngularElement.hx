@@ -20,6 +20,7 @@ import js.Lib;
 
 class AngularElement
 {
+	private static var showDataInTrace : Bool = false;
 	private static var validAnnotations : Map<String, Class<Annotation>> = [
 		"Component" => ComponentAnnotation,
 		"View" 		=> ViewAnnotation
@@ -30,7 +31,9 @@ class AngularElement
 		if (annotations != null && annotations.length == 0)
 		{
 			var cl = Type.getClass(this);
-			var anno = Meta.getType(cl);
+			var anno = Meta.getType(cl);			
+			var className = Type.getClassName(cl);
+			trace('--- Bootstrapping ${className} ---');
 				
 			for(name in Reflect.fields(anno))
 			{
@@ -93,12 +96,16 @@ class AngularElement
 			
 			// Add event listener for Angular Bootstrap
 			js.Browser.document.addEventListener("DOMContentLoaded", function()
-			{
-				var className = Type.getClassName(cl);
-				trace('--- Bootstrapping ${className} ---');
-				trace('Annotations:\n${annotations}');
-				trace('Parameters:\n${parameters}');
+			{			
+				if (showDataInTrace)
+				{
+					trace('Annotations:\n${annotations}');
+					trace('Parameters:\n${parameters}');
+				}
+				
 				Angular.bootstrap(cl);
+				
+				trace('--- Finished bootstrapping ${className} ---');
 			});
 		}
     }

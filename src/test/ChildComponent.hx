@@ -1,4 +1,3 @@
-package;
 /*
 Copyright 2015 Niall Frederick Weedon
 
@@ -14,19 +13,31 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import test.ChildComponent;
-import test.DisplayComponent;
-import test.ParentComponent;
-import test.TodoList;
+package test;
 
-class Main
+import angular.Angular;
+import angular.AngularElement;
+
+/*
+ * Reference:
+ * https://angular.io/docs/js/latest/guide/making-components.html
+ */
+
+@Component({ 
+	selector: 'child'
+})
+@View({
+	template: '<p>{{ message }}</p>'
+})
+@:expose
+class ChildComponent extends AngularElement
 {
-    static function main() 
+	private static var annotations : Array<Dynamic> = [];
+	private static var parameters : Array<Dynamic> = [];
+	private var message = "I am the child.";
+	
+    public function new()
     {
-		// Acts the same as System.import
-		new DisplayComponent();
-		new TodoList();
-		new ParentComponent();
-		new ChildComponent();
+        super(annotations, parameters);
     }
 }
