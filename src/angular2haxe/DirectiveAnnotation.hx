@@ -13,12 +13,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package angular;
+package angular2haxe;
 
-class Annotation
+@:native('angular.DirectiveAnnotation')
+extern class DirectiveAnnotation extends Annotation
 {
-	public function new(data : Dynamic) 
-	{
-		
-	}
+	function new(data : Dynamic);
 }

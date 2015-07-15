@@ -1,0 +1,110 @@
+/*
+Copyright 2015 Niall Frederick Weedon
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+package test;
+
+import angular2haxe.Angular;
+import angular2haxe.EventEmitter;
+
+/*
+ * Reference:
+ * https://angular.io/docs/js/latest/api/annotations/DirectiveAnnotation-class.html
+ * http://victorsavkin.com/post/119943127151/angular-2-template-syntax
+ */
+
+@Directive({
+	selector: '[dependency]',
+	properties: [
+		"id: dependency"
+	]/*,
+	host: {
+		// For some reason the key has $__hx__ prepended to it. Need to remove at run-time?
+		"(onmouseenter)": "onMouseEnter($event)"
+	}*/
+})
+@:expose
+class Dependency
+{
+	private static var annotations : Array<Dynamic> = [];
+	private static var parameters : Array<Dynamic> = [];
+	public var id : String;
+	
+    public function new()
+    {		
+    }
+	
+	public function onMouseEnter(event : Dynamic)
+	{
+		trace('onMouseEnter: ${id}');
+	}
+	
+	public function onMouseLeave()
+	{
+		trace('onMouseLeave: ${id}');
+	}
+	
+	public function onResize(event : Dynamic)
+	{
+		trace('resize ${event}');
+	}
+}
+
+@Directive({ 
+	selector: '[my-directive]'//,
+	// TODO: Resolve hostInjector the same as appInjector
+	//hostInjector: ["test.Dependency"]
+})
+@:expose
+class MyDirective
+{
+	private static var annotations : Array<Dynamic> = [];
+	private static var parameters : Array<Dynamic> = [];
+	
+    public function new(?dependency : Dependency)
+    {
+		if (dependency != null)
+		{
+			trace('Dependency: ${dependency.id}');
+		}
+    }
+}
+
+@Directive({
+	selector: '[ng-model]',
+	properties: ['ngModel']/*,
+	events: ['ngModelChanged: ngModel'],
+	host: {
+		"[value]": 'ngModel',
+		"(input)": "modelChanged($event)"
+	}*/
+})
+@:expose
+class NgModelDirective
+{
+	private static var annotations : Array<Dynamic> = [];
+	private static var parameters : Array<Dynamic> = [];
+	private var ngModel : String = "";
+	private var ngModelChanged : EventEmitter = new EventEmitter();
+	
+	public function new()
+	{
+	}
+	
+	public function modelChanged(event : Dynamic)
+	{
+		trace(event);
+		ngModelChanged.next(event.target.value);
+	}
+}

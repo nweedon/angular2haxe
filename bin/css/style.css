@@ -1,3 +1,8 @@
+html, body
+{
+	width: 100%;
+}
+
 body
 {
 	margin: 0px;
@@ -28,7 +33,6 @@ body > div > *:nth-child(2)
 
 div.titlebar
 {
-	width: 100%;
 	background-color: #c5e1a5;
 	-webkit-box-shadow: 0px 6px 5px 1px #aed581;
 	-moz-box-shadow: 0px 6px 5px 1px #aed581;

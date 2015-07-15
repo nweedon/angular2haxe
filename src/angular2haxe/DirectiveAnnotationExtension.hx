@@ -1,4 +1,3 @@
-package;
 /*
 Copyright 2015 Niall Frederick Weedon
 
@@ -14,32 +13,17 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+package angular2haxe;
 
-import angular2haxe.Application;
-import test.ChildComponent;
-import test.Dependency;
-import test.DependencyDisplayComponent;
-import test.DisplayComponent;
-import test.ParentComponent;
-import test.TodoList;
-
-class Main
+class DirectiveAnnotationExtension extends AnnotationExtension
 {
-    static function main()
-    {
-		// Create a new application, bootstrapping the
-		// listed classes in the process.
-		new Application([
-		
-			DisplayComponent,
-			TodoList,
-			ParentComponent,
-			ChildComponent,
-			MyDirective,
-			NgModelDirective,
-			Dependency,
-			DependencyDisplayComponent
-			
-		]);
-    }
+	public function new() 
+	{
+		super();
+	}
+	
+	public static function transform(input : Dynamic, annotations : Array<Dynamic>, parameters : Array<Dynamic>) : Dynamic
+	{
+		return input;
+	}
 }

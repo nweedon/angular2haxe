@@ -7,14 +7,26 @@ function $extend(from, fields) {
 	if( fields.toString !== Object.prototype.toString ) proto.toString = fields.toString;
 	return proto;
 }
+var HxOverrides = function() { };
+$hxClasses["HxOverrides"] = HxOverrides;
+HxOverrides.__name__ = ["HxOverrides"];
+HxOverrides.indexOf = function(a,obj,i) {
+	var len = a.length;
+	if(i < 0) {
+		i += len;
+		if(i < 0) i = 0;
+	}
+	while(i < len) {
+		if(a[i] === obj) return i;
+		i++;
+	}
+	return -1;
+};
 var Main = function() { };
 $hxClasses["Main"] = Main;
 Main.__name__ = ["Main"];
 Main.main = function() {
-	new test_DisplayComponent();
-	new test_TodoList();
-	new test_ParentComponent();
-	new test_ChildComponent();
+	new angular2haxe_Application([test_DisplayComponent,test_TodoList,test_ParentComponent,test_ChildComponent,test_MyDirective,test_NgModelDirective,test_Dependency,test_DependencyDisplayComponent]);
 };
 Math.__name__ = ["Math"];
 var Reflect = function() { };
@@ -30,6 +42,9 @@ Reflect.field = function(o,field) {
 };
 Reflect.setField = function(o,field,value) {
 	o[field] = value;
+};
+Reflect.callMethod = function(o,func,args) {
+	return func.apply(o,args);
 };
 Reflect.fields = function(o) {
 	var a = [];
@@ -93,73 +108,133 @@ Type.createInstance = function(cl,args) {
 	}
 	return null;
 };
-var angular_Annotation = function(data) {
+var angular2haxe_Annotation = function(data) {
 };
-$hxClasses["angular.Annotation"] = angular_Annotation;
-angular_Annotation.__name__ = ["angular","Annotation"];
-angular_Annotation.prototype = {
-	__class__: angular_Annotation
+$hxClasses["angular2haxe.Annotation"] = angular2haxe_Annotation;
+angular2haxe_Annotation.__name__ = ["angular2haxe","Annotation"];
+var angular2haxe_AnnotationExtension = function() {
 };
-var angular_AngularElement = function(annotations,parameters) {
-	if(annotations != null && annotations.length == 0) {
-		var cl = js_Boot.getClass(this);
-		var anno = haxe_rtti_Meta.getType(cl);
-		var className = Type.getClassName(cl);
-		console.log("--- Bootstrapping " + className + " ---");
-		var _g = 0;
-		var _g1 = Reflect.fields(anno);
-		while(_g < _g1.length) {
-			var name = _g1[_g];
-			++_g;
-			if(angular_AngularElement.validAnnotations.exists(name)) {
-				var field = Reflect.field(anno,name);
-				if(field[0].directives != null) {
-					var _g2 = 0;
-					var _g3 = Reflect.fields(field[0].directives);
-					while(_g2 < _g3.length) {
-						var directive = _g3[_g2];
-						++_g2;
-						var directiveName = Reflect.field(field[0].directives,directive);
-						if(directiveName != null && directiveName.length > 0) {
-							directiveName = StringTools.htmlEscape(directiveName);
-							Reflect.setField(field[0].directives,directive,eval(directiveName));
-						}
-					}
+$hxClasses["angular2haxe.AnnotationExtension"] = angular2haxe_AnnotationExtension;
+angular2haxe_AnnotationExtension.__name__ = ["angular2haxe","AnnotationExtension"];
+angular2haxe_AnnotationExtension.transform = function(input,annotations,parameters) {
+	return input;
+};
+var angular2haxe_Application = function(components) {
+	this.bootstrap(components);
+};
+$hxClasses["angular2haxe.Application"] = angular2haxe_Application;
+angular2haxe_Application.__name__ = ["angular2haxe","Application"];
+angular2haxe_Application.prototype = {
+	bootstrap: function(components) {
+		var showDataInTrace = false;
+		var validAnnotations;
+		var _g = new haxe_ds_StringMap();
+		_g.set("Component",{ annotation : angular.ComponentAnnotation, extension : angular2haxe_ComponentAnnotationExtension});
+		_g.set("Directive",{ annotation : angular.DirectiveAnnotation, extension : angular2haxe_DirectiveAnnotationExtension});
+		_g.set("View",{ annotation : angular.ViewAnnotation, extension : angular2haxe_ViewAnnotationExtension});
+		validAnnotations = _g;
+		var _g1 = 0;
+		while(_g1 < components.length) {
+			var component = [components[_g1]];
+			++_g1;
+			var anno = [haxe_rtti_Meta.getType(component[0])];
+			var className = [Type.getClassName(component[0])];
+			var annotations = [Reflect.field(component[0],"annotations")];
+			var parameters = [Reflect.field(component[0],"parameters")];
+			if(annotations[0] != null && annotations[0].length == 0) {
+				console.log("=> Bootstrapping " + className[0]);
+				var _g2 = 0;
+				var _g3 = Reflect.fields(anno[0]);
+				while(_g2 < _g3.length) {
+					var name = _g3[_g2];
+					++_g2;
+					if(__map_reserved[name] != null?validAnnotations.existsReserved(name):validAnnotations.h.hasOwnProperty(name)) {
+						var field = Reflect.field(anno[0],name);
+						Reflect.callMethod((__map_reserved[name] != null?validAnnotations.getReserved(name):validAnnotations.h[name]).extension,Reflect.field((__map_reserved[name] != null?validAnnotations.getReserved(name):validAnnotations.h[name]).extension,"transform"),[field[0],annotations[0],parameters[0]]);
+						annotations[0].push(Type.createInstance((__map_reserved[name] != null?validAnnotations.getReserved(name):validAnnotations.h[name]).annotation,[field[0]]));
+					} else console.error(name + " is not a valid annotation.");
 				}
-				if(parameters != null && field[0].appInjector != null) {
-					var serviceParams = [];
-					var _g21 = 0;
-					var _g31 = Reflect.fields(field[0].appInjector);
-					while(_g21 < _g31.length) {
-						var app = _g31[_g21];
-						++_g21;
-						var appName = Reflect.field(field[0].appInjector,app);
-						if(appName != null && appName.length > 0) {
-							var cl1 = Type.resolveClass(appName);
-							serviceParams.push(cl1);
-							field[0].appInjector[app] = cl1;
+				window.document.addEventListener("DOMContentLoaded",(function(parameters,annotations,className,anno,component) {
+					return function() {
+						if(showDataInTrace) {
+							console.log("Annotations:\n" + Std.string(annotations[0]));
+							console.log("Parameters:\n" + Std.string(parameters[0]));
 						}
-					}
-					if(serviceParams.length > 0) parameters.push(serviceParams);
-				}
-				annotations.push(Type.createInstance(angular_AngularElement.validAnnotations.get(name),[field[0]]));
-			} else console.error(name + " is not a valid annotation.");
-		}
-		window.document.addEventListener("DOMContentLoaded",function() {
-			if(angular_AngularElement.showDataInTrace) {
-				console.log("Annotations:\n" + Std.string(annotations));
-				console.log("Parameters:\n" + Std.string(parameters));
+						if((function($this) {
+							var $r;
+							var _this = Reflect.fields(anno[0]);
+							$r = HxOverrides.indexOf(_this,"Component",0);
+							return $r;
+						}(this)) >= 0) angular.bootstrap(component[0]);
+						console.log("=> Finished bootstrapping " + className[0]);
+					};
+				})(parameters,annotations,className,anno,component));
 			}
-			angular.bootstrap(cl);
-			console.log("--- Finished bootstrapping " + className + " ---");
-		});
+		}
 	}
 };
-$hxClasses["angular.AngularElement"] = angular_AngularElement;
-angular_AngularElement.__name__ = ["angular","AngularElement"];
-angular_AngularElement.prototype = {
-	__class__: angular_AngularElement
+var angular2haxe_ComponentAnnotationExtension = function() {
+	angular2haxe_AnnotationExtension.call(this);
 };
+$hxClasses["angular2haxe.ComponentAnnotationExtension"] = angular2haxe_ComponentAnnotationExtension;
+angular2haxe_ComponentAnnotationExtension.__name__ = ["angular2haxe","ComponentAnnotationExtension"];
+angular2haxe_ComponentAnnotationExtension.transform = function(input,annotations,parameters) {
+	if(parameters != null && input.appInjector != null) {
+		var serviceParams = [];
+		var _g = 0;
+		var _g1 = Reflect.fields(input.appInjector);
+		while(_g < _g1.length) {
+			var app = _g1[_g];
+			++_g;
+			var appName = Reflect.field(input.appInjector,app);
+			if(appName != null && appName.length > 0) {
+				var cl = Type.resolveClass(appName);
+				serviceParams.push(cl);
+				input.appInjector[app] = cl;
+			}
+		}
+		if(serviceParams.length > 0) parameters.push(serviceParams);
+	}
+	return input;
+};
+angular2haxe_ComponentAnnotationExtension.__super__ = angular2haxe_AnnotationExtension;
+angular2haxe_ComponentAnnotationExtension.prototype = $extend(angular2haxe_AnnotationExtension.prototype,{
+});
+var angular2haxe_DirectiveAnnotationExtension = function() {
+	angular2haxe_AnnotationExtension.call(this);
+};
+$hxClasses["angular2haxe.DirectiveAnnotationExtension"] = angular2haxe_DirectiveAnnotationExtension;
+angular2haxe_DirectiveAnnotationExtension.__name__ = ["angular2haxe","DirectiveAnnotationExtension"];
+angular2haxe_DirectiveAnnotationExtension.transform = function(input,annotations,parameters) {
+	return input;
+};
+angular2haxe_DirectiveAnnotationExtension.__super__ = angular2haxe_AnnotationExtension;
+angular2haxe_DirectiveAnnotationExtension.prototype = $extend(angular2haxe_AnnotationExtension.prototype,{
+});
+var angular2haxe_ViewAnnotationExtension = function() {
+	angular2haxe_AnnotationExtension.call(this);
+};
+$hxClasses["angular2haxe.ViewAnnotationExtension"] = angular2haxe_ViewAnnotationExtension;
+angular2haxe_ViewAnnotationExtension.__name__ = ["angular2haxe","ViewAnnotationExtension"];
+angular2haxe_ViewAnnotationExtension.transform = function(input,annotations,parameters) {
+	if(input.directives != null) {
+		var _g = 0;
+		var _g1 = Reflect.fields(input.directives);
+		while(_g < _g1.length) {
+			var directive = _g1[_g];
+			++_g;
+			var directiveName = Reflect.field(input.directives,directive);
+			if(directiveName != null && directiveName.length > 0) {
+				directiveName = StringTools.htmlEscape(directiveName);
+				Reflect.setField(input.directives,directive,eval(directiveName));
+			}
+		}
+	}
+	return input;
+};
+angular2haxe_ViewAnnotationExtension.__super__ = angular2haxe_AnnotationExtension;
+angular2haxe_ViewAnnotationExtension.prototype = $extend(angular2haxe_AnnotationExtension.prototype,{
+});
 var haxe_IMap = function() { };
 $hxClasses["haxe.IMap"] = haxe_IMap;
 haxe_IMap.__name__ = ["haxe","IMap"];
@@ -173,14 +248,6 @@ haxe_ds_StringMap.prototype = {
 	set: function(key,value) {
 		if(__map_reserved[key] != null) this.setReserved(key,value); else this.h[key] = value;
 	}
-	,get: function(key) {
-		if(__map_reserved[key] != null) return this.getReserved(key);
-		return this.h[key];
-	}
-	,exists: function(key) {
-		if(__map_reserved[key] != null) return this.existsReserved(key);
-		return this.h.hasOwnProperty(key);
-	}
 	,setReserved: function(key,value) {
 		if(this.rh == null) this.rh = { };
 		this.rh["$" + key] = value;
@@ -192,7 +259,6 @@ haxe_ds_StringMap.prototype = {
 		if(this.rh == null) return false;
 		return this.rh.hasOwnProperty("$" + key);
 	}
-	,__class__: haxe_ds_StringMap
 };
 var haxe_rtti_Meta = function() { };
 $hxClasses["haxe.rtti.Meta"] = haxe_rtti_Meta;
@@ -214,20 +280,10 @@ $hxClasses["js._Boot.HaxeError"] = js__$Boot_HaxeError;
 js__$Boot_HaxeError.__name__ = ["js","_Boot","HaxeError"];
 js__$Boot_HaxeError.__super__ = Error;
 js__$Boot_HaxeError.prototype = $extend(Error.prototype,{
-	__class__: js__$Boot_HaxeError
 });
 var js_Boot = function() { };
 $hxClasses["js.Boot"] = js_Boot;
 js_Boot.__name__ = ["js","Boot"];
-js_Boot.getClass = function(o) {
-	if((o instanceof Array) && o.__enum__ == null) return Array; else {
-		var cl = o.__class__;
-		if(cl != null) return cl;
-		var name = js_Boot.__nativeClassName(o);
-		if(name != null) return js_Boot.__resolveNativeClass(name);
-		return null;
-	}
-};
 js_Boot.__string_rec = function(o,s) {
 	if(o == null) return "null";
 	if(s.length >= 5) return "<...>";
@@ -296,61 +352,69 @@ js_Boot.__string_rec = function(o,s) {
 		return String(o);
 	}
 };
-js_Boot.__nativeClassName = function(o) {
-	var name = js_Boot.__toStr.call(o).slice(8,-1);
-	if(name == "Object" || name == "Function" || name == "Math" || name == "JSON") return null;
-	return name;
-};
-js_Boot.__resolveNativeClass = function(name) {
-	return (Function("return typeof " + name + " != \"undefined\" ? " + name + " : null"))();
-};
 var test_ChildComponent = $hx_exports.test.ChildComponent = function() {
 	this.message = "I am the child.";
-	angular_AngularElement.call(this,test_ChildComponent.annotations,test_ChildComponent.parameters);
 };
 $hxClasses["test.ChildComponent"] = test_ChildComponent;
 test_ChildComponent.__name__ = ["test","ChildComponent"];
-test_ChildComponent.__super__ = angular_AngularElement;
-test_ChildComponent.prototype = $extend(angular_AngularElement.prototype,{
-	__class__: test_ChildComponent
-});
+var test_Dependency = $hx_exports.test.Dependency = function() {
+};
+$hxClasses["test.Dependency"] = test_Dependency;
+test_Dependency.__name__ = ["test","Dependency"];
+test_Dependency.prototype = {
+	onMouseEnter: function(event) {
+		console.log("onMouseEnter: " + this.id);
+	}
+	,onMouseLeave: function() {
+		console.log("onMouseLeave: " + this.id);
+	}
+	,onResize: function(event) {
+		console.log("resize " + Std.string(event));
+	}
+};
+var test_MyDirective = $hx_exports.test.MyDirective = function(dependency) {
+	if(dependency != null) console.log("Dependency: " + dependency.id);
+};
+$hxClasses["test.MyDirective"] = test_MyDirective;
+test_MyDirective.__name__ = ["test","MyDirective"];
+var test_NgModelDirective = $hx_exports.test.NgModelDirective = function() {
+	this.ngModelChanged = new angular.EventEmitter();
+	this.ngModel = "";
+};
+$hxClasses["test.NgModelDirective"] = test_NgModelDirective;
+test_NgModelDirective.__name__ = ["test","NgModelDirective"];
+test_NgModelDirective.prototype = {
+	modelChanged: function(event) {
+		console.log(event);
+		this.ngModelChanged.next(event.target.value);
+	}
+};
+var test_DependencyDisplayComponent = function() {
+};
+$hxClasses["test.DependencyDisplayComponent"] = test_DependencyDisplayComponent;
+test_DependencyDisplayComponent.__name__ = ["test","DependencyDisplayComponent"];
 var test_DisplayComponent = function(friends) {
-	angular_AngularElement.call(this,test_DisplayComponent.annotations,test_DisplayComponent.parameters);
 	this.myName = "Alice";
 	if(friends != null) this.names = friends.names;
 };
 $hxClasses["test.DisplayComponent"] = test_DisplayComponent;
 test_DisplayComponent.__name__ = ["test","DisplayComponent"];
-test_DisplayComponent.__super__ = angular_AngularElement;
-test_DisplayComponent.prototype = $extend(angular_AngularElement.prototype,{
-	__class__: test_DisplayComponent
-});
 var test_FriendsService = $hx_exports.test.FriendsService = function() {
 	this.names = ["Aarav","Martín","Shannon","Ariana","Kai"];
 };
 $hxClasses["test.FriendsService"] = test_FriendsService;
 test_FriendsService.__name__ = ["test","FriendsService"];
-test_FriendsService.prototype = {
-	__class__: test_FriendsService
-};
 var test_ParentComponent = function() {
 	this.message = "I am the parent.";
-	angular_AngularElement.call(this,test_ParentComponent.annotations,test_ParentComponent.parameters);
 };
 $hxClasses["test.ParentComponent"] = test_ParentComponent;
 test_ParentComponent.__name__ = ["test","ParentComponent"];
-test_ParentComponent.__super__ = angular_AngularElement;
-test_ParentComponent.prototype = $extend(angular_AngularElement.prototype,{
-	__class__: test_ParentComponent
-});
 var test_TodoList = function() {
-	angular_AngularElement.call(this,test_TodoList.annotations,test_TodoList.parameters);
 	this.todos = ["Eat Breakfast","Walk Dog","Breathe"];
 };
 $hxClasses["test.TodoList"] = test_TodoList;
 test_TodoList.__name__ = ["test","TodoList"];
-test_TodoList.__super__ = angular_AngularElement;
-test_TodoList.prototype = $extend(angular_AngularElement.prototype,{
+test_TodoList.prototype = {
 	doneTyping: function(event) {
 		if(event.which == 13) {
 			this.addTodo(event.target.value);
@@ -360,27 +424,30 @@ test_TodoList.prototype = $extend(angular_AngularElement.prototype,{
 	,addTodo: function(todo) {
 		this.todos.push(todo);
 	}
-	,__class__: test_TodoList
-});
+};
+if(Array.prototype.indexOf) HxOverrides.indexOf = function(a,o,i) {
+	return Array.prototype.indexOf.call(a,o,i);
+};
 $hxClasses.Math = Math;
-String.prototype.__class__ = $hxClasses.String = String;
 String.__name__ = ["String"];
 $hxClasses.Array = Array;
 Array.__name__ = ["Array"];
 var __map_reserved = {}
-angular_AngularElement.showDataInTrace = false;
-angular_AngularElement.validAnnotations = (function($this) {
-	var $r;
-	var _g = new haxe_ds_StringMap();
-	_g.set("Component",angular.ComponentAnnotation);
-	_g.set("View",angular.ViewAnnotation);
-	$r = _g;
-	return $r;
-}(this));
-js_Boot.__toStr = {}.toString;
 test_ChildComponent.__meta__ = { obj : { Component : [{ selector : "child"}], View : [{ template : "<p>{{ message }}</p>"}]}};
 test_ChildComponent.annotations = [];
 test_ChildComponent.parameters = [];
+test_Dependency.__meta__ = { obj : { Directive : [{ selector : "[dependency]", properties : ["id: dependency"]}]}};
+test_Dependency.annotations = [];
+test_Dependency.parameters = [];
+test_MyDirective.__meta__ = { obj : { Directive : [{ selector : "[my-directive]"}]}};
+test_MyDirective.annotations = [];
+test_MyDirective.parameters = [];
+test_NgModelDirective.__meta__ = { obj : { Directive : [{ selector : "[ng-model]", properties : ["ngModel"]}]}};
+test_NgModelDirective.annotations = [];
+test_NgModelDirective.parameters = [];
+test_DependencyDisplayComponent.__meta__ = { obj : { Component : [{ selector : "dependency-display", compileChildren : true}], View : [{ directives : ["test.Dependency","test.MyDirective","test.NgModelDirective"], templateUrl : "templates/dependency.tpl.html"}]}};
+test_DependencyDisplayComponent.annotations = [];
+test_DependencyDisplayComponent.parameters = [];
 test_DisplayComponent.__meta__ = { obj : { Component : [{ selector : "display", appInjector : ["test.FriendsService"]}], View : [{ directives : ["angular.NgFor","angular.NgIf"], template : "<p>My name: {{ myName }}</p><p>Friends:</p><ul><li *ng-for=\"#name of names\">{{ name }}</li></ul><p *ng-if=\"names.length > 3\">You have many friends!</p>"}]}};
 test_DisplayComponent.annotations = [];
 test_DisplayComponent.parameters = [];

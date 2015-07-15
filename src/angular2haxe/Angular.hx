@@ -1,4 +1,3 @@
-package;
 /*
 Copyright 2015 Niall Frederick Weedon
 
@@ -14,32 +13,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+package angular2haxe;
 
-import angular2haxe.Application;
-import test.ChildComponent;
-import test.Dependency;
-import test.DependencyDisplayComponent;
-import test.DisplayComponent;
-import test.ParentComponent;
-import test.TodoList;
-
-class Main
+/**
+ * Haxe representation of Angular 2.0
+ */
+@:native('angular')
+extern class Angular
 {
-    static function main()
-    {
-		// Create a new application, bootstrapping the
-		// listed classes in the process.
-		new Application([
-		
-			DisplayComponent,
-			TodoList,
-			ParentComponent,
-			ChildComponent,
-			MyDirective,
-			NgModelDirective,
-			Dependency,
-			DependencyDisplayComponent
-			
-		]);
-    }
+    function new();
+	
+    static function bootstrap<T>(cl : Class<T>) : Angular;
 }

@@ -15,8 +15,7 @@ limitations under the License.
 */
 package test;
 
-import angular.Angular;
-import angular.AngularElement;
+import angular2haxe.Angular;
 
 /*
  * Reference:
@@ -30,7 +29,7 @@ import angular.AngularElement;
 	directives: ["test.ChildComponent"],
 	template: '<h1>{{ message }}</h1><child></child>'
 })
-class ParentComponent extends AngularElement
+class ParentComponent 
 {
 	private static var annotations : Array<Dynamic> = [];
 	private static var parameters : Array<Dynamic> = [];
@@ -38,6 +37,6 @@ class ParentComponent extends AngularElement
 	
     public function new()
     {
-        super(annotations, parameters);
+		
     }
 }

@@ -14,42 +14,28 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 package test;
-import browser.KeyboardEvent;
+
+import angular2haxe.Angular;
 
 /*
  * Reference:
- * https://angular.io/docs/js/latest/guide/user-input.html
+ * https://angular.io/docs/js/latest/guide/displaying-data.html
  */
 
 @Component({ 
-	selector: 'todo-list'
+	selector: 'dependency-display',
+	compileChildren: true
 })
 @View({ 
-	directives: ["angular.NgFor", "angular.NgIf"],
-	template: '<ul><li *ng-for="#todo of todos">{{ todo }}</li></ul><input #textbox (keyup)="doneTyping($event)"><button (click)="addTodo(textbox.value)">Add Todo</button>',
+	directives: ["test.Dependency", "test.MyDirective", "test.NgModelDirective"],
+	templateUrl: "templates/dependency.tpl.html"
 })
-class TodoList
+class DependencyDisplayComponent
 {
 	private static var annotations : Array<Dynamic> = [];
 	private static var parameters : Array<Dynamic> = [];
-	private var todos : Array<String>;
 	
-	public function new() 
-	{
-		todos = ["Eat Breakfast", "Walk Dog", "Breathe"];
-	}
-	
-	public function doneTyping(event : KeyboardEvent)
-	{
-		if (event.which == 13)
-		{
-			addTodo(event.target.value);
-			event.target.value = "";
-		}
-	}
-	
-	public function addTodo(todo : String)
-	{
-		todos.push(todo);
-	}
+    public function new()
+    {
+    }
 }

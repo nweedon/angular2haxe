@@ -15,8 +15,7 @@ limitations under the License.
 */
 package test;
 
-import angular.Angular;
-import angular.AngularElement;
+import angular2haxe.Angular;
 
 /*
  * Reference:
@@ -31,7 +30,7 @@ import angular.AngularElement;
 	directives: ["angular.NgFor", "angular.NgIf"],
 	template: '<p>My name: {{ myName }}</p><p>Friends:</p><ul><li *ng-for="#name of names">{{ name }}</li></ul><p *ng-if="names.length > 3">You have many friends!</p>'
 })
-class DisplayComponent extends AngularElement
+class DisplayComponent
 {
 	private static var annotations : Array<Dynamic> = [];
 	private static var parameters : Array<Dynamic> = [];
@@ -40,7 +39,6 @@ class DisplayComponent extends AngularElement
 	
     public function new(?friends : FriendsService)
     {
-        super(annotations, parameters);
 		myName = "Alice";
 		
 		if (friends != null)

@@ -13,15 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package angular;
+package angular2haxe;
 
-/**
- * Haxe representation of Angular 2.0
- */
-@:native('angular')
-extern class Angular
+class Annotation
 {
-    function new();
-	
-    static function bootstrap<T>(cl : Class<T>) : Angular;
+	private function new(data : Dynamic) { }
 }
