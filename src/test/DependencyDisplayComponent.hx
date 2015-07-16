@@ -16,6 +16,7 @@ limitations under the License.
 package test;
 
 import angular2haxe.Angular;
+import test.Dependency.MyDirective;
 
 /*
  * Reference:

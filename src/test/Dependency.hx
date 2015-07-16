@@ -22,6 +22,8 @@ import angular2haxe.EventEmitter;
  * Reference:
  * https://angular.io/docs/js/latest/api/annotations/DirectiveAnnotation-class.html
  * http://victorsavkin.com/post/119943127151/angular-2-template-syntax
+ * 
+ * Note: Events on Dependency and NgModelDirective classes are work-in-progress.
  */
 
 @Directive({
@@ -42,7 +44,13 @@ class Dependency
 	public var id : String;
 	
     public function new()
-    {		
+    {
+		untyped
+		{
+			setTimeout(function() {
+				console.log('Dependency.hx result:\n' + this);
+			}, 1);
+		}
     }
 	
 	public function onMouseEnter(event : Dynamic)
@@ -61,22 +69,30 @@ class Dependency
 	}
 }
 
+/**
+ * Injecting dependency with hostInjector
+ */
 @Directive({ 
-	selector: '[my-directive]'//,
-	// TODO: Resolve hostInjector the same as appInjector
-	//hostInjector: ["test.Dependency"]
+	selector: '[my-directive]',
+	hostInjector: ["test.Dependency"]
 })
 @:expose
 class MyDirective
 {
 	private static var annotations : Array<Dynamic> = [];
 	private static var parameters : Array<Dynamic> = [];
+	private var dependency : Dependency;
 	
     public function new(?dependency : Dependency)
     {
 		if (dependency != null)
 		{
-			trace('Dependency: ${dependency.id}');
+			untyped
+			{
+				setTimeout(function() {
+					this.dependency = dependency;
+				}, 1);
+			}
 		}
     }
 }

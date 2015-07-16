@@ -22,6 +22,7 @@ import test.DependencyDisplayComponent;
 import test.DisplayComponent;
 import test.ParentComponent;
 import test.TodoList;
+import test.HelloWorld;
 
 class Main
 {
@@ -35,10 +36,19 @@ class Main
 			TodoList,
 			ParentComponent,
 			ChildComponent,
-			MyDirective,
-			NgModelDirective,
+			
+			// --- Dependency.hx ---
+			MyDirective,			
+			NgModelDirective,			
 			Dependency,
-			DependencyDisplayComponent
+			
+			// --- DependencyDisplayComponent.hx --
+			DependencyDisplayComponent,
+			
+			// --- HelloWorld.hx ---
+			Greeter,
+			NeedsGreeter,
+			HelloWorld
 			
 		]);
     }

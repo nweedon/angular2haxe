@@ -26,7 +26,7 @@ var Main = function() { };
 $hxClasses["Main"] = Main;
 Main.__name__ = ["Main"];
 Main.main = function() {
-	new angular2haxe_Application([test_DisplayComponent,test_TodoList,test_ParentComponent,test_ChildComponent,test_MyDirective,test_NgModelDirective,test_Dependency,test_DependencyDisplayComponent]);
+	new angular2haxe_Application([test_DisplayComponent,test_TodoList,test_ParentComponent,test_ChildComponent,test_MyDirective,test_NgModelDirective,test_Dependency,test_DependencyDisplayComponent,test_Greeter,test_NeedsGreeter,test_HelloWorld]);
 };
 Math.__name__ = ["Math"];
 var Reflect = function() { };
@@ -119,6 +119,26 @@ angular2haxe_AnnotationExtension.__name__ = ["angular2haxe","AnnotationExtension
 angular2haxe_AnnotationExtension.transform = function(input,annotations,parameters) {
 	return input;
 };
+angular2haxe_AnnotationExtension.parseServiceParameters = function(injector) {
+	var serviceParams = [];
+	var _g = 0;
+	var _g1 = Reflect.fields(injector);
+	while(_g < _g1.length) {
+		var app = _g1[_g];
+		++_g;
+		var appName = Reflect.field(injector,app);
+		if(appName != null && appName.length > 0) {
+			var cl = Type.resolveClass(appName);
+			serviceParams.push(cl);
+			injector[app] = cl;
+		}
+	}
+	return serviceParams;
+};
+angular2haxe_AnnotationExtension.parseInjector = function(parameters,injector) {
+	var serviceParameter = angular2haxe_AnnotationExtension.parseServiceParameters(injector);
+	if(serviceParameter != null && serviceParameter.length > 0) parameters.push(serviceParameter);
+};
 var angular2haxe_Application = function(components) {
 	this.bootstrap(components);
 };
@@ -169,7 +189,7 @@ angular2haxe_Application.prototype = {
 						console.log("=> Finished bootstrapping " + className[0]);
 					};
 				})(parameters,annotations,className,anno,component));
-			}
+			} else console.error(className[0] + " does not have an 'annotations' static variable in its class definition!");
 		}
 	}
 };
@@ -179,22 +199,8 @@ var angular2haxe_ComponentAnnotationExtension = function() {
 $hxClasses["angular2haxe.ComponentAnnotationExtension"] = angular2haxe_ComponentAnnotationExtension;
 angular2haxe_ComponentAnnotationExtension.__name__ = ["angular2haxe","ComponentAnnotationExtension"];
 angular2haxe_ComponentAnnotationExtension.transform = function(input,annotations,parameters) {
-	if(parameters != null && input.appInjector != null) {
-		var serviceParams = [];
-		var _g = 0;
-		var _g1 = Reflect.fields(input.appInjector);
-		while(_g < _g1.length) {
-			var app = _g1[_g];
-			++_g;
-			var appName = Reflect.field(input.appInjector,app);
-			if(appName != null && appName.length > 0) {
-				var cl = Type.resolveClass(appName);
-				serviceParams.push(cl);
-				input.appInjector[app] = cl;
-			}
-		}
-		if(serviceParams.length > 0) parameters.push(serviceParams);
-	}
+	if(parameters != null && input.appInjector != null) angular2haxe_AnnotationExtension.parseInjector(parameters,input.appInjector);
+	if(parameters != null && input.viewInjector != null) angular2haxe_AnnotationExtension.parseInjector(parameters,input.viewInjector);
 	return input;
 };
 angular2haxe_ComponentAnnotationExtension.__super__ = angular2haxe_AnnotationExtension;
@@ -206,6 +212,7 @@ var angular2haxe_DirectiveAnnotationExtension = function() {
 $hxClasses["angular2haxe.DirectiveAnnotationExtension"] = angular2haxe_DirectiveAnnotationExtension;
 angular2haxe_DirectiveAnnotationExtension.__name__ = ["angular2haxe","DirectiveAnnotationExtension"];
 angular2haxe_DirectiveAnnotationExtension.transform = function(input,annotations,parameters) {
+	if(parameters != null && input.hostInjector != null) angular2haxe_AnnotationExtension.parseInjector(parameters,input.hostInjector);
 	return input;
 };
 angular2haxe_DirectiveAnnotationExtension.__super__ = angular2haxe_AnnotationExtension;
@@ -358,6 +365,10 @@ var test_ChildComponent = $hx_exports.test.ChildComponent = function() {
 $hxClasses["test.ChildComponent"] = test_ChildComponent;
 test_ChildComponent.__name__ = ["test","ChildComponent"];
 var test_Dependency = $hx_exports.test.Dependency = function() {
+	var _g = this;
+	setTimeout(function() {
+		console.log("Dependency.hx result:\n" + Std.string(_g));
+	},1);
 };
 $hxClasses["test.Dependency"] = test_Dependency;
 test_Dependency.__name__ = ["test","Dependency"];
@@ -373,7 +384,10 @@ test_Dependency.prototype = {
 	}
 };
 var test_MyDirective = $hx_exports.test.MyDirective = function(dependency) {
-	if(dependency != null) console.log("Dependency: " + dependency.id);
+	var _g = this;
+	if(dependency != null) setTimeout(function() {
+		_g.dependency = dependency;
+	},1);
 };
 $hxClasses["test.MyDirective"] = test_MyDirective;
 test_MyDirective.__name__ = ["test","MyDirective"];
@@ -404,6 +418,25 @@ var test_FriendsService = $hx_exports.test.FriendsService = function() {
 };
 $hxClasses["test.FriendsService"] = test_FriendsService;
 test_FriendsService.__name__ = ["test","FriendsService"];
+var test_Greeter = $hx_exports.test.Greeter = function() {
+};
+$hxClasses["test.Greeter"] = test_Greeter;
+test_Greeter.__name__ = ["test","Greeter"];
+test_Greeter.prototype = {
+	greet: function(name) {
+		return "Hello " + name + "!";
+	}
+};
+var test_NeedsGreeter = $hx_exports.test.NeedsGreeter = function(greeter) {
+	this.greeter = greeter;
+};
+$hxClasses["test.NeedsGreeter"] = test_NeedsGreeter;
+test_NeedsGreeter.__name__ = ["test","NeedsGreeter"];
+var test_HelloWorld = function(greeter) {
+	this.greeter = greeter;
+};
+$hxClasses["test.HelloWorld"] = test_HelloWorld;
+test_HelloWorld.__name__ = ["test","HelloWorld"];
 var test_ParentComponent = function() {
 	this.message = "I am the parent.";
 };
@@ -439,7 +472,7 @@ test_ChildComponent.parameters = [];
 test_Dependency.__meta__ = { obj : { Directive : [{ selector : "[dependency]", properties : ["id: dependency"]}]}};
 test_Dependency.annotations = [];
 test_Dependency.parameters = [];
-test_MyDirective.__meta__ = { obj : { Directive : [{ selector : "[my-directive]"}]}};
+test_MyDirective.__meta__ = { obj : { Directive : [{ selector : "[my-directive]", hostInjector : ["test.Dependency"]}]}};
 test_MyDirective.annotations = [];
 test_MyDirective.parameters = [];
 test_NgModelDirective.__meta__ = { obj : { Directive : [{ selector : "[ng-model]", properties : ["ngModel"]}]}};
@@ -451,6 +484,14 @@ test_DependencyDisplayComponent.parameters = [];
 test_DisplayComponent.__meta__ = { obj : { Component : [{ selector : "display", appInjector : ["test.FriendsService"]}], View : [{ directives : ["angular.NgFor","angular.NgIf"], template : "<p>My name: {{ myName }}</p><p>Friends:</p><ul><li *ng-for=\"#name of names\">{{ name }}</li></ul><p *ng-if=\"names.length > 3\">You have many friends!</p>"}]}};
 test_DisplayComponent.annotations = [];
 test_DisplayComponent.parameters = [];
+test_Greeter.annotations = [];
+test_Greeter.parameters = [];
+test_NeedsGreeter.__meta__ = { obj : { Directive : [{ selector : "needs-greeter", hostInjector : ["test.Greeter"]}]}};
+test_NeedsGreeter.annotations = [];
+test_NeedsGreeter.parameters = [];
+test_HelloWorld.__meta__ = { obj : { Component : [{ selector : "greet", viewInjector : ["test.Greeter"]}], View : [{ template : "<needs-greeter>{{ greeter.greet('World') }}</needs-greeter>", directives : ["test.NeedsGreeter"]}]}};
+test_HelloWorld.annotations = [];
+test_HelloWorld.parameters = [];
 test_ParentComponent.__meta__ = { obj : { Component : [{ selector : "parent"}], View : [{ directives : ["test.ChildComponent"], template : "<h1>{{ message }}</h1><child></child>"}]}};
 test_ParentComponent.annotations = [];
 test_ParentComponent.parameters = [];
@@ -459,5 +500,3 @@ test_TodoList.annotations = [];
 test_TodoList.parameters = [];
 Main.main();
 })(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : exports);
-
-//# sourceMappingURL=Angular2-Haxe.js.map

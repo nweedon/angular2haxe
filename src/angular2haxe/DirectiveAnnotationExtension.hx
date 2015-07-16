@@ -24,6 +24,11 @@ class DirectiveAnnotationExtension extends AnnotationExtension
 	
 	public static function transform(input : Dynamic, annotations : Array<Dynamic>, parameters : Array<Dynamic>) : Dynamic
 	{
+		if (parameters != null && input.hostInjector != null)
+		{
+			AnnotationExtension.parseInjector(parameters, input.hostInjector);
+		}
+		
 		return input;
 	}
 }

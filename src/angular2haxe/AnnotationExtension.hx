@@ -19,5 +19,37 @@ class AnnotationExtension
 {
 	private function new() { }
 	// Intended to be overridden in child class
-	public static function transform(input : Dynamic, annotations : Array<Dynamic>, parameters : Array<Dynamic>) : Dynamic { return input; }
+	public static function transform(input : Dynamic, annotations : Array<Dynamic>, parameters : Array<Dynamic>) : Dynamic 
+	{ 
+		return input; 
+	}
+	
+	public static function parseServiceParameters(injector : Dynamic) : Array<Dynamic>
+	{
+		var serviceParams : Array<Dynamic> = [];
+		
+		for (app in Reflect.fields(injector))
+		{
+			var appName : String = Reflect.field(injector, app);
+			
+			if (appName != null && appName.length > 0)
+			{
+				var cl = Type.resolveClass(appName);
+				serviceParams.push(cl);
+				Reflect.setField(injector, app, cl);
+			}
+		}
+		
+		return serviceParams;
+	}
+	
+	public static function parseInjector(parameters : Array<Dynamic>, injector : Array<Dynamic>)
+	{
+		var serviceParameter : Array<Dynamic> = parseServiceParameters(injector);
+		
+		if (serviceParameter != null && serviceParameter.length > 0)
+		{
+			parameters.push(serviceParameter);
+		}
+	}
 }

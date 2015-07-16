@@ -28,24 +28,12 @@ class ComponentAnnotationExtension extends AnnotationExtension
 		// correct JavaScript classes.
 		if (parameters != null && input.appInjector != null)
 		{
-			var serviceParams : Array<Dynamic> = [];
-			
-			for (app in Reflect.fields(input.appInjector))
-			{
-				var appName : String = Reflect.field(input.appInjector, app);
-				
-				if (appName != null && appName.length > 0)
-				{
-					var cl = Type.resolveClass(appName);
-					serviceParams.push(cl);
-					Reflect.setField(input.appInjector, app, cl);
-				}
-			}
-			
-			if (serviceParams.length > 0)
-			{
-				parameters.push(serviceParams);
-			}
+			AnnotationExtension.parseInjector(parameters, input.appInjector);
+		}
+		
+		if (parameters != null && input.viewInjector != null)
+		{
+			AnnotationExtension.parseInjector(parameters, input.viewInjector);
 		}
 		
 		return input;

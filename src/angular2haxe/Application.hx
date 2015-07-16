@@ -40,7 +40,7 @@ class Application
 			"Directive" => { annotation: DirectiveAnnotation, extension: DirectiveAnnotationExtension },
 			"View" 		=> { annotation: ViewAnnotation, extension: ViewAnnotationExtension },
 		];
-	
+		
 		for (component in components)
 		{
 			var anno = Meta.getType(component);			
@@ -97,6 +97,13 @@ class Application
 					
 					trace('=> Finished bootstrapping ${className}');
 				});
+			}
+			else
+			{
+				untyped
+				{
+					console.error(className + " does not have an 'annotations' static variable in its class definition!");
+				}
 			}
 		}
 	}
