@@ -9,6 +9,11 @@ I plan to expand this readme in the future, but below are a few pieces of info t
 * The Haxe components required are in the 'src/angular2haxe' and 'src/browser' folders.
 * If you want to see the Haxe code which creates Angular 2 components, view 'src/Main.hx' and the code in the 'src/test' folder.
 
+### Haxelib Installation
+```
+Coming soon!
+```
+
 ### Creating an application
 Creating an application this way allows you to import and bootstrap all of your components with ease. All data transformation (from Haxe metadata to Angular annotations) is done under the hood! (See 'src/Main.hx').
 ```
@@ -33,6 +38,7 @@ Creating components is pretty much the same as it is in ES6/TypeScript, with a f
 **Currently tested metadata for @Component annotation:**
 * selector
 * appInjector *(Note: class names must be surrounded in double-quotes)*
+* viewInjector *(Note: class names must be surrounded in double-quotes)*
 
 *Make sure to use the @:expose metadata tag on classes you wish to import!*
 
@@ -60,4 +66,43 @@ class DisplayComponent
 ```
 
 ### Creating a directive (@Directive annotation)
-Directives are currently work-in-progress.
+Creating a directive is again similar to the way components and views are created with Haxe. View the example below, which injects a service (via component-level injection) into the directive.
+
+**Currently tested metadata for @Directive annotation:**
+* selector
+* hostInjector *(Note: class names must be surrounded in double-quotes)*
+* properties
+
+```
+@:expose
+class Greeter
+{
+	private static var annotations : Array<Dynamic> = [];
+	private static var parameters : Array<Dynamic> = [];
+	
+	public function new() { }
+	public function greet(name : String)
+	{
+		return 'Hello ${name}!';
+	}
+}
+
+@Directive({
+	selector: 'needs-greeter',
+	hostInjector: [
+		"test.Greeter"
+	]
+})
+@:expose
+class NeedsGreeter
+{
+	private static var annotations : Array<Dynamic> = [];
+	private static var parameters : Array<Dynamic> = [];
+	private var greeter : Greeter;
+	
+	public function new(greeter : Greeter)
+	{
+		this.greeter = greeter;
+	}
+}
+```
