@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 package test;
-import browser.KeyboardEvent;
+import angular2haxe.KeyboardEvent;
 
 /*
  * Reference:
@@ -43,8 +43,8 @@ class TodoList
 	{
 		if (event.which == 13)
 		{
-			addTodo(event.target.value);
-			event.target.value = "";
+			addTodo(event._target.value);
+			event._target.value = "";
 		}
 	}
 	

@@ -218,6 +218,14 @@ angular2haxe_DirectiveAnnotationExtension.transform = function(input,annotations
 angular2haxe_DirectiveAnnotationExtension.__super__ = angular2haxe_AnnotationExtension;
 angular2haxe_DirectiveAnnotationExtension.prototype = $extend(angular2haxe_AnnotationExtension.prototype,{
 });
+var angular2haxe_KeyboardEvent = function(typeArg,keyboardEventInitDict) {
+	KeyboardEvent.call(this,typeArg,keyboardEventInitDict);
+};
+$hxClasses["angular2haxe.KeyboardEvent"] = angular2haxe_KeyboardEvent;
+angular2haxe_KeyboardEvent.__name__ = ["angular2haxe","KeyboardEvent"];
+angular2haxe_KeyboardEvent.__super__ = KeyboardEvent;
+angular2haxe_KeyboardEvent.prototype = $extend(KeyboardEvent.prototype,{
+});
 var angular2haxe_ViewAnnotationExtension = function() {
 	angular2haxe_AnnotationExtension.call(this);
 };
@@ -500,3 +508,5 @@ test_TodoList.annotations = [];
 test_TodoList.parameters = [];
 Main.main();
 })(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : exports);
+
+//# sourceMappingURL=Angular2-Haxe.js.map
