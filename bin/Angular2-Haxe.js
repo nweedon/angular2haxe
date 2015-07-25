@@ -276,27 +276,10 @@ var angular2haxe_LifecycleEvent = function() {
 $hxClasses["angular2haxe.LifecycleEvent"] = angular2haxe_LifecycleEvent;
 angular2haxe_LifecycleEvent.__name__ = ["angular2haxe","LifecycleEvent"];
 angular2haxe_LifecycleEvent.toAngular = function(lifecycleEvent) {
-	var convertedEvent = { };
-	switch(lifecycleEvent) {
-	case "onChange":
-		convertedEvent = angular.onChange;
-		break;
-	case "onInit":
-		convertedEvent = angular.onInit;
-		break;
-	case "onCheck":
-		convertedEvent = angular.onCheck;
-		break;
-	case "onAllChangesDone":
-		convertedEvent = angular.onAllChangesDone;
-		break;
-	case "onDestroy":
-		convertedEvent = angular.onDestroy;
-		break;
-	default:
+	if(angular2haxe_LifecycleEvent.supportedLifecycleEvents.exists(lifecycleEvent)) return angular2haxe_LifecycleEvent.supportedLifecycleEvents.get(lifecycleEvent); else {
 		console.error("Angular does not have LifecycleEvent \"" + lifecycleEvent + "\"");
+		return { };
 	}
-	return convertedEvent;
 };
 angular2haxe_LifecycleEvent.prototype = {
 	__class__: angular2haxe_LifecycleEvent
@@ -351,6 +334,14 @@ haxe_ds_StringMap.__interfaces__ = [haxe_IMap];
 haxe_ds_StringMap.prototype = {
 	set: function(key,value) {
 		if(__map_reserved[key] != null) this.setReserved(key,value); else this.h[key] = value;
+	}
+	,get: function(key) {
+		if(__map_reserved[key] != null) return this.getReserved(key);
+		return this.h[key];
+	}
+	,exists: function(key) {
+		if(__map_reserved[key] != null) return this.existsReserved(key);
+		return this.h.hasOwnProperty(key);
 	}
 	,setReserved: function(key,value) {
 		if(this.rh == null) this.rh = { };
@@ -683,6 +674,17 @@ Bool.__ename__ = ["Bool"];
 var Class = $hxClasses.Class = { __name__ : ["Class"]};
 var Enum = { };
 var __map_reserved = {}
+angular2haxe_LifecycleEvent.supportedLifecycleEvents = (function($this) {
+	var $r;
+	var _g = new haxe_ds_StringMap();
+	_g.set("onChange",angular.onChange);
+	_g.set("onInit",angular.onInit);
+	_g.set("onCheck",angular.onCheck);
+	_g.set("onAllChangesDone",angular.onAllChangesDone);
+	_g.set("onDestroy",angular.onDestroy);
+	$r = _g;
+	return $r;
+}(this));
 js_Boot.__toStr = {}.toString;
 test_ChildComponent.__meta__ = { obj : { Component : [{ selector : "child"}], View : [{ template : "<p>{{ message }}</p>"}]}};
 test_ChildComponent.annotations = [];

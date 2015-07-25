@@ -17,22 +17,26 @@ package angular2haxe;
 
 class LifecycleEvent
 {
+	private static var supportedLifecycleEvents : Map<String, Dynamic> = [
+		"onChange" 			=> untyped angular.onChange,
+		"onInit"			=> untyped angular.onInit,
+		"onCheck"			=> untyped angular.onCheck,
+		"onAllChangesDone"	=> untyped angular.onAllChangesDone,
+		"onDestroy"			=> untyped angular.onDestroy
+	];
+	
 	private function new() { }
 	
 	public static function toAngular(lifecycleEvent : String) : Dynamic
-	{
-		var convertedEvent : Dynamic = { };
-		
-		switch(lifecycleEvent)
+	{		
+		if (supportedLifecycleEvents.exists(lifecycleEvent))
 		{
-			case "onChange": 			convertedEvent = untyped angular.onChange;
-			case "onInit": 				convertedEvent = untyped angular.onInit;
-			case "onCheck":				convertedEvent = untyped angular.onCheck;
-			case "onAllChangesDone": 	convertedEvent = untyped angular.onAllChangesDone;
-			case "onDestroy":			convertedEvent = untyped angular.onDestroy;
-			default: Trace.error('Angular does not have LifecycleEvent "${lifecycleEvent}"');
+			return supportedLifecycleEvents[lifecycleEvent];
+		} 
+		else 
+		{
+			Trace.error('Angular does not have LifecycleEvent "${lifecycleEvent}"');
+			return { };
 		}
-		
-		return convertedEvent;
 	}
 }
