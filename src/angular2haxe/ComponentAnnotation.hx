@@ -15,8 +15,10 @@ limitations under the License.
 */
 package angular2haxe;
 
+import angular2haxe.ComponentConstructorData;
+
 @:native('angular.ComponentAnnotation')
 extern class ComponentAnnotation extends Annotation
 {
-	function new(data : Dynamic);
+	function new(data : ComponentConstructorData);
 }

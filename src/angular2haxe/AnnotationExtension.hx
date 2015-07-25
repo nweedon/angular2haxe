@@ -52,4 +52,16 @@ class AnnotationExtension
 			parameters.push(serviceParameter);
 		}
 	}
+	
+	public static function transformLifecycle(lifecycle : Array<Dynamic>)
+	{
+		// Transform lifecycle values
+		var index : Int = 0;
+		
+		while (index < lifecycle.length)
+		{
+			lifecycle[index] = LifecycleEvent.toAngular(cast(lifecycle[index], String));
+			index++;
+		}
+	}
 }

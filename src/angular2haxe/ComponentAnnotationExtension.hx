@@ -15,6 +15,9 @@ limitations under the License.
 */
 package angular2haxe;
 
+import angular2haxe.ComponentConstructorData;
+import angular2haxe.LifecycleEvent;
+
 class ComponentAnnotationExtension extends AnnotationExtension
 {
 	public function new() 
@@ -22,20 +25,43 @@ class ComponentAnnotationExtension extends AnnotationExtension
 		super();
 	}
 	
-	public static function transform(input : Dynamic, annotations : Array<Dynamic>, parameters : Array<Dynamic>) : Dynamic
+	/**
+	 * Transforms Haxe metadata input into valid Angular 2 annotation data.
+	 * @param	input			- Haxe metadata
+	 * @param	annotations		- annotations static field present in angular component
+	 * @param	parameters		- parameters static field present in angular component
+	 * @return Angular 2 annotation constructor
+	 */
+	public static function transform(input : Dynamic, annotations : Array<Dynamic>, parameters : Array<Dynamic>) : ComponentConstructorData
 	{
+		var output : ComponentConstructorData = new ComponentConstructorData();
+		
+		for (field in Reflect.fields(input))
+		{
+			if (Reflect.hasField(output, field))
+			{
+				Reflect.setField(output, field, Reflect.field(input, field));
+			}
+			else 
+			{
+				Trace.error('ComponentConstructorData does not have field "${field}" and as such this field will be ignored.');
+			}
+		}
+		
 		// Transform appInjector to resolve to the
 		// correct JavaScript classes.
 		if (parameters != null && input.appInjector != null)
 		{
-			AnnotationExtension.parseInjector(parameters, input.appInjector);
+			AnnotationExtension.parseInjector(parameters, output.appInjector);
 		}
 		
 		if (parameters != null && input.viewInjector != null)
 		{
-			AnnotationExtension.parseInjector(parameters, input.viewInjector);
+			AnnotationExtension.parseInjector(parameters, output.viewInjector);
 		}
 		
-		return input;
+		AnnotationExtension.transformLifecycle(output.lifecycle);
+		
+		return output;
 	}
 }

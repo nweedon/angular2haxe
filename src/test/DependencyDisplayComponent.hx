@@ -16,6 +16,7 @@ limitations under the License.
 package test;
 
 import angular2haxe.Angular;
+import angular2haxe.LifecycleEvent;
 import test.Dependency.MyDirective;
 
 /*

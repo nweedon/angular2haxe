@@ -15,25 +15,22 @@ limitations under the License.
 */
 package angular2haxe;
 
-class DirectiveAnnotationExtension extends AnnotationExtension
+class Trace
 {
-	public function new() 
-	{
-		super();
+	private function new() 
+	{		
 	}
 	
-	public static function transform(input : Dynamic, annotations : Array<Dynamic>, parameters : Array<Dynamic>) : Dynamic
+	public static inline function error(info : String)
 	{
-		if (parameters != null && input.hostInjector != null)
+		untyped
 		{
-			AnnotationExtension.parseInjector(parameters, input.hostInjector);
+			console.error(info);
 		}
-		
-		if (Reflect.hasField(input, "lifecycle"))
-		{
-			AnnotationExtension.transformLifecycle(input.lifecycle);
-		}
-		
-		return input;
+	}
+	
+	public static inline function log(info : String)
+	{
+		trace(info);
 	}
 }

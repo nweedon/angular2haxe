@@ -17,6 +17,7 @@ package test;
 
 import angular2haxe.Angular;
 import angular2haxe.EventEmitter;
+import angular2haxe.Trace;
 
 /*
  * Reference:
@@ -30,7 +31,8 @@ import angular2haxe.EventEmitter;
 	selector: '[dependency]',
 	properties: [
 		"id: dependency"
-	]/*,
+	],
+	lifecycle: ["onInit"]/*,
 	host: {
 		// For some reason the key has $__hx__ prepended to it. Need to remove at run-time?
 		"(onmouseenter)": "onMouseEnter($event)"
@@ -45,13 +47,12 @@ class Dependency
 	
     public function new()
     {
-		untyped
-		{
-			setTimeout(function() {
-				console.log('Dependency.hx result:\n' + this);
-			}, 1);
-		}
     }
+	
+	public function onInit()
+	{
+		Trace.log('Dependency.hx result:\n${this}');
+	}
 	
 	public function onMouseEnter(event : Dynamic)
 	{
@@ -74,6 +75,7 @@ class Dependency
  */
 @Directive({ 
 	selector: '[my-directive]',
+	lifecycle: ["onInit"],
 	hostInjector: ["test.Dependency"]
 })
 @:expose
@@ -87,14 +89,14 @@ class MyDirective
     {
 		if (dependency != null)
 		{
-			untyped
-			{
-				setTimeout(function() {
-					this.dependency = dependency;
-				}, 1);
-			}
+			this.dependency = dependency;
 		}
     }
+	
+	public function onInit()
+	{
+		Trace.log('MyDirective Dependency:\n${dependency}');
+	}
 }
 
 @Directive({
@@ -120,7 +122,7 @@ class NgModelDirective
 	
 	public function modelChanged(event : Dynamic)
 	{
-		trace(event);
+		Trace.log(event);
 		ngModelChanged.next(event.target.value);
 	}
 }

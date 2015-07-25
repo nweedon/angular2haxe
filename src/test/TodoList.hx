@@ -15,6 +15,7 @@ limitations under the License.
 */
 package test;
 import angular2haxe.KeyboardEvent;
+import angular2haxe.Trace;
 
 /*
  * Reference:
@@ -22,21 +23,26 @@ import angular2haxe.KeyboardEvent;
  */
 
 @Component({ 
-	selector: 'todo-list'
+	selector: 'todo-list',
+	properties: ["lastValue", "todos"],
+	lifecycle: ["onInit", "onChange", "onAllChangesDone", "onCheck"],
+	changeDetection: "CHECK_ALWAYS"
 })
 @View({ 
 	directives: ["angular.NgFor", "angular.NgIf"],
-	template: '<ul><li *ng-for="#todo of todos">{{ todo }}</li></ul><input #textbox (keyup)="doneTyping($event)"><button (click)="addTodo(textbox.value)">Add Todo</button>',
+	template: 'Last value: {{lastValue}}<ul><li *ng-for="#todo of todos">{{ todo }}</li></ul><input #textbox (keyup)="doneTyping($event)"><button (click)="addTodo(textbox.value)">Add Todo</button>',
 })
 class TodoList
 {
 	private static var annotations : Array<Dynamic> = [];
 	private static var parameters : Array<Dynamic> = [];
 	private var todos : Array<String>;
+	public var lastValue : String = "";
 	
 	public function new() 
 	{
 		todos = ["Eat Breakfast", "Walk Dog", "Breathe"];
+		lastValue = todos[todos.length - 1];
 	}
 	
 	public function doneTyping(event : KeyboardEvent)
@@ -50,6 +56,27 @@ class TodoList
 	
 	public function addTodo(todo : String)
 	{
+		lastValue = todo;
 		todos.push(todo);
+	}
+	
+	public function onInit()
+	{
+		Trace.log('Lifecycle onInit:\n${this}');
+	}
+	
+	public function onCheck()
+	{
+		Trace.log('Lifecycle onCheck');
+	}
+	
+	public function onChange(changes : Dynamic)
+	{
+		Trace.log('Lifecycle onChange: ${changes}');
+	}
+	
+	public function onAllChangesDone()
+	{
+		Trace.log('Lifecycle onAllChangesDone');
 	}
 }

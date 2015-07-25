@@ -37,8 +37,13 @@ Creating components is pretty much the same as it is in ES6/TypeScript, with a f
 
 **Currently tested metadata for @Component annotation:**
 * selector
+* lifecycle ("onInit", "onCheck", "onAllChangesDone")
 * appInjector *(Note: class names must be surrounded in double-quotes)*
 * viewInjector *(Note: class names must be surrounded in double-quotes)*
+* compileChildren
+
+**Implemented but untested metadata for @Component annotation:**
+* lifecycle (onChange, onDestroy)
 
 *Make sure to use the @:expose metadata tag on classes you wish to import!*
 
@@ -72,6 +77,10 @@ Creating a directive is again similar to the way components and views are create
 * selector
 * hostInjector *(Note: class names must be surrounded in double-quotes)*
 * properties
+* lifecycle ("onInit", "onCheck", "onAllChangesDone")
+
+**Implemented but untested metadata for @Directive annotation:**
+* lifecycle (onChange, onDestroy)
 
 ```
 @:expose

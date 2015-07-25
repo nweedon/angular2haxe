@@ -52,7 +52,7 @@ class Application
 			// Only bootstrap once.
 			if (annotations != null && annotations.length == 0)
 			{
-				trace('=> Bootstrapping ${className}');
+				Trace.log('=> Bootstrapping ${className}');
 					
 				for(name in Reflect.fields(anno))
 				{
@@ -74,10 +74,7 @@ class Application
 					}
 					else
 					{
-						untyped
-						{
-							console.error(name + " is not a valid annotation.");
-						}
+						Trace.error(name + " is not a valid annotation.");
 					}
 				}
 				
@@ -86,8 +83,8 @@ class Application
 				{			
 					if (showDataInTrace)
 					{
-						trace('Annotations:\n${annotations}');
-						trace('Parameters:\n${parameters}');
+						Trace.log('Annotations:\n${annotations}');
+						Trace.log('Parameters:\n${parameters}');
 					}
 					
 					if (Reflect.fields(anno).indexOf("Component") >= 0)
@@ -95,15 +92,12 @@ class Application
 						Angular.bootstrap(component);
 					}
 					
-					trace('=> Finished bootstrapping ${className}');
+					Trace.log('=> Finished bootstrapping ${className}');
 				});
 			}
 			else
 			{
-				untyped
-				{
-					console.error(className + " does not have an 'annotations' static variable in its class definition!");
-				}
+				Trace.error('${className} does not have an "annotations" static variable in its class definition!');
 			}
 		}
 	}

@@ -112,6 +112,9 @@ var angular2haxe_Annotation = function(data) {
 };
 $hxClasses["angular2haxe.Annotation"] = angular2haxe_Annotation;
 angular2haxe_Annotation.__name__ = ["angular2haxe","Annotation"];
+angular2haxe_Annotation.prototype = {
+	__class__: angular2haxe_Annotation
+};
 var angular2haxe_AnnotationExtension = function() {
 };
 $hxClasses["angular2haxe.AnnotationExtension"] = angular2haxe_AnnotationExtension;
@@ -138,6 +141,16 @@ angular2haxe_AnnotationExtension.parseServiceParameters = function(injector) {
 angular2haxe_AnnotationExtension.parseInjector = function(parameters,injector) {
 	var serviceParameter = angular2haxe_AnnotationExtension.parseServiceParameters(injector);
 	if(serviceParameter != null && serviceParameter.length > 0) parameters.push(serviceParameter);
+};
+angular2haxe_AnnotationExtension.transformLifecycle = function(lifecycle) {
+	var index = 0;
+	while(index < lifecycle.length) {
+		lifecycle[index] = angular2haxe_LifecycleEvent.toAngular(js_Boot.__cast(lifecycle[index] , String));
+		index++;
+	}
+};
+angular2haxe_AnnotationExtension.prototype = {
+	__class__: angular2haxe_AnnotationExtension
 };
 var angular2haxe_Application = function(components) {
 	this.bootstrap(components);
@@ -189,9 +202,10 @@ angular2haxe_Application.prototype = {
 						console.log("=> Finished bootstrapping " + className[0]);
 					};
 				})(parameters,annotations,className,anno,component));
-			} else console.error(className[0] + " does not have an 'annotations' static variable in its class definition!");
+			} else console.error("" + className[0] + " does not have an \"annotations\" static variable in its class definition!");
 		}
 	}
+	,__class__: angular2haxe_Application
 };
 var angular2haxe_ComponentAnnotationExtension = function() {
 	angular2haxe_AnnotationExtension.call(this);
@@ -199,13 +213,41 @@ var angular2haxe_ComponentAnnotationExtension = function() {
 $hxClasses["angular2haxe.ComponentAnnotationExtension"] = angular2haxe_ComponentAnnotationExtension;
 angular2haxe_ComponentAnnotationExtension.__name__ = ["angular2haxe","ComponentAnnotationExtension"];
 angular2haxe_ComponentAnnotationExtension.transform = function(input,annotations,parameters) {
-	if(parameters != null && input.appInjector != null) angular2haxe_AnnotationExtension.parseInjector(parameters,input.appInjector);
-	if(parameters != null && input.viewInjector != null) angular2haxe_AnnotationExtension.parseInjector(parameters,input.viewInjector);
-	return input;
+	var output = new angular2haxe_ComponentConstructorData();
+	var _g = 0;
+	var _g1 = Reflect.fields(input);
+	while(_g < _g1.length) {
+		var field = _g1[_g];
+		++_g;
+		if(Object.prototype.hasOwnProperty.call(output,field)) Reflect.setField(output,field,Reflect.field(input,field)); else console.error("ComponentConstructorData does not have field \"" + field + "\" and as such this field will be ignored.");
+	}
+	if(parameters != null && input.appInjector != null) angular2haxe_AnnotationExtension.parseInjector(parameters,output.appInjector);
+	if(parameters != null && input.viewInjector != null) angular2haxe_AnnotationExtension.parseInjector(parameters,output.viewInjector);
+	angular2haxe_AnnotationExtension.transformLifecycle(output.lifecycle);
+	return output;
 };
 angular2haxe_ComponentAnnotationExtension.__super__ = angular2haxe_AnnotationExtension;
 angular2haxe_ComponentAnnotationExtension.prototype = $extend(angular2haxe_AnnotationExtension.prototype,{
+	__class__: angular2haxe_ComponentAnnotationExtension
 });
+var angular2haxe_ComponentConstructorData = function() {
+	this.changeDetection = "DEFAULT";
+	this.viewInjector = [];
+	this.appInjector = [];
+	this.compileChildren = true;
+	this.exportAs = "";
+	this.hostInjector = [];
+	this.lifecycle = [];
+	this.host = new haxe_ds_StringMap();
+	this.events = [];
+	this.properties = [];
+	this.selector = "";
+};
+$hxClasses["angular2haxe.ComponentConstructorData"] = angular2haxe_ComponentConstructorData;
+angular2haxe_ComponentConstructorData.__name__ = ["angular2haxe","ComponentConstructorData"];
+angular2haxe_ComponentConstructorData.prototype = {
+	__class__: angular2haxe_ComponentConstructorData
+};
 var angular2haxe_DirectiveAnnotationExtension = function() {
 	angular2haxe_AnnotationExtension.call(this);
 };
@@ -213,10 +255,12 @@ $hxClasses["angular2haxe.DirectiveAnnotationExtension"] = angular2haxe_Directive
 angular2haxe_DirectiveAnnotationExtension.__name__ = ["angular2haxe","DirectiveAnnotationExtension"];
 angular2haxe_DirectiveAnnotationExtension.transform = function(input,annotations,parameters) {
 	if(parameters != null && input.hostInjector != null) angular2haxe_AnnotationExtension.parseInjector(parameters,input.hostInjector);
+	if(Object.prototype.hasOwnProperty.call(input,"lifecycle")) angular2haxe_AnnotationExtension.transformLifecycle(input.lifecycle);
 	return input;
 };
 angular2haxe_DirectiveAnnotationExtension.__super__ = angular2haxe_AnnotationExtension;
 angular2haxe_DirectiveAnnotationExtension.prototype = $extend(angular2haxe_AnnotationExtension.prototype,{
+	__class__: angular2haxe_DirectiveAnnotationExtension
 });
 var angular2haxe_KeyboardEvent = function(typeArg,keyboardEventInitDict) {
 	KeyboardEvent.call(this,typeArg,keyboardEventInitDict);
@@ -225,7 +269,51 @@ $hxClasses["angular2haxe.KeyboardEvent"] = angular2haxe_KeyboardEvent;
 angular2haxe_KeyboardEvent.__name__ = ["angular2haxe","KeyboardEvent"];
 angular2haxe_KeyboardEvent.__super__ = KeyboardEvent;
 angular2haxe_KeyboardEvent.prototype = $extend(KeyboardEvent.prototype,{
+	__class__: angular2haxe_KeyboardEvent
 });
+var angular2haxe_LifecycleEvent = function() {
+};
+$hxClasses["angular2haxe.LifecycleEvent"] = angular2haxe_LifecycleEvent;
+angular2haxe_LifecycleEvent.__name__ = ["angular2haxe","LifecycleEvent"];
+angular2haxe_LifecycleEvent.toAngular = function(lifecycleEvent) {
+	var convertedEvent = { };
+	switch(lifecycleEvent) {
+	case "onChange":
+		convertedEvent = angular.onChange;
+		break;
+	case "onInit":
+		convertedEvent = angular.onInit;
+		break;
+	case "onCheck":
+		convertedEvent = angular.onCheck;
+		break;
+	case "onAllChangesDone":
+		convertedEvent = angular.onAllChangesDone;
+		break;
+	case "onDestroy":
+		convertedEvent = angular.onDestroy;
+		break;
+	default:
+		console.error("Angular does not have LifecycleEvent \"" + lifecycleEvent + "\"");
+	}
+	return convertedEvent;
+};
+angular2haxe_LifecycleEvent.prototype = {
+	__class__: angular2haxe_LifecycleEvent
+};
+var angular2haxe_Trace = function() {
+};
+$hxClasses["angular2haxe.Trace"] = angular2haxe_Trace;
+angular2haxe_Trace.__name__ = ["angular2haxe","Trace"];
+angular2haxe_Trace.error = function(info) {
+	console.error(info);
+};
+angular2haxe_Trace.log = function(info) {
+	console.log(info);
+};
+angular2haxe_Trace.prototype = {
+	__class__: angular2haxe_Trace
+};
 var angular2haxe_ViewAnnotationExtension = function() {
 	angular2haxe_AnnotationExtension.call(this);
 };
@@ -249,6 +337,7 @@ angular2haxe_ViewAnnotationExtension.transform = function(input,annotations,para
 };
 angular2haxe_ViewAnnotationExtension.__super__ = angular2haxe_AnnotationExtension;
 angular2haxe_ViewAnnotationExtension.prototype = $extend(angular2haxe_AnnotationExtension.prototype,{
+	__class__: angular2haxe_ViewAnnotationExtension
 });
 var haxe_IMap = function() { };
 $hxClasses["haxe.IMap"] = haxe_IMap;
@@ -274,6 +363,7 @@ haxe_ds_StringMap.prototype = {
 		if(this.rh == null) return false;
 		return this.rh.hasOwnProperty("$" + key);
 	}
+	,__class__: haxe_ds_StringMap
 };
 var haxe_rtti_Meta = function() { };
 $hxClasses["haxe.rtti.Meta"] = haxe_rtti_Meta;
@@ -295,10 +385,20 @@ $hxClasses["js._Boot.HaxeError"] = js__$Boot_HaxeError;
 js__$Boot_HaxeError.__name__ = ["js","_Boot","HaxeError"];
 js__$Boot_HaxeError.__super__ = Error;
 js__$Boot_HaxeError.prototype = $extend(Error.prototype,{
+	__class__: js__$Boot_HaxeError
 });
 var js_Boot = function() { };
 $hxClasses["js.Boot"] = js_Boot;
 js_Boot.__name__ = ["js","Boot"];
+js_Boot.getClass = function(o) {
+	if((o instanceof Array) && o.__enum__ == null) return Array; else {
+		var cl = o.__class__;
+		if(cl != null) return cl;
+		var name = js_Boot.__nativeClassName(o);
+		if(name != null) return js_Boot.__resolveNativeClass(name);
+		return null;
+	}
+};
 js_Boot.__string_rec = function(o,s) {
 	if(o == null) return "null";
 	if(s.length >= 5) return "<...>";
@@ -367,21 +467,81 @@ js_Boot.__string_rec = function(o,s) {
 		return String(o);
 	}
 };
+js_Boot.__interfLoop = function(cc,cl) {
+	if(cc == null) return false;
+	if(cc == cl) return true;
+	var intf = cc.__interfaces__;
+	if(intf != null) {
+		var _g1 = 0;
+		var _g = intf.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			var i1 = intf[i];
+			if(i1 == cl || js_Boot.__interfLoop(i1,cl)) return true;
+		}
+	}
+	return js_Boot.__interfLoop(cc.__super__,cl);
+};
+js_Boot.__instanceof = function(o,cl) {
+	if(cl == null) return false;
+	switch(cl) {
+	case Int:
+		return (o|0) === o;
+	case Float:
+		return typeof(o) == "number";
+	case Bool:
+		return typeof(o) == "boolean";
+	case String:
+		return typeof(o) == "string";
+	case Array:
+		return (o instanceof Array) && o.__enum__ == null;
+	case Dynamic:
+		return true;
+	default:
+		if(o != null) {
+			if(typeof(cl) == "function") {
+				if(o instanceof cl) return true;
+				if(js_Boot.__interfLoop(js_Boot.getClass(o),cl)) return true;
+			} else if(typeof(cl) == "object" && js_Boot.__isNativeObj(cl)) {
+				if(o instanceof cl) return true;
+			}
+		} else return false;
+		if(cl == Class && o.__name__ != null) return true;
+		if(cl == Enum && o.__ename__ != null) return true;
+		return o.__enum__ == cl;
+	}
+};
+js_Boot.__cast = function(o,t) {
+	if(js_Boot.__instanceof(o,t)) return o; else throw new js__$Boot_HaxeError("Cannot cast " + Std.string(o) + " to " + Std.string(t));
+};
+js_Boot.__nativeClassName = function(o) {
+	var name = js_Boot.__toStr.call(o).slice(8,-1);
+	if(name == "Object" || name == "Function" || name == "Math" || name == "JSON") return null;
+	return name;
+};
+js_Boot.__isNativeObj = function(o) {
+	return js_Boot.__nativeClassName(o) != null;
+};
+js_Boot.__resolveNativeClass = function(name) {
+	return (Function("return typeof " + name + " != \"undefined\" ? " + name + " : null"))();
+};
 var test_ChildComponent = $hx_exports.test.ChildComponent = function() {
 	this.message = "I am the child.";
 };
 $hxClasses["test.ChildComponent"] = test_ChildComponent;
 test_ChildComponent.__name__ = ["test","ChildComponent"];
+test_ChildComponent.prototype = {
+	__class__: test_ChildComponent
+};
 var test_Dependency = $hx_exports.test.Dependency = function() {
-	var _g = this;
-	setTimeout(function() {
-		console.log("Dependency.hx result:\n" + Std.string(_g));
-	},1);
 };
 $hxClasses["test.Dependency"] = test_Dependency;
 test_Dependency.__name__ = ["test","Dependency"];
 test_Dependency.prototype = {
-	onMouseEnter: function(event) {
+	onInit: function() {
+		console.log("Dependency.hx result:\n" + Std.string(this));
+	}
+	,onMouseEnter: function(event) {
 		console.log("onMouseEnter: " + this.id);
 	}
 	,onMouseLeave: function() {
@@ -390,15 +550,19 @@ test_Dependency.prototype = {
 	,onResize: function(event) {
 		console.log("resize " + Std.string(event));
 	}
+	,__class__: test_Dependency
 };
 var test_MyDirective = $hx_exports.test.MyDirective = function(dependency) {
-	var _g = this;
-	if(dependency != null) setTimeout(function() {
-		_g.dependency = dependency;
-	},1);
+	if(dependency != null) this.dependency = dependency;
 };
 $hxClasses["test.MyDirective"] = test_MyDirective;
 test_MyDirective.__name__ = ["test","MyDirective"];
+test_MyDirective.prototype = {
+	onInit: function() {
+		console.log("MyDirective Dependency:\n" + Std.string(this.dependency));
+	}
+	,__class__: test_MyDirective
+};
 var test_NgModelDirective = $hx_exports.test.NgModelDirective = function() {
 	this.ngModelChanged = new angular.EventEmitter();
 	this.ngModel = "";
@@ -407,25 +571,35 @@ $hxClasses["test.NgModelDirective"] = test_NgModelDirective;
 test_NgModelDirective.__name__ = ["test","NgModelDirective"];
 test_NgModelDirective.prototype = {
 	modelChanged: function(event) {
-		console.log(event);
+		angular2haxe_Trace.log(event);
 		this.ngModelChanged.next(event.target.value);
 	}
+	,__class__: test_NgModelDirective
 };
 var test_DependencyDisplayComponent = function() {
 };
 $hxClasses["test.DependencyDisplayComponent"] = test_DependencyDisplayComponent;
 test_DependencyDisplayComponent.__name__ = ["test","DependencyDisplayComponent"];
+test_DependencyDisplayComponent.prototype = {
+	__class__: test_DependencyDisplayComponent
+};
 var test_DisplayComponent = function(friends) {
 	this.myName = "Alice";
 	if(friends != null) this.names = friends.names;
 };
 $hxClasses["test.DisplayComponent"] = test_DisplayComponent;
 test_DisplayComponent.__name__ = ["test","DisplayComponent"];
+test_DisplayComponent.prototype = {
+	__class__: test_DisplayComponent
+};
 var test_FriendsService = $hx_exports.test.FriendsService = function() {
 	this.names = ["Aarav","Martín","Shannon","Ariana","Kai"];
 };
 $hxClasses["test.FriendsService"] = test_FriendsService;
 test_FriendsService.__name__ = ["test","FriendsService"];
+test_FriendsService.prototype = {
+	__class__: test_FriendsService
+};
 var test_Greeter = $hx_exports.test.Greeter = function() {
 };
 $hxClasses["test.Greeter"] = test_Greeter;
@@ -434,24 +608,36 @@ test_Greeter.prototype = {
 	greet: function(name) {
 		return "Hello " + name + "!";
 	}
+	,__class__: test_Greeter
 };
 var test_NeedsGreeter = $hx_exports.test.NeedsGreeter = function(greeter) {
 	this.greeter = greeter;
 };
 $hxClasses["test.NeedsGreeter"] = test_NeedsGreeter;
 test_NeedsGreeter.__name__ = ["test","NeedsGreeter"];
+test_NeedsGreeter.prototype = {
+	__class__: test_NeedsGreeter
+};
 var test_HelloWorld = function(greeter) {
 	this.greeter = greeter;
 };
 $hxClasses["test.HelloWorld"] = test_HelloWorld;
 test_HelloWorld.__name__ = ["test","HelloWorld"];
+test_HelloWorld.prototype = {
+	__class__: test_HelloWorld
+};
 var test_ParentComponent = function() {
 	this.message = "I am the parent.";
 };
 $hxClasses["test.ParentComponent"] = test_ParentComponent;
 test_ParentComponent.__name__ = ["test","ParentComponent"];
+test_ParentComponent.prototype = {
+	__class__: test_ParentComponent
+};
 var test_TodoList = function() {
+	this.lastValue = "";
 	this.todos = ["Eat Breakfast","Walk Dog","Breathe"];
+	this.lastValue = this.todos[this.todos.length - 1];
 };
 $hxClasses["test.TodoList"] = test_TodoList;
 test_TodoList.__name__ = ["test","TodoList"];
@@ -463,24 +649,48 @@ test_TodoList.prototype = {
 		}
 	}
 	,addTodo: function(todo) {
+		this.lastValue = todo;
 		this.todos.push(todo);
 	}
+	,onInit: function() {
+		console.log("Lifecycle onInit:\n" + Std.string(this));
+	}
+	,onCheck: function() {
+		console.log("Lifecycle onCheck");
+	}
+	,onChange: function(changes) {
+		console.log("Lifecycle onChange: " + Std.string(changes));
+	}
+	,onAllChangesDone: function() {
+		console.log("Lifecycle onAllChangesDone");
+	}
+	,__class__: test_TodoList
 };
 if(Array.prototype.indexOf) HxOverrides.indexOf = function(a,o,i) {
 	return Array.prototype.indexOf.call(a,o,i);
 };
 $hxClasses.Math = Math;
+String.prototype.__class__ = $hxClasses.String = String;
 String.__name__ = ["String"];
 $hxClasses.Array = Array;
 Array.__name__ = ["Array"];
+var Int = $hxClasses.Int = { __name__ : ["Int"]};
+var Dynamic = $hxClasses.Dynamic = { __name__ : ["Dynamic"]};
+var Float = $hxClasses.Float = Number;
+Float.__name__ = ["Float"];
+var Bool = Boolean;
+Bool.__ename__ = ["Bool"];
+var Class = $hxClasses.Class = { __name__ : ["Class"]};
+var Enum = { };
 var __map_reserved = {}
+js_Boot.__toStr = {}.toString;
 test_ChildComponent.__meta__ = { obj : { Component : [{ selector : "child"}], View : [{ template : "<p>{{ message }}</p>"}]}};
 test_ChildComponent.annotations = [];
 test_ChildComponent.parameters = [];
-test_Dependency.__meta__ = { obj : { Directive : [{ selector : "[dependency]", properties : ["id: dependency"]}]}};
+test_Dependency.__meta__ = { obj : { Directive : [{ selector : "[dependency]", properties : ["id: dependency"], lifecycle : ["onInit"]}]}};
 test_Dependency.annotations = [];
 test_Dependency.parameters = [];
-test_MyDirective.__meta__ = { obj : { Directive : [{ selector : "[my-directive]", hostInjector : ["test.Dependency"]}]}};
+test_MyDirective.__meta__ = { obj : { Directive : [{ selector : "[my-directive]", lifecycle : ["onInit"], hostInjector : ["test.Dependency"]}]}};
 test_MyDirective.annotations = [];
 test_MyDirective.parameters = [];
 test_NgModelDirective.__meta__ = { obj : { Directive : [{ selector : "[ng-model]", properties : ["ngModel"]}]}};
@@ -503,7 +713,7 @@ test_HelloWorld.parameters = [];
 test_ParentComponent.__meta__ = { obj : { Component : [{ selector : "parent"}], View : [{ directives : ["test.ChildComponent"], template : "<h1>{{ message }}</h1><child></child>"}]}};
 test_ParentComponent.annotations = [];
 test_ParentComponent.parameters = [];
-test_TodoList.__meta__ = { obj : { Component : [{ selector : "todo-list"}], View : [{ directives : ["angular.NgFor","angular.NgIf"], template : "<ul><li *ng-for=\"#todo of todos\">{{ todo }}</li></ul><input #textbox (keyup)=\"doneTyping($event)\"><button (click)=\"addTodo(textbox.value)\">Add Todo</button>"}]}};
+test_TodoList.__meta__ = { obj : { Component : [{ selector : "todo-list", properties : ["lastValue","todos"], lifecycle : ["onInit","onChange","onAllChangesDone","onCheck"], changeDetection : "CHECK_ALWAYS"}], View : [{ directives : ["angular.NgFor","angular.NgIf"], template : "Last value: {{lastValue}}<ul><li *ng-for=\"#todo of todos\">{{ todo }}</li></ul><input #textbox (keyup)=\"doneTyping($event)\"><button (click)=\"addTodo(textbox.value)\">Add Todo</button>"}]}};
 test_TodoList.annotations = [];
 test_TodoList.parameters = [];
 Main.main();
