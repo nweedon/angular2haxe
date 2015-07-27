@@ -3,7 +3,7 @@ Haxe Language Bindings for Angular 2
 
 I plan to expand this readme in the future, but below are a few pieces of info to let you know where I am currently at with the project:
 
-* Currently working with version: alpha.28
+* Currently working with version: alpha.32
 * Heavily work-in-progress, API is subject to change as the Angular 2 API goes through development.
 * View 'bin/index.html' (with a webserver) to see the current examples which work with these language bindings.
 * The Haxe components required are in the 'src/angular2haxe' and 'src/browser' folders.
@@ -38,8 +38,7 @@ Creating components is pretty much the same as it is in ES6/TypeScript, with a f
 **Currently tested metadata for @Component annotation:**
 * selector
 * lifecycle ("onInit", "onCheck", "onAllChangesDone")
-* appInjector *(Note: class names must be surrounded in double-quotes)*
-* viewInjector *(Note: class names must be surrounded in double-quotes)*
+* hostInjector *(Note: class names must be surrounded in double-quotes)*
 * compileChildren
 
 **Implemented but untested metadata for @Component annotation:**
@@ -55,7 +54,7 @@ Creating components is pretty much the same as it is in ES6/TypeScript, with a f
 ```
 @Component({ 
 	selector: 'display',
-	appInjector: ["test.FriendsService"]
+	hostInjector: ["test.FriendsService"]
 })
 @View({ 
 	directives: ["angular.NgFor", "angular.NgIf"],
