@@ -153,6 +153,7 @@ angular2haxe_AnnotationExtension.prototype = {
 	__class__: angular2haxe_AnnotationExtension
 };
 var angular2haxe_Application = function(components) {
+	window.angular = window.ng;
 	this.bootstrap(components);
 };
 $hxClasses["angular2haxe.Application"] = angular2haxe_Application;
@@ -221,8 +222,7 @@ angular2haxe_ComponentAnnotationExtension.transform = function(input,annotations
 		++_g;
 		if(Object.prototype.hasOwnProperty.call(output,field)) Reflect.setField(output,field,Reflect.field(input,field)); else console.error("ComponentConstructorData does not have field \"" + field + "\" and as such this field will be ignored.");
 	}
-	if(parameters != null && input.appInjector != null) angular2haxe_AnnotationExtension.parseInjector(parameters,output.appInjector);
-	if(parameters != null && input.viewInjector != null) angular2haxe_AnnotationExtension.parseInjector(parameters,output.viewInjector);
+	if(parameters != null && input.hostInjector != null) angular2haxe_AnnotationExtension.parseInjector(parameters,output.hostInjector);
 	angular2haxe_AnnotationExtension.transformLifecycle(output.lifecycle);
 	return output;
 };
@@ -232,8 +232,6 @@ angular2haxe_ComponentAnnotationExtension.prototype = $extend(angular2haxe_Annot
 });
 var angular2haxe_ComponentConstructorData = function() {
 	this.changeDetection = "DEFAULT";
-	this.viewInjector = [];
-	this.appInjector = [];
 	this.compileChildren = true;
 	this.exportAs = "";
 	this.hostInjector = [];
@@ -677,11 +675,11 @@ var __map_reserved = {}
 angular2haxe_LifecycleEvent.supportedLifecycleEvents = (function($this) {
 	var $r;
 	var _g = new haxe_ds_StringMap();
-	_g.set("onChange",angular.onChange);
-	_g.set("onInit",angular.onInit);
-	_g.set("onCheck",angular.onCheck);
-	_g.set("onAllChangesDone",angular.onAllChangesDone);
-	_g.set("onDestroy",angular.onDestroy);
+	_g.set("onChange",ng.onChange);
+	_g.set("onInit",ng.onInit);
+	_g.set("onCheck",ng.onCheck);
+	_g.set("onAllChangesDone",ng.onAllChangesDone);
+	_g.set("onDestroy",ng.onDestroy);
 	$r = _g;
 	return $r;
 }(this));
@@ -701,7 +699,7 @@ test_NgModelDirective.parameters = [];
 test_DependencyDisplayComponent.__meta__ = { obj : { Component : [{ selector : "dependency-display", compileChildren : true}], View : [{ directives : ["test.Dependency","test.MyDirective","test.NgModelDirective"], templateUrl : "templates/dependency.tpl.html"}]}};
 test_DependencyDisplayComponent.annotations = [];
 test_DependencyDisplayComponent.parameters = [];
-test_DisplayComponent.__meta__ = { obj : { Component : [{ selector : "display", appInjector : ["test.FriendsService"]}], View : [{ directives : ["angular.NgFor","angular.NgIf"], template : "<p>My name: {{ myName }}</p><p>Friends:</p><ul><li *ng-for=\"#name of names\">{{ name }}</li></ul><p *ng-if=\"names.length > 3\">You have many friends!</p>"}]}};
+test_DisplayComponent.__meta__ = { obj : { Component : [{ selector : "display", hostInjector : ["test.FriendsService"]}], View : [{ directives : ["angular.NgFor","angular.NgIf"], template : "<p>My name: {{ myName }}</p><p>Friends:</p><ul><li *ng-for=\"#name of names\">{{ name }}</li></ul><p *ng-if=\"names.length > 3\">You have many friends!</p>"}]}};
 test_DisplayComponent.annotations = [];
 test_DisplayComponent.parameters = [];
 test_Greeter.annotations = [];
@@ -709,7 +707,7 @@ test_Greeter.parameters = [];
 test_NeedsGreeter.__meta__ = { obj : { Directive : [{ selector : "needs-greeter", hostInjector : ["test.Greeter"]}]}};
 test_NeedsGreeter.annotations = [];
 test_NeedsGreeter.parameters = [];
-test_HelloWorld.__meta__ = { obj : { Component : [{ selector : "greet", viewInjector : ["test.Greeter"]}], View : [{ template : "<needs-greeter>{{ greeter.greet('World') }}</needs-greeter>", directives : ["test.NeedsGreeter"]}]}};
+test_HelloWorld.__meta__ = { obj : { Component : [{ selector : "greet", hostInjector : ["test.Greeter"]}], View : [{ template : "<needs-greeter>{{ greeter.greet('World') }}</needs-greeter>", directives : ["test.NeedsGreeter"]}]}};
 test_HelloWorld.annotations = [];
 test_HelloWorld.parameters = [];
 test_ParentComponent.__meta__ = { obj : { Component : [{ selector : "parent"}], View : [{ directives : ["test.ChildComponent"], template : "<h1>{{ message }}</h1><child></child>"}]}};

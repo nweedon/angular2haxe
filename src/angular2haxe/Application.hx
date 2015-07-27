@@ -22,6 +22,7 @@ class Application
 {
 	public function new(components : Array<Class<Dynamic>>) 
 	{
+		untyped window.angular = window.ng;		
 		bootstrap(components);
 	}
 	

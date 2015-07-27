@@ -50,14 +50,9 @@ class ComponentAnnotationExtension extends AnnotationExtension
 		
 		// Transform appInjector to resolve to the
 		// correct JavaScript classes.
-		if (parameters != null && input.appInjector != null)
+		if (parameters != null && input.hostInjector != null)
 		{
-			AnnotationExtension.parseInjector(parameters, output.appInjector);
-		}
-		
-		if (parameters != null && input.viewInjector != null)
-		{
-			AnnotationExtension.parseInjector(parameters, output.viewInjector);
+			AnnotationExtension.parseInjector(parameters, output.hostInjector);
 		}
 		
 		AnnotationExtension.transformLifecycle(output.lifecycle);

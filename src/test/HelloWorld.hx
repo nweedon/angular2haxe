@@ -21,7 +21,7 @@ package test;
  * 
  * Uses:
  * 		Directive => hostInjector
- * 		Component => viewInjector
+ * 		Component => hostInjector
  */
 
 @:expose
@@ -59,7 +59,7 @@ class NeedsGreeter
 
 @Component({
 	selector: 'greet',
-	viewInjector: [
+	hostInjector: [
 		"test.Greeter"
 	]
 })

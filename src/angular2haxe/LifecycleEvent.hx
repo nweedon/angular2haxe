@@ -18,11 +18,11 @@ package angular2haxe;
 class LifecycleEvent
 {
 	private static var supportedLifecycleEvents : Map<String, Dynamic> = [
-		"onChange" 			=> untyped angular.onChange,
-		"onInit"			=> untyped angular.onInit,
-		"onCheck"			=> untyped angular.onCheck,
-		"onAllChangesDone"	=> untyped angular.onAllChangesDone,
-		"onDestroy"			=> untyped angular.onDestroy
+		"onChange" 			=> untyped ng.onChange,
+		"onInit"			=> untyped ng.onInit,
+		"onCheck"			=> untyped ng.onCheck,
+		"onAllChangesDone"	=> untyped ng.onAllChangesDone,
+		"onDestroy"			=> untyped ng.onDestroy
 	];
 	
 	private function new() { }

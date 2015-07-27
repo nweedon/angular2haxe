@@ -20,43 +20,50 @@ limitations under the License.
 	<title>Angular2-Haxe</title>
 	<meta name="description" content="" />
 	<script src="https://jspm.io/system@0.16.js"></script>
-	<script src="https://code.angularjs.org/2.0.0-alpha.28/angular2.sfx.dev.js"></script>
+	<script src="https://code.angularjs.org/2.0.0-alpha.32/angular2.sfx.dev.js"></script>
 	<link rel="stylesheet" href="css/style.css"/>
 </head>
 <body>
 	<div class="titlebar">
-		<h1>Angular2-Haxe Examples</h1>
+		<img class="haxe-logo" src="img/haxe-logo.png"/>
+		<h3 class="title">Angular2-Haxe Examples</h3>
 	</div>
 	
 	<!-- HelloWorld.hx -->
-	<div>
-		<small>HelloWorld.hx</small>
-		<greet></greet>
+	<div class="examples">
+		<div>
+			<small>HelloWorld.hx</small>
+			<greet></greet>
+		</div>
+		
+		<!-- Dependency.hx and DependencyDisplayComponent.hx -->
+		<div>
+			<small>Dependency.hx and DependencyDisplayComponent.hx</small>
+			<dependency-display></dependency-display>
+		</div>
+		
+		<!-- ParentComponent.hx and ChildComponent.hx -->
+		<div>
+			<small>ParentComponent.hx and ChildComponent.hx</small>
+			<parent></parent>
+		</div>
+		
+		<!-- TodoList.hx -->
+		<div>
+			<small>TodoList.hx</small>
+			<todo-list></todo-list>
+		</div>
+		
+		<!-- DisplayComponent.hx -->
+		<div>
+			<small>DisplayComponent.hx</small>
+			<display></display>
+		</div>
 	</div>
 	
-	<!-- Dependency.hx and DependencyDisplayComponent.hx -->
-	<div>
-		<small>Dependency.hx and DependencyDisplayComponent.hx</small>
-		<dependency-display></dependency-display>
-	</div>
-	
-	<!-- ParentComponent.hx and ChildComponent.hx -->
-	<div>
-		<small>ParentComponent.hx and ChildComponent.hx</small>
-		<parent></parent>
-	</div>
-	
-	<!-- TodoList.hx -->
-	<div>
-		<small>TodoList.hx</small>
-		<todo-list></todo-list>
-	</div>
-	
-	<!-- DisplayComponent.hx -->
-	<div>
-		<small>DisplayComponent.hx</small>
-		<display></display>
-	</div>
+	<footer>
+		<a href="https://github.com/nweedon/Angular2-Haxe" target="_blank">View on GitHub</a> | <a href="https://twitter.com/niall_weedon" target="_blank">Twitter</a>
+	</footer>
 	
 	<script src="Angular2-Haxe.js"></script>
 </body>

@@ -33,8 +33,6 @@ class ComponentConstructorData
 	public var hostInjector		: Array<String>			= [];
 	public var exportAs			: String				= "";
 	public var compileChildren 	: Bool					= true;
-	public var appInjector 		: Array<String>			= [];
-	public var viewInjector 	: Array<String>			= [];
 	public var changeDetection 	: String				= "DEFAULT";
 	
 	public function new() 
