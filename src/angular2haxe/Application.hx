@@ -22,6 +22,8 @@ class Application
 {
 	public function new(components : Array<Class<Dynamic>>) 
 	{
+		// Backwards compatibility. After alpha.28, the window
+		// variable was named 'ng' instead of 'angular'.
 		untyped window.angular = window.ng;		
 		bootstrap(components);
 	}

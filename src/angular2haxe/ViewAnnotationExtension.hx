@@ -15,6 +15,7 @@ limitations under the License.
 */
 package angular2haxe;
 
+import angular2haxe.ViewConstructorData;
 import js.Lib;
 
 class ViewAnnotationExtension extends AnnotationExtension
@@ -24,14 +25,16 @@ class ViewAnnotationExtension extends AnnotationExtension
 		super();
 	}
 	
-	public static function transform(input : Dynamic, annotations : Array<Dynamic>, parameters : Array<Dynamic>) : Dynamic
+	public static function transform(input : Dynamic, annotations : Array<Dynamic>, parameters : Array<Dynamic>) : ViewConstructorData
 	{
+		var output : ViewConstructorData = AnnotationExtension.resolveInputAnnotation(input, ViewConstructorData);
+		
 		// Transform directive names was field[0]
-		if (input.directives != null)
+		if (output.directives != null)
 		{
-			for (directive in Reflect.fields(input.directives))
+			for (directive in Reflect.fields(output.directives))
 			{
-				var directiveName : String = Reflect.field(input.directives, directive);
+				var directiveName : String = Reflect.field(output.directives, directive);
 				
 				if (directiveName != null && directiveName.length > 0)
 				{
@@ -39,10 +42,10 @@ class ViewAnnotationExtension extends AnnotationExtension
 					// valid field characters, so is there even a possibility that a
 					// vulnerability exists?
 					directiveName = StringTools.htmlEscape(directiveName);
-					Reflect.setField(input.directives, directive, Lib.eval(directiveName));
+					Reflect.setField(output.directives, directive, Lib.eval(directiveName));
 				}
 			}
 		}
-		return input;
+		return output;
 	}	
 }

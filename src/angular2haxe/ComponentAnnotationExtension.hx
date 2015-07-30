@@ -34,23 +34,11 @@ class ComponentAnnotationExtension extends AnnotationExtension
 	 */
 	public static function transform(input : Dynamic, annotations : Array<Dynamic>, parameters : Array<Dynamic>) : ComponentConstructorData
 	{
-		var output : ComponentConstructorData = new ComponentConstructorData();
-		
-		for (field in Reflect.fields(input))
-		{
-			if (Reflect.hasField(output, field))
-			{
-				Reflect.setField(output, field, Reflect.field(input, field));
-			}
-			else 
-			{
-				Trace.error('ComponentConstructorData does not have field "${field}" and as such this field will be ignored.');
-			}
-		}
+		var output : ComponentConstructorData = AnnotationExtension.resolveInputAnnotation(input, ComponentConstructorData);	
 		
 		// Transform appInjector to resolve to the
 		// correct JavaScript classes.
-		if (parameters != null && input.hostInjector != null)
+		if (parameters != null && output.hostInjector != null)
 		{
 			AnnotationExtension.parseInjector(parameters, output.hostInjector);
 		}

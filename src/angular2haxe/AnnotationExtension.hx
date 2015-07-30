@@ -24,6 +24,27 @@ class AnnotationExtension
 		return input; 
 	}
 	
+	public static function resolveInputAnnotation<T>(input : Dynamic, outputType : Class<T>) : T
+	{
+		var output : T;
+		
+		output = Type.createInstance(outputType, []);
+		
+		for (field in Reflect.fields(input))
+		{
+			if (Reflect.hasField(output, field))
+			{
+				Reflect.setField(output, field, Reflect.field(input, field));
+			}
+			else 
+			{
+				Trace.error('${Type.getClassName(outputType)} does not have field "${field}" and as such this field will be ignored.');
+			}
+		}
+		
+		return output;
+	}
+	
 	public static function parseServiceParameters(injector : Dynamic) : Array<Dynamic>
 	{
 		var serviceParams : Array<Dynamic> = [];

@@ -122,6 +122,18 @@ angular2haxe_AnnotationExtension.__name__ = ["angular2haxe","AnnotationExtension
 angular2haxe_AnnotationExtension.transform = function(input,annotations,parameters) {
 	return input;
 };
+angular2haxe_AnnotationExtension.resolveInputAnnotation = function(input,outputType) {
+	var output;
+	output = Type.createInstance(outputType,[]);
+	var _g = 0;
+	var _g1 = Reflect.fields(input);
+	while(_g < _g1.length) {
+		var field = _g1[_g];
+		++_g;
+		if(Object.prototype.hasOwnProperty.call(output,field)) Reflect.setField(output,field,Reflect.field(input,field)); else angular2haxe_Trace.error("" + Type.getClassName(outputType) + " does not have field \"" + field + "\" and as such this field will be ignored.");
+	}
+	return output;
+};
 angular2haxe_AnnotationExtension.parseServiceParameters = function(injector) {
 	var serviceParams = [];
 	var _g = 0;
@@ -214,15 +226,8 @@ var angular2haxe_ComponentAnnotationExtension = function() {
 $hxClasses["angular2haxe.ComponentAnnotationExtension"] = angular2haxe_ComponentAnnotationExtension;
 angular2haxe_ComponentAnnotationExtension.__name__ = ["angular2haxe","ComponentAnnotationExtension"];
 angular2haxe_ComponentAnnotationExtension.transform = function(input,annotations,parameters) {
-	var output = new angular2haxe_ComponentConstructorData();
-	var _g = 0;
-	var _g1 = Reflect.fields(input);
-	while(_g < _g1.length) {
-		var field = _g1[_g];
-		++_g;
-		if(Object.prototype.hasOwnProperty.call(output,field)) Reflect.setField(output,field,Reflect.field(input,field)); else console.error("ComponentConstructorData does not have field \"" + field + "\" and as such this field will be ignored.");
-	}
-	if(parameters != null && input.hostInjector != null) angular2haxe_AnnotationExtension.parseInjector(parameters,output.hostInjector);
+	var output = angular2haxe_AnnotationExtension.resolveInputAnnotation(input,angular2haxe_ComponentConstructorData);
+	if(parameters != null && output.hostInjector != null) angular2haxe_AnnotationExtension.parseInjector(parameters,output.hostInjector);
 	angular2haxe_AnnotationExtension.transformLifecycle(output.lifecycle);
 	return output;
 };
@@ -301,25 +306,39 @@ var angular2haxe_ViewAnnotationExtension = function() {
 $hxClasses["angular2haxe.ViewAnnotationExtension"] = angular2haxe_ViewAnnotationExtension;
 angular2haxe_ViewAnnotationExtension.__name__ = ["angular2haxe","ViewAnnotationExtension"];
 angular2haxe_ViewAnnotationExtension.transform = function(input,annotations,parameters) {
-	if(input.directives != null) {
+	var output = angular2haxe_AnnotationExtension.resolveInputAnnotation(input,angular2haxe_ViewConstructorData);
+	if(output.directives != null) {
 		var _g = 0;
-		var _g1 = Reflect.fields(input.directives);
+		var _g1 = Reflect.fields(output.directives);
 		while(_g < _g1.length) {
 			var directive = _g1[_g];
 			++_g;
-			var directiveName = Reflect.field(input.directives,directive);
+			var directiveName = Reflect.field(output.directives,directive);
 			if(directiveName != null && directiveName.length > 0) {
 				directiveName = StringTools.htmlEscape(directiveName);
-				Reflect.setField(input.directives,directive,eval(directiveName));
+				Reflect.setField(output.directives,directive,eval(directiveName));
 			}
 		}
 	}
-	return input;
+	return output;
 };
 angular2haxe_ViewAnnotationExtension.__super__ = angular2haxe_AnnotationExtension;
 angular2haxe_ViewAnnotationExtension.prototype = $extend(angular2haxe_AnnotationExtension.prototype,{
 	__class__: angular2haxe_ViewAnnotationExtension
 });
+var angular2haxe_ViewConstructorData = function() {
+	this.styleUrls = [];
+	this.styles = [];
+	this.renderer = "";
+	this.directives = [];
+	this.template = "";
+	this.templateUrl = "";
+};
+$hxClasses["angular2haxe.ViewConstructorData"] = angular2haxe_ViewConstructorData;
+angular2haxe_ViewConstructorData.__name__ = ["angular2haxe","ViewConstructorData"];
+angular2haxe_ViewConstructorData.prototype = {
+	__class__: angular2haxe_ViewConstructorData
+};
 var haxe_IMap = function() { };
 $hxClasses["haxe.IMap"] = haxe_IMap;
 haxe_IMap.__name__ = ["haxe","IMap"];
@@ -675,11 +694,26 @@ var __map_reserved = {}
 angular2haxe_LifecycleEvent.supportedLifecycleEvents = (function($this) {
 	var $r;
 	var _g = new haxe_ds_StringMap();
-	_g.set("onChange",ng.onChange);
-	_g.set("onInit",ng.onInit);
-	_g.set("onCheck",ng.onCheck);
-	_g.set("onAllChangesDone",ng.onAllChangesDone);
-	_g.set("onDestroy",ng.onDestroy);
+	{
+		var value = ng.LifecycleEvent.onChange;
+		_g.set("onChange",value);
+	}
+	{
+		var value1 = ng.LifecycleEvent.onInit;
+		_g.set("onInit",value1);
+	}
+	{
+		var value2 = ng.onCheck;
+		_g.set("onCheck",value2);
+	}
+	{
+		var value3 = ng.onAllChangesDone;
+		_g.set("onAllChangesDone",value3);
+	}
+	{
+		var value4 = ng.onDestroy;
+		_g.set("onDestroy",value4);
+	}
 	$r = _g;
 	return $r;
 }(this));
