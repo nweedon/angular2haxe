@@ -258,8 +258,19 @@ $hxClasses["angular2haxe.DirectiveAnnotationExtension"] = angular2haxe_Directive
 angular2haxe_DirectiveAnnotationExtension.__name__ = ["angular2haxe","DirectiveAnnotationExtension"];
 angular2haxe_DirectiveAnnotationExtension.transform = function(input,annotations,parameters) {
 	if(input.host != null) {
-		input.host = JSON.parse(input.host);
-		console.log(input.host);
+		var outputHost = { };
+		var _g = 0;
+		var _g1 = Reflect.fields(input.host);
+		while(_g < _g1.length) {
+			var field = _g1[_g];
+			++_g;
+			var index = field.indexOf("@$__hx__");
+			if(index > -1) {
+				var key = field.substring(8);
+				Reflect.setField(outputHost,key,Reflect.field(input.host,field));
+			}
+		}
+		input.host = outputHost;
 	}
 	var output = angular2haxe_AnnotationExtension.resolveInputAnnotation(input,angular2haxe_DirectiveConstructorData);
 	if(parameters != null && output.hostInjector != null) angular2haxe_AnnotationExtension.parseInjector(parameters,output.hostInjector);
@@ -777,7 +788,7 @@ test_NeedsGreeter.parameters = [];
 test_HelloWorld.__meta__ = { obj : { Component : [{ selector : "greet", hostInjector : ["test.Greeter"]}], View : [{ template : "<needs-greeter>{{ greeter.greet('World') }}</needs-greeter>", directives : ["test.NeedsGreeter"]}]}};
 test_HelloWorld.annotations = [];
 test_HelloWorld.parameters = [];
-test_InputDirective.__meta__ = { obj : { Directive : [{ selector : "input", lifecycle : ["onInit"], host : "{ \"(keyup)\" : \"onKeyUp($event)\" }"}]}};
+test_InputDirective.__meta__ = { obj : { Directive : [{ selector : "input", lifecycle : ["onInit"], host : { '@$__hx__(keyup)' : "onKeyUp($event)"}}]}};
 test_InputDirective.annotations = [];
 test_InputDirective.parameters = [];
 test_ParentComponent.__meta__ = { obj : { Component : [{ selector : "parent"}], View : [{ directives : ["test.ChildComponent"], template : "<h1>{{ message }}</h1><child></child>"}]}};

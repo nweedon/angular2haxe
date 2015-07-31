@@ -4,7 +4,9 @@ import angular2haxe.KeyboardEvent;
 @Directive({
 	selector: 'input',
 	lifecycle: ["onInit"],
-	host: '{ "(keyup)" : "onKeyUp($event)" }'
+	host: {
+		'(keyup)' : 'onKeyUp($event)'
+	}
 })
 @:expose
 class InputDirective

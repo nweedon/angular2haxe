@@ -28,12 +28,28 @@ class DirectiveAnnotationExtension extends AnnotationExtension
 	
 	public static function transform(input : Dynamic, annotations : Array<Dynamic>, parameters : Array<Dynamic>) : DirectiveConstructorData
 	{
-		// Update host events. Transform Haxe Object to StringMap
-		// so Angular recognises the events properly.
+		// Update host events. Metadata objects with a string as their
+		// key have '@$__hx__' prefixed to them, so it needs to be removed.
 		if (input.host != null)
 		{
-			input.host = Json.parse(input.host);
-			trace(input.host);
+			var outputHost : Dynamic = { };
+			
+			// Iterate through input.host and strip prefixed
+			// tag from all variables that have it.
+			for (field in Reflect.fields(input.host))
+			{
+				var index : Int = field.indexOf("@$__hx__");
+				
+				if (index > -1) 
+				{
+					// Remove the prepended @$__hx__ and add
+					// it to the new object.
+					var key = field.substring(8);
+					Reflect.setField(outputHost, key, Reflect.field(input.host, field));
+				}
+			}
+			
+			input.host = outputHost;
 		}
 		
 		// Resolve final input.
