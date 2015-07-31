@@ -26,7 +26,7 @@ var Main = function() { };
 $hxClasses["Main"] = Main;
 Main.__name__ = ["Main"];
 Main.main = function() {
-	new angular2haxe_Application([test_DisplayComponent,test_TodoList,test_ParentComponent,test_ChildComponent,test_MyDirective,test_NgModelDirective,test_Dependency,test_DependencyDisplayComponent,test_Greeter,test_NeedsGreeter,test_HelloWorld]);
+	new angular2haxe_Application([test_DisplayComponent,test_TodoList,test_ParentComponent,test_ChildComponent,test_MyDirective,test_NgModelDirective,test_Dependency,test_DependencyDisplayComponent,test_Greeter,test_NeedsGreeter,test_HelloWorld,test_InputDirective]);
 };
 Math.__name__ = ["Math"];
 var Reflect = function() { };
@@ -257,14 +257,34 @@ var angular2haxe_DirectiveAnnotationExtension = function() {
 $hxClasses["angular2haxe.DirectiveAnnotationExtension"] = angular2haxe_DirectiveAnnotationExtension;
 angular2haxe_DirectiveAnnotationExtension.__name__ = ["angular2haxe","DirectiveAnnotationExtension"];
 angular2haxe_DirectiveAnnotationExtension.transform = function(input,annotations,parameters) {
-	if(parameters != null && input.hostInjector != null) angular2haxe_AnnotationExtension.parseInjector(parameters,input.hostInjector);
-	if(Object.prototype.hasOwnProperty.call(input,"lifecycle")) angular2haxe_AnnotationExtension.transformLifecycle(input.lifecycle);
-	return input;
+	if(input.host != null) {
+		input.host = JSON.parse(input.host);
+		console.log(input.host);
+	}
+	var output = angular2haxe_AnnotationExtension.resolveInputAnnotation(input,angular2haxe_DirectiveConstructorData);
+	if(parameters != null && output.hostInjector != null) angular2haxe_AnnotationExtension.parseInjector(parameters,output.hostInjector);
+	if(output.lifecycle != null) angular2haxe_AnnotationExtension.transformLifecycle(output.lifecycle);
+	return output;
 };
 angular2haxe_DirectiveAnnotationExtension.__super__ = angular2haxe_AnnotationExtension;
 angular2haxe_DirectiveAnnotationExtension.prototype = $extend(angular2haxe_AnnotationExtension.prototype,{
 	__class__: angular2haxe_DirectiveAnnotationExtension
 });
+var angular2haxe_DirectiveConstructorData = function() {
+	this.compileChildren = true;
+	this.exportAs = "";
+	this.hostInjector = [];
+	this.lifecycle = [];
+	this.host = { };
+	this.events = [];
+	this.properties = [];
+	this.selector = "";
+};
+$hxClasses["angular2haxe.DirectiveConstructorData"] = angular2haxe_DirectiveConstructorData;
+angular2haxe_DirectiveConstructorData.__name__ = ["angular2haxe","DirectiveConstructorData"];
+angular2haxe_DirectiveConstructorData.prototype = {
+	__class__: angular2haxe_DirectiveConstructorData
+};
 var angular2haxe_KeyboardEvent = function(typeArg,keyboardEventInitDict) {
 	KeyboardEvent.call(this,typeArg,keyboardEventInitDict);
 };
@@ -634,6 +654,19 @@ test_HelloWorld.__name__ = ["test","HelloWorld"];
 test_HelloWorld.prototype = {
 	__class__: test_HelloWorld
 };
+var test_InputDirective = $hx_exports.test.InputDirective = function() {
+};
+$hxClasses["test.InputDirective"] = test_InputDirective;
+test_InputDirective.__name__ = ["test","InputDirective"];
+test_InputDirective.prototype = {
+	onInit: function() {
+		console.log("InputDirective.onInit: " + Std.string(this));
+	}
+	,onKeyUp: function(event) {
+		console.log("You just pressed a key with key code: " + event.keyCode + "!");
+	}
+	,__class__: test_InputDirective
+};
 var test_ParentComponent = function() {
 	this.message = "I am the parent.";
 };
@@ -703,15 +736,15 @@ angular2haxe_LifecycleEvent.supportedLifecycleEvents = (function($this) {
 		_g.set("onInit",value1);
 	}
 	{
-		var value2 = ng.onCheck;
+		var value2 = ng.LifecycleEvent.onCheck;
 		_g.set("onCheck",value2);
 	}
 	{
-		var value3 = ng.onAllChangesDone;
+		var value3 = ng.LifecycleEvent.onAllChangesDone;
 		_g.set("onAllChangesDone",value3);
 	}
 	{
-		var value4 = ng.onDestroy;
+		var value4 = ng.LifecycleEvent.onDestroy;
 		_g.set("onDestroy",value4);
 	}
 	$r = _g;
@@ -744,10 +777,13 @@ test_NeedsGreeter.parameters = [];
 test_HelloWorld.__meta__ = { obj : { Component : [{ selector : "greet", hostInjector : ["test.Greeter"]}], View : [{ template : "<needs-greeter>{{ greeter.greet('World') }}</needs-greeter>", directives : ["test.NeedsGreeter"]}]}};
 test_HelloWorld.annotations = [];
 test_HelloWorld.parameters = [];
+test_InputDirective.__meta__ = { obj : { Directive : [{ selector : "input", lifecycle : ["onInit"], host : "{ \"(keyup)\" : \"onKeyUp($event)\" }"}]}};
+test_InputDirective.annotations = [];
+test_InputDirective.parameters = [];
 test_ParentComponent.__meta__ = { obj : { Component : [{ selector : "parent"}], View : [{ directives : ["test.ChildComponent"], template : "<h1>{{ message }}</h1><child></child>"}]}};
 test_ParentComponent.annotations = [];
 test_ParentComponent.parameters = [];
-test_TodoList.__meta__ = { obj : { Component : [{ selector : "todo-list", properties : ["lastValue","todos"], lifecycle : ["onInit","onChange","onAllChangesDone","onCheck"], changeDetection : "CHECK_ALWAYS"}], View : [{ directives : ["angular.NgFor","angular.NgIf"], template : "Last value: {{lastValue}}<ul><li *ng-for=\"#todo of todos\">{{ todo }}</li></ul><input #textbox (keyup)=\"doneTyping($event)\"><button (click)=\"addTodo(textbox.value)\">Add Todo</button>"}]}};
+test_TodoList.__meta__ = { obj : { Component : [{ selector : "todo-list", properties : ["lastValue","todos"], lifecycle : ["onInit","onChange","onAllChangesDone","onCheck"], changeDetection : "CHECK_ALWAYS"}], View : [{ directives : ["angular.NgFor","angular.NgIf","test.InputDirective"], template : "Last value: {{lastValue}}<ul><li *ng-for=\"#todo of todos\">{{ todo }}</li></ul><input #textbox (keyup)=\"doneTyping($event)\"><button (click)=\"addTodo(textbox.value)\">Add Todo</button>"}]}};
 test_TodoList.annotations = [];
 test_TodoList.parameters = [];
 Main.main();

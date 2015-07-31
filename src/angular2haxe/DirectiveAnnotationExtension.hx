@@ -15,6 +15,10 @@ limitations under the License.
 */
 package angular2haxe;
 
+import angular2haxe.DirectiveConstructorData;
+import haxe.ds.StringMap;
+import haxe.Json;
+
 class DirectiveAnnotationExtension extends AnnotationExtension
 {
 	public function new() 
@@ -22,18 +26,29 @@ class DirectiveAnnotationExtension extends AnnotationExtension
 		super();
 	}
 	
-	public static function transform(input : Dynamic, annotations : Array<Dynamic>, parameters : Array<Dynamic>) : Dynamic
+	public static function transform(input : Dynamic, annotations : Array<Dynamic>, parameters : Array<Dynamic>) : DirectiveConstructorData
 	{
-		if (parameters != null && input.hostInjector != null)
+		// Update host events. Transform Haxe Object to StringMap
+		// so Angular recognises the events properly.
+		if (input.host != null)
 		{
-			AnnotationExtension.parseInjector(parameters, input.hostInjector);
+			input.host = Json.parse(input.host);
+			trace(input.host);
 		}
 		
-		if (Reflect.hasField(input, "lifecycle"))
+		// Resolve final input.
+		var output : DirectiveConstructorData = AnnotationExtension.resolveInputAnnotation(input, DirectiveConstructorData);
+		
+		if (parameters != null && output.hostInjector != null)
 		{
-			AnnotationExtension.transformLifecycle(input.lifecycle);
+			AnnotationExtension.parseInjector(parameters, output.hostInjector);
 		}
 		
-		return input;
+		if (output.lifecycle != null)
+		{
+			AnnotationExtension.transformLifecycle(output.lifecycle);
+		}
+		
+		return output;
 	}
 }

@@ -20,9 +20,9 @@ class LifecycleEvent
 	private static var supportedLifecycleEvents : Map<String, Dynamic> = [
 		"onChange" 			=> untyped __js__('ng.LifecycleEvent.onChange'),
 		"onInit"			=> untyped __js__('ng.LifecycleEvent.onInit'),
-		"onCheck"			=> untyped __js__('ng.onCheck'),
-		"onAllChangesDone"	=> untyped __js__('ng.onAllChangesDone'),
-		"onDestroy"			=> untyped __js__('ng.onDestroy')
+		"onCheck"			=> untyped __js__('ng.LifecycleEvent.onCheck'),
+		"onAllChangesDone"	=> untyped __js__('ng.LifecycleEvent.onAllChangesDone'),
+		"onDestroy"			=> untyped __js__('ng.LifecycleEvent.onDestroy')
 	];
 	
 	private function new() { }

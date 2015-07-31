@@ -23,6 +23,7 @@ import test.DisplayComponent;
 import test.ParentComponent;
 import test.TodoList;
 import test.HelloWorld;
+import test.InputDirective;
 
 class Main
 {
@@ -31,7 +32,7 @@ class Main
 		// Create a new application, bootstrapping the
 		// listed classes in the process.
 		new Application([
-		
+			
 			DisplayComponent,
 			TodoList,
 			ParentComponent,
@@ -48,7 +49,9 @@ class Main
 			// --- HelloWorld.hx ---
 			Greeter,
 			NeedsGreeter,
-			HelloWorld
+			HelloWorld,
+		
+			InputDirective
 			
 		]);
     }

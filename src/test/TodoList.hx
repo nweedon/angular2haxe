@@ -16,6 +16,7 @@ limitations under the License.
 package test;
 import angular2haxe.KeyboardEvent;
 import angular2haxe.Trace;
+import test.InputDirective;
 
 /*
  * Reference:
@@ -29,7 +30,7 @@ import angular2haxe.Trace;
 	changeDetection: "CHECK_ALWAYS"
 })
 @View({ 
-	directives: ["angular.NgFor", "angular.NgIf"],
+	directives: ["angular.NgFor", "angular.NgIf", "test.InputDirective"],
 	template: 'Last value: {{lastValue}}<ul><li *ng-for="#todo of todos">{{ todo }}</li></ul><input #textbox (keyup)="doneTyping($event)"><button (click)="addTodo(textbox.value)">Add Todo</button>',
 })
 class TodoList
