@@ -3,7 +3,7 @@ Haxe Language Bindings for Angular 2
 
 I plan to expand this readme in the future, but below are a few pieces of info to let you know where I am currently at with the project:
 
-* Currently working with version: alpha.32
+* Currently working with version: alpha.33
 * Heavily work-in-progress, API is subject to change as the Angular 2 API goes through development.
 * View 'bin/index.html' (with a webserver) to see the current examples which work with these language bindings.
 * The Haxe components required are in the 'src/angular2haxe' and 'src/browser' folders.
