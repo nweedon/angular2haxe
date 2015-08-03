@@ -11,7 +11,7 @@ I plan to expand this readme in the future, but below are a few pieces of info t
 
 ### Haxelib Installation
 ```
-haxelib install angular2haxe 0.1.0
+haxelib install angular2haxe 0.2.0
 ```
 Also, add ```-lib angular2haxe``` to the build command of your project.
 

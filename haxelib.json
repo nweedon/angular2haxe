@@ -4,9 +4,9 @@
 	"license" : "MIT",
 	"tags" : ["angular", "web", "language bindings"],
 	"description" : "Haxe language bindings for Angular 2",
-	"version" : "0.1.0",
+	"version" : "0.2.0",
 	"classpath" : "angular2haxe/",
-	"releasenote" : "Up to commit 21 on repo, initial Haxelib release.",
+	"releasenote" : "Removed the need to provide annotations and parameters variables explicitly in Angular classes.",
 	"contributors" : ["nweedon"],
 	"dependencies" : { }
 }
