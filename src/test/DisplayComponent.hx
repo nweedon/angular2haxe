@@ -32,8 +32,6 @@ import angular2haxe.Angular;
 })
 class DisplayComponent
 {
-	private static var annotations : Array<Dynamic> = [];
-	private static var parameters : Array<Dynamic> = [];
 	private var myName : String;
 	private var names : Array<String>;
 	

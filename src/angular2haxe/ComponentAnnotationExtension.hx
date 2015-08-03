@@ -30,7 +30,7 @@ class ComponentAnnotationExtension extends AnnotationExtension
 	 * @param	input			- Haxe metadata
 	 * @param	annotations		- annotations static field present in angular component
 	 * @param	parameters		- parameters static field present in angular component
-	 * @return Angular 2 annotation constructor
+	 * @return Angular 2 component annotation constructor
 	 */
 	public static function transform(input : Dynamic, annotations : Array<Dynamic>, parameters : Array<Dynamic>) : ComponentConstructorData
 	{

@@ -35,8 +35,6 @@ import test.InputDirective;
 })
 class TodoList
 {
-	private static var annotations : Array<Dynamic> = [];
-	private static var parameters : Array<Dynamic> = [];
 	private var todos : Array<String>;
 	public var lastValue : String = "";
 	

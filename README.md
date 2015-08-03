@@ -6,7 +6,7 @@ I plan to expand this readme in the future, but below are a few pieces of info t
 * Currently working with version: alpha.33
 * Heavily work-in-progress, API is subject to change as the Angular 2 API goes through development.
 * View 'bin/index.html' (with a webserver) to see the current examples which work with these language bindings.
-* The Haxe components required are in the 'src/angular2haxe' and 'src/browser' folders.
+* The Haxe components required are in the 'src/angular2haxe' folders. Alternatively, install via haxelib.
 * If you want to see the Haxe code which creates Angular 2 components, view 'src/Main.hx' and the code in the 'src/test' folder.
 
 ### Haxelib Installation
@@ -86,9 +86,6 @@ Creating a directive is again similar to the way components and views are create
 @:expose
 class Greeter
 {
-	private static var annotations : Array<Dynamic> = [];
-	private static var parameters : Array<Dynamic> = [];
-	
 	public function new() { }
 	public function greet(name : String)
 	{
@@ -105,8 +102,6 @@ class Greeter
 @:expose
 class NeedsGreeter
 {
-	private static var annotations : Array<Dynamic> = [];
-	private static var parameters : Array<Dynamic> = [];
 	private var greeter : Greeter;
 	
 	public function new(greeter : Greeter)

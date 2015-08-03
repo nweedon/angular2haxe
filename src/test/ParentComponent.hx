@@ -31,8 +31,6 @@ import angular2haxe.Angular;
 })
 class ParentComponent 
 {
-	private static var annotations : Array<Dynamic> = [];
-	private static var parameters : Array<Dynamic> = [];
 	private var message = "I am the parent.";
 	
     public function new()

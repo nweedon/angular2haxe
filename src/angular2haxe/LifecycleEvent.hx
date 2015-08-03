@@ -27,6 +27,12 @@ class LifecycleEvent
 	
 	private function new() { }
 	
+	/**
+	 * Convert string to an Angular Lifecycle object. If the
+	 * object does not exist, null is returned.
+	 * @param	lifecycleEvent	String representing an Angular Lifecycle event (i.e. onInit).
+	 * @return
+	 */
 	public static function toAngular(lifecycleEvent : String) : Dynamic
 	{		
 		if (supportedLifecycleEvents.exists(lifecycleEvent))
@@ -36,7 +42,7 @@ class LifecycleEvent
 		else 
 		{
 			Trace.error('Angular does not have LifecycleEvent "${lifecycleEvent}"');
-			return { };
+			return null;
 		}
 	}
 }

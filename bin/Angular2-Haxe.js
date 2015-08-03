@@ -72,6 +72,9 @@ StringTools.htmlEscape = function(s,quotes) {
 var Type = function() { };
 $hxClasses["Type"] = Type;
 Type.__name__ = ["Type"];
+Type.getClass = function(o) {
+	if(o == null) return null; else return js_Boot.getClass(o);
+};
 Type.getClassName = function(c) {
 	var a = c.__name__;
 	if(a == null) return null;
@@ -130,7 +133,15 @@ angular2haxe_AnnotationExtension.resolveInputAnnotation = function(input,outputT
 	while(_g < _g1.length) {
 		var field = _g1[_g];
 		++_g;
-		if(Object.prototype.hasOwnProperty.call(output,field)) Reflect.setField(output,field,Reflect.field(input,field)); else angular2haxe_Trace.error("" + Type.getClassName(outputType) + " does not have field \"" + field + "\" and as such this field will be ignored.");
+		if(Object.prototype.hasOwnProperty.call(output,field)) {
+			var inputField = Reflect.field(input,field);
+			var outputClass = Type.getClass(Reflect.field(output,field));
+			if(js_Boot.__instanceof(inputField,outputClass) || outputClass == null) Reflect.setField(output,field,Reflect.field(input,field)); else {
+				var inputClassName = Type.getClassName(inputField == null?null:js_Boot.getClass(inputField));
+				var outputClassName = Type.getClassName(outputClass);
+				console.error("Input type of field \"" + field + "\" (" + inputClassName + ") does not match type of output field (" + outputClassName + ").");
+			}
+		} else angular2haxe_Trace.error("" + Type.getClassName(outputType) + " does not have field \"" + field + "\" and as such this field will be ignored.");
 	}
 	return output;
 };
@@ -185,6 +196,8 @@ angular2haxe_Application.prototype = {
 			++_g1;
 			var anno = [haxe_rtti_Meta.getType(component[0])];
 			var className = [Type.getClassName(component[0])];
+			component[0].annotations = [];
+			component[0].parameters = [];
 			var annotations = [Reflect.field(component[0],"annotations")];
 			var parameters = [Reflect.field(component[0],"parameters")];
 			if(annotations[0] != null && annotations[0].length == 0) {
@@ -312,7 +325,7 @@ angular2haxe_LifecycleEvent.__name__ = ["angular2haxe","LifecycleEvent"];
 angular2haxe_LifecycleEvent.toAngular = function(lifecycleEvent) {
 	if(angular2haxe_LifecycleEvent.supportedLifecycleEvents.exists(lifecycleEvent)) return angular2haxe_LifecycleEvent.supportedLifecycleEvents.get(lifecycleEvent); else {
 		console.error("Angular does not have LifecycleEvent \"" + lifecycleEvent + "\"");
-		return { };
+		return null;
 	}
 };
 angular2haxe_LifecycleEvent.prototype = {
@@ -763,40 +776,16 @@ angular2haxe_LifecycleEvent.supportedLifecycleEvents = (function($this) {
 }(this));
 js_Boot.__toStr = {}.toString;
 test_ChildComponent.__meta__ = { obj : { Component : [{ selector : "child"}], View : [{ template : "<p>{{ message }}</p>"}]}};
-test_ChildComponent.annotations = [];
-test_ChildComponent.parameters = [];
 test_Dependency.__meta__ = { obj : { Directive : [{ selector : "[dependency]", properties : ["id: dependency"], lifecycle : ["onInit"]}]}};
-test_Dependency.annotations = [];
-test_Dependency.parameters = [];
 test_MyDirective.__meta__ = { obj : { Directive : [{ selector : "[my-directive]", lifecycle : ["onInit"], hostInjector : ["test.Dependency"]}]}};
-test_MyDirective.annotations = [];
-test_MyDirective.parameters = [];
 test_NgModelDirective.__meta__ = { obj : { Directive : [{ selector : "[ng-model]", properties : ["ngModel"]}]}};
-test_NgModelDirective.annotations = [];
-test_NgModelDirective.parameters = [];
 test_DependencyDisplayComponent.__meta__ = { obj : { Component : [{ selector : "dependency-display", compileChildren : true}], View : [{ directives : ["test.Dependency","test.MyDirective","test.NgModelDirective"], templateUrl : "templates/dependency.tpl.html"}]}};
-test_DependencyDisplayComponent.annotations = [];
-test_DependencyDisplayComponent.parameters = [];
 test_DisplayComponent.__meta__ = { obj : { Component : [{ selector : "display", hostInjector : ["test.FriendsService"]}], View : [{ directives : ["angular.NgFor","angular.NgIf"], template : "<p>My name: {{ myName }}</p><p>Friends:</p><ul><li *ng-for=\"#name of names\">{{ name }}</li></ul><p *ng-if=\"names.length > 3\">You have many friends!</p>"}]}};
-test_DisplayComponent.annotations = [];
-test_DisplayComponent.parameters = [];
-test_Greeter.annotations = [];
-test_Greeter.parameters = [];
 test_NeedsGreeter.__meta__ = { obj : { Directive : [{ selector : "needs-greeter", hostInjector : ["test.Greeter"]}]}};
-test_NeedsGreeter.annotations = [];
-test_NeedsGreeter.parameters = [];
 test_HelloWorld.__meta__ = { obj : { Component : [{ selector : "greet", hostInjector : ["test.Greeter"]}], View : [{ template : "<needs-greeter>{{ greeter.greet('World') }}</needs-greeter>", directives : ["test.NeedsGreeter"]}]}};
-test_HelloWorld.annotations = [];
-test_HelloWorld.parameters = [];
 test_InputDirective.__meta__ = { obj : { Directive : [{ selector : "input", lifecycle : ["onInit"], host : { '@$__hx__(keyup)' : "onKeyUp($event)"}}]}};
-test_InputDirective.annotations = [];
-test_InputDirective.parameters = [];
 test_ParentComponent.__meta__ = { obj : { Component : [{ selector : "parent"}], View : [{ directives : ["test.ChildComponent"], template : "<h1>{{ message }}</h1><child></child>"}]}};
-test_ParentComponent.annotations = [];
-test_ParentComponent.parameters = [];
 test_TodoList.__meta__ = { obj : { Component : [{ selector : "todo-list", properties : ["lastValue","todos"], lifecycle : ["onInit","onChange","onAllChangesDone","onCheck"], changeDetection : "CHECK_ALWAYS"}], View : [{ directives : ["angular.NgFor","angular.NgIf","test.InputDirective"], template : "Last value: {{lastValue}}<ul><li *ng-for=\"#todo of todos\">{{ todo }}</li></ul><input #textbox (keyup)=\"doneTyping($event)\"><button (click)=\"addTodo(textbox.value)\">Add Todo</button>"}]}};
-test_TodoList.annotations = [];
-test_TodoList.parameters = [];
 Main.main();
 })(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : exports);
 

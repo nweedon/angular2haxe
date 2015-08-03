@@ -26,10 +26,7 @@ package test;
 
 @:expose
 class Greeter
-{
-	private static var annotations : Array<Dynamic> = [];
-	private static var parameters : Array<Dynamic> = [];
-	
+{	
 	public function new() { }
 	public function greet(name : String)
 	{
@@ -46,9 +43,6 @@ class Greeter
 @:expose
 class NeedsGreeter
 {
-	private static var annotations : Array<Dynamic> = [];
-	private static var parameters : Array<Dynamic> = [];
-	
 	private var greeter : Greeter;
 	
 	public function new(greeter : Greeter)
@@ -69,8 +63,6 @@ class NeedsGreeter
 })
 class HelloWorld
 {
-	private static var annotations : Array<Dynamic> = [];
-	private static var parameters : Array<Dynamic> = [];
 	private var greeter : Greeter;
 	
 	public function new(greeter : Greeter) 

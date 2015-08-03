@@ -33,10 +33,7 @@ import test.Dependency.MyDirective;
 	templateUrl: "templates/dependency.tpl.html"
 })
 class DependencyDisplayComponent
-{
-	private static var annotations : Array<Dynamic> = [];
-	private static var parameters : Array<Dynamic> = [];
-	
+{	
     public function new()
     {
     }

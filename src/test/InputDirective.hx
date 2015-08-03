@@ -11,9 +11,6 @@ import angular2haxe.KeyboardEvent;
 @:expose
 class InputDirective
 {
-	private static var annotations : Array<Dynamic> = [];
-	private static var parameters : Array<Dynamic> = [];
-	
 	public function new() 
 	{
 		

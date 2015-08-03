@@ -31,8 +31,6 @@ import angular2haxe.Angular;
 @:expose
 class ChildComponent
 {
-	private static var annotations : Array<Dynamic> = [];
-	private static var parameters : Array<Dynamic> = [];
 	private var message = "I am the child.";
 	
     public function new()

@@ -48,6 +48,12 @@ class Application
 		{
 			var anno = Meta.getType(component);			
 			var className = Type.getClassName(component);
+			
+			// Create 'annotations' and 'parameters' fields, so they don't have
+			// to be added by a developer every time a new class is created.
+			Reflect.setField(component, "annotations", []);
+			Reflect.setField(component, "parameters", []);
+			
 			// Get the annotation and parameters fields from the component class.
 			var annotations : Array<Dynamic> = Reflect.field(component, "annotations");
 			var parameters : Array<Dynamic> = Reflect.field(component, "parameters");

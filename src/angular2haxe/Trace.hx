@@ -21,6 +21,10 @@ class Trace
 	{		
 	}
 	
+	/**
+	 * Feed string to console.error
+	 * @param	info 	String to display as an error.
+	 */
 	public static inline function error(info : String)
 	{
 		untyped
@@ -29,6 +33,10 @@ class Trace
 		}
 	}
 	
+	/**
+	 * Feed string to console.log
+	 * @param	info	String to display as a log message.
+	 */
 	public static inline function log(info : String)
 	{
 		trace(info);

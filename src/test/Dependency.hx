@@ -32,17 +32,11 @@ import angular2haxe.Trace;
 	properties: [
 		"id: dependency"
 	],
-	lifecycle: ["onInit"]/*,
-	host: {
-		// For some reason the key has $__hx__ prepended to it. Need to remove at run-time?
-		"(onmouseenter)": "onMouseEnter($event)"
-	}*/
+	lifecycle: ["onInit"]
 })
 @:expose
 class Dependency
 {
-	private static var annotations : Array<Dynamic> = [];
-	private static var parameters : Array<Dynamic> = [];
 	public var id : String;
 	
     public function new()
@@ -81,8 +75,6 @@ class Dependency
 @:expose
 class MyDirective
 {
-	private static var annotations : Array<Dynamic> = [];
-	private static var parameters : Array<Dynamic> = [];
 	private var dependency : Dependency;
 	
     public function new(?dependency : Dependency)
@@ -101,18 +93,11 @@ class MyDirective
 
 @Directive({
 	selector: '[ng-model]',
-	properties: ['ngModel']/*,
-	events: ['ngModelChanged: ngModel'],
-	host: {
-		"[value]": 'ngModel',
-		"(input)": "modelChanged($event)"
-	}*/
+	properties: ['ngModel']
 })
 @:expose
 class NgModelDirective
 {
-	private static var annotations : Array<Dynamic> = [];
-	private static var parameters : Array<Dynamic> = [];
 	private var ngModel : String = "";
 	private var ngModelChanged : EventEmitter = new EventEmitter();
 	

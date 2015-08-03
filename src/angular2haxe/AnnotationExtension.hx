@@ -18,12 +18,18 @@ package angular2haxe;
 class AnnotationExtension
 {
 	private function new() { }
+	
 	// Intended to be overridden in child class
 	public static function transform(input : Dynamic, annotations : Array<Dynamic>, parameters : Array<Dynamic>) : Dynamic 
 	{ 
 		return input; 
 	}
 	
+	/**
+	 * Resolve Haxe metadata input to the form Angular
+	 * expects, checking that the fields are of the 
+	 * correct type.
+	 */
 	public static function resolveInputAnnotation<T>(input : Dynamic, outputType : Class<T>) : T
 	{
 		var output : T;
@@ -34,7 +40,20 @@ class AnnotationExtension
 		{
 			if (Reflect.hasField(output, field))
 			{
-				Reflect.setField(output, field, Reflect.field(input, field));
+				var inputField = Reflect.field(input, field);
+				var outputClass = Type.getClass(Reflect.field(output, field));
+				
+				// If outputClass is null, the output class is most likely Dynamic
+				if (Std.is(inputField, outputClass) || outputClass == null)
+				{
+					Reflect.setField(output, field, Reflect.field(input, field));
+				} 
+				else 
+				{
+					var inputClassName : String = Type.getClassName(Type.getClass(inputField));
+					var outputClassName : String = Type.getClassName(outputClass);
+					Trace.error('Input type of field "${field}" (${inputClassName}) does not match type of output field (${outputClassName}).');
+				}
 			}
 			else 
 			{
@@ -45,7 +64,14 @@ class AnnotationExtension
 		return output;
 	}
 	
-	public static function parseServiceParameters(injector : Dynamic) : Array<Dynamic>
+	/**
+	 * Parse annotation injectors to be used in the Angular, resolving
+	 * strings to their respective class/type.
+	 * service parameters.
+	 * @param	injector	Annotation injector variable (i.e. hostInjector).
+	 * @return
+	 */
+	private static function parseServiceParameters(injector : Dynamic) : Array<Dynamic>
 	{
 		var serviceParams : Array<Dynamic> = [];
 		
@@ -64,7 +90,13 @@ class AnnotationExtension
 		return serviceParams;
 	}
 	
-	public static function parseInjector(parameters : Array<Dynamic>, injector : Array<Dynamic>)
+	/**
+	 * Parses an annotation injector variable. Most of the work in this instance is
+	 * deferred to AnnotationExtension.parseServiceParameters.
+	 * @param	parameters	Static variable of the same name located in an Angular class.
+	 * @param	injector 	The injector variable to parse.
+	 */
+	private static function parseInjector(parameters : Array<Dynamic>, injector : Array<Dynamic>)
 	{
 		var serviceParameter : Array<Dynamic> = parseServiceParameters(injector);
 		
@@ -74,7 +106,12 @@ class AnnotationExtension
 		}
 	}
 	
-	public static function transformLifecycle(lifecycle : Array<Dynamic>)
+	/**
+	 * Transform lifecycle variable names (String) to Angular
+	 * lifecycle variables (JS Object).
+	 * @param	lifecycle
+	 */
+	private static function transformLifecycle(lifecycle : Array<Dynamic>)
 	{
 		// Transform lifecycle values
 		var index : Int = 0;
