@@ -11,8 +11,9 @@ I plan to expand this readme in the future, but below are a few pieces of info t
 
 ### Haxelib Installation
 ```
-Coming soon!
+haxelib install angular2haxe 0.1.0
 ```
+Also, add ```-lib angular2haxe``` to the build command of your project.
 
 ### Creating an application
 Creating an application this way allows you to import and bootstrap all of your components with ease. All data transformation (from Haxe metadata to Angular annotations) is done under the hood! (See 'src/Main.hx').

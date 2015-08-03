@@ -1,0 +1,13 @@
+{
+	"name" : "angular2haxe",
+	"url" : "https://github.com/nweedon/Angular2-Haxe",
+	"license" : "MIT",
+	"tags" : ["angular", "web", "language bindings"],
+	"description" : "Haxe language bindings for Angular 2",
+	"version" : "0.1.0",
+	"classpath" : "angular2haxe/",
+	"releasenote" : "Up to commit 21 on repo, initial Haxelib release.",
+	"contributors" : ["nweedon"],
+	"dependencies" : { }
+}
+	
