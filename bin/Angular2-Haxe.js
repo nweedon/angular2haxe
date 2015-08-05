@@ -168,7 +168,7 @@ angular2haxe_AnnotationExtension.parseInjector = function(parameters,injector) {
 angular2haxe_AnnotationExtension.transformLifecycle = function(lifecycle) {
 	var index = 0;
 	while(index < lifecycle.length) {
-		lifecycle[index] = angular2haxe_LifecycleEvent.toAngular(js_Boot.__cast(lifecycle[index] , String));
+		lifecycle[index] = angular2haxe_LifecycleEventExtension.toAngular(js_Boot.__cast(lifecycle[index] , String));
 		index++;
 	}
 };
@@ -195,40 +195,43 @@ angular2haxe_Application.prototype = {
 			var component = [components[_g1]];
 			++_g1;
 			var anno = [haxe_rtti_Meta.getType(component[0])];
-			var className = [Type.getClassName(component[0])];
-			component[0].annotations = [];
-			component[0].parameters = [];
-			var annotations = [Reflect.field(component[0],"annotations")];
-			var parameters = [Reflect.field(component[0],"parameters")];
-			if(annotations[0] != null && annotations[0].length == 0) {
-				console.log("=> Bootstrapping " + className[0]);
-				var _g2 = 0;
-				var _g3 = Reflect.fields(anno[0]);
-				while(_g2 < _g3.length) {
-					var name = _g3[_g2];
-					++_g2;
-					if(__map_reserved[name] != null?validAnnotations.existsReserved(name):validAnnotations.h.hasOwnProperty(name)) {
-						var field = Reflect.field(anno[0],name);
-						Reflect.callMethod((__map_reserved[name] != null?validAnnotations.getReserved(name):validAnnotations.h[name]).extension,Reflect.field((__map_reserved[name] != null?validAnnotations.getReserved(name):validAnnotations.h[name]).extension,"transform"),[field[0],annotations[0],parameters[0]]);
-						annotations[0].push(Type.createInstance((__map_reserved[name] != null?validAnnotations.getReserved(name):validAnnotations.h[name]).annotation,[field[0]]));
-					} else console.error(name + " is not a valid annotation.");
-				}
-				window.document.addEventListener("DOMContentLoaded",(function(parameters,annotations,className,anno,component) {
-					return function() {
-						if(showDataInTrace) {
-							console.log("Annotations:\n" + Std.string(annotations[0]));
-							console.log("Parameters:\n" + Std.string(parameters[0]));
-						}
-						if((function($this) {
-							var $r;
-							var _this = Reflect.fields(anno[0]);
-							$r = HxOverrides.indexOf(_this,"Component",0);
-							return $r;
-						}(this)) >= 0) angular.bootstrap(component[0]);
-						console.log("=> Finished bootstrapping " + className[0]);
-					};
-				})(parameters,annotations,className,anno,component));
-			} else console.error("" + className[0] + " does not have an \"annotations\" static variable in its class definition!");
+			var className = Type.getClassName(component[0]);
+			if((function($this) {
+				var $r;
+				var _this = Reflect.fields(component[0]);
+				$r = HxOverrides.indexOf(_this,"__alreadyConstructed",0);
+				return $r;
+			}(this)) > -1) console.warn("WARNING: " + className + " is using experimental :build annotation feature."); else {
+				component[0].annotations = [];
+				component[0].parameters = [];
+				var annotations = Reflect.field(component[0],"annotations");
+				var parameters = Reflect.field(component[0],"parameters");
+				if(annotations != null && annotations.length == 0) {
+					var _g2 = 0;
+					var _g3 = Reflect.fields(anno[0]);
+					while(_g2 < _g3.length) {
+						var name = _g3[_g2];
+						++_g2;
+						if(__map_reserved[name] != null?validAnnotations.existsReserved(name):validAnnotations.h.hasOwnProperty(name)) {
+							var field = Reflect.field(anno[0],name);
+							Reflect.callMethod((__map_reserved[name] != null?validAnnotations.getReserved(name):validAnnotations.h[name]).extension,Reflect.field((__map_reserved[name] != null?validAnnotations.getReserved(name):validAnnotations.h[name]).extension,"transform"),[field[0],annotations,parameters]);
+							annotations.push(Type.createInstance((__map_reserved[name] != null?validAnnotations.getReserved(name):validAnnotations.h[name]).annotation,[field[0]]));
+						} else console.error(name + " is not a valid annotation.");
+					}
+					if(showDataInTrace) null;
+				} else console.error("" + className + " does not have an \"annotations\" static variable in its class definition!");
+			}
+			window.document.addEventListener("DOMContentLoaded",(function(anno,component) {
+				return function() {
+					if((function($this) {
+						var $r;
+						var _this1 = Reflect.fields(anno[0]);
+						$r = HxOverrides.indexOf(_this1,"Component",0);
+						return $r;
+					}(this)) >= 0) angular.bootstrap(component[0]);
+					null;
+				};
+			})(anno,component));
 		}
 	}
 	,__class__: angular2haxe_Application
@@ -318,18 +321,36 @@ angular2haxe_KeyboardEvent.__super__ = KeyboardEvent;
 angular2haxe_KeyboardEvent.prototype = $extend(KeyboardEvent.prototype,{
 	__class__: angular2haxe_KeyboardEvent
 });
-var angular2haxe_LifecycleEvent = function() {
+var angular2haxe_LifecycleEventExtension = function() {
 };
-$hxClasses["angular2haxe.LifecycleEvent"] = angular2haxe_LifecycleEvent;
-angular2haxe_LifecycleEvent.__name__ = ["angular2haxe","LifecycleEvent"];
-angular2haxe_LifecycleEvent.toAngular = function(lifecycleEvent) {
-	if(angular2haxe_LifecycleEvent.supportedLifecycleEvents.exists(lifecycleEvent)) return angular2haxe_LifecycleEvent.supportedLifecycleEvents.get(lifecycleEvent); else {
+$hxClasses["angular2haxe.LifecycleEventExtension"] = angular2haxe_LifecycleEventExtension;
+angular2haxe_LifecycleEventExtension.__name__ = ["angular2haxe","LifecycleEventExtension"];
+angular2haxe_LifecycleEventExtension.init = function() {
+	if(!angular2haxe_LifecycleEventExtension.initialised) {
+		var _g = new haxe_ds_StringMap();
+		var value = ng.LifecycleEvent.onChange;
+		_g.set("onChange",value);
+		var value1 = ng.LifecycleEvent.onInit;
+		_g.set("onInit",value1);
+		var value2 = ng.LifecycleEvent.onCheck;
+		_g.set("onCheck",value2);
+		var value3 = ng.LifecycleEvent.onAllChangesDone;
+		_g.set("onAllChangesDone",value3);
+		var value4 = ng.LifecycleEvent.onDestroy;
+		_g.set("onDestroy",value4);
+		angular2haxe_LifecycleEventExtension.supportedLifecycleEvents = _g;
+		angular2haxe_LifecycleEventExtension.initialised = true;
+	}
+};
+angular2haxe_LifecycleEventExtension.toAngular = function(lifecycleEvent) {
+	angular2haxe_LifecycleEventExtension.init();
+	if(angular2haxe_LifecycleEventExtension.supportedLifecycleEvents.exists(lifecycleEvent)) return angular2haxe_LifecycleEventExtension.supportedLifecycleEvents.get(lifecycleEvent); else {
 		console.error("Angular does not have LifecycleEvent \"" + lifecycleEvent + "\"");
 		return null;
 	}
 };
-angular2haxe_LifecycleEvent.prototype = {
-	__class__: angular2haxe_LifecycleEvent
+angular2haxe_LifecycleEventExtension.prototype = {
+	__class__: angular2haxe_LifecycleEventExtension
 };
 var angular2haxe_Trace = function() {
 };
@@ -338,8 +359,10 @@ angular2haxe_Trace.__name__ = ["angular2haxe","Trace"];
 angular2haxe_Trace.error = function(info) {
 	console.error(info);
 };
+angular2haxe_Trace.warning = function(info) {
+	console.warn(info);
+};
 angular2haxe_Trace.log = function(info) {
-	console.log(info);
 };
 angular2haxe_Trace.prototype = {
 	__class__: angular2haxe_Trace
@@ -591,7 +614,7 @@ $hxClasses["test.Dependency"] = test_Dependency;
 test_Dependency.__name__ = ["test","Dependency"];
 test_Dependency.prototype = {
 	onInit: function() {
-		console.log("Dependency.hx result:\n" + Std.string(this));
+		null;
 	}
 	,onMouseEnter: function(event) {
 		console.log("onMouseEnter: " + this.id);
@@ -611,7 +634,7 @@ $hxClasses["test.MyDirective"] = test_MyDirective;
 test_MyDirective.__name__ = ["test","MyDirective"];
 test_MyDirective.prototype = {
 	onInit: function() {
-		console.log("MyDirective Dependency:\n" + Std.string(this.dependency));
+		null;
 	}
 	,__class__: test_MyDirective
 };
@@ -670,8 +693,9 @@ test_NeedsGreeter.__name__ = ["test","NeedsGreeter"];
 test_NeedsGreeter.prototype = {
 	__class__: test_NeedsGreeter
 };
-var test_HelloWorld = function(greeter) {
+var test_HelloWorld = $hx_exports.test.HelloWorld = function(greeter) {
 	this.greeter = greeter;
+	console.log(this);
 };
 $hxClasses["test.HelloWorld"] = test_HelloWorld;
 test_HelloWorld.__name__ = ["test","HelloWorld"];
@@ -718,16 +742,16 @@ test_TodoList.prototype = {
 		this.todos.push(todo);
 	}
 	,onInit: function() {
-		console.log("Lifecycle onInit:\n" + Std.string(this));
+		null;
 	}
 	,onCheck: function() {
-		console.log("Lifecycle onCheck");
+		null;
 	}
 	,onChange: function(changes) {
-		console.log("Lifecycle onChange: " + Std.string(changes));
+		null;
 	}
 	,onAllChangesDone: function() {
-		console.log("Lifecycle onAllChangesDone");
+		null;
 	}
 	,__class__: test_TodoList
 };
@@ -748,32 +772,7 @@ Bool.__ename__ = ["Bool"];
 var Class = $hxClasses.Class = { __name__ : ["Class"]};
 var Enum = { };
 var __map_reserved = {}
-angular2haxe_LifecycleEvent.supportedLifecycleEvents = (function($this) {
-	var $r;
-	var _g = new haxe_ds_StringMap();
-	{
-		var value = ng.LifecycleEvent.onChange;
-		_g.set("onChange",value);
-	}
-	{
-		var value1 = ng.LifecycleEvent.onInit;
-		_g.set("onInit",value1);
-	}
-	{
-		var value2 = ng.LifecycleEvent.onCheck;
-		_g.set("onCheck",value2);
-	}
-	{
-		var value3 = ng.LifecycleEvent.onAllChangesDone;
-		_g.set("onAllChangesDone",value3);
-	}
-	{
-		var value4 = ng.LifecycleEvent.onDestroy;
-		_g.set("onDestroy",value4);
-	}
-	$r = _g;
-	return $r;
-}(this));
+angular2haxe_LifecycleEventExtension.initialised = false;
 js_Boot.__toStr = {}.toString;
 test_ChildComponent.__meta__ = { obj : { Component : [{ selector : "child"}], View : [{ template : "<p>{{ message }}</p>"}]}};
 test_Dependency.__meta__ = { obj : { Directive : [{ selector : "[dependency]", properties : ["id: dependency"], lifecycle : ["onInit"]}]}};
@@ -783,6 +782,9 @@ test_DependencyDisplayComponent.__meta__ = { obj : { Component : [{ selector : "
 test_DisplayComponent.__meta__ = { obj : { Component : [{ selector : "display", hostInjector : ["test.FriendsService"]}], View : [{ directives : ["angular.NgFor","angular.NgIf"], template : "<p>My name: {{ myName }}</p><p>Friends:</p><ul><li *ng-for=\"#name of names\">{{ name }}</li></ul><p *ng-if=\"names.length > 3\">You have many friends!</p>"}]}};
 test_NeedsGreeter.__meta__ = { obj : { Directive : [{ selector : "needs-greeter", hostInjector : ["test.Greeter"]}]}};
 test_HelloWorld.__meta__ = { obj : { Component : [{ selector : "greet", hostInjector : ["test.Greeter"]}], View : [{ template : "<needs-greeter>{{ greeter.greet('World') }}</needs-greeter>", directives : ["test.NeedsGreeter"]}]}};
+test_HelloWorld.annotations = test_HelloWorld.annotations;
+test_HelloWorld.parameters = test_HelloWorld.parameters;
+test_HelloWorld.__alreadyConstructed = true;
 test_InputDirective.__meta__ = { obj : { Directive : [{ selector : "input", lifecycle : ["onInit"], host : { '@$__hx__(keyup)' : "onKeyUp($event)"}}]}};
 test_ParentComponent.__meta__ = { obj : { Component : [{ selector : "parent"}], View : [{ directives : ["test.ChildComponent"], template : "<h1>{{ message }}</h1><child></child>"}]}};
 test_TodoList.__meta__ = { obj : { Component : [{ selector : "todo-list", properties : ["lastValue","todos"], lifecycle : ["onInit","onChange","onAllChangesDone","onCheck"], changeDetection : "CHECK_ALWAYS"}], View : [{ directives : ["angular.NgFor","angular.NgIf","test.InputDirective"], template : "Last value: {{lastValue}}<ul><li *ng-for=\"#todo of todos\">{{ todo }}</li></ul><input #textbox (keyup)=\"doneTyping($event)\"><button (click)=\"addTodo(textbox.value)\">Add Todo</button>"}]}};

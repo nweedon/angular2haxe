@@ -61,6 +61,8 @@ class NeedsGreeter
 	template: "<needs-greeter>{{ greeter.greet('World') }}</needs-greeter>",
 	directives: ["test.NeedsGreeter"]
 })
+@:build(angular2haxe.AnnotationExtension.compile())
+@:expose
 class HelloWorld
 {
 	private var greeter : Greeter;
@@ -68,5 +70,6 @@ class HelloWorld
 	public function new(greeter : Greeter) 
 	{
 		this.greeter = greeter;
+		trace(this);
 	}
 }

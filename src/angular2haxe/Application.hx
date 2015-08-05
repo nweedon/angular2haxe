@@ -49,65 +49,72 @@ class Application
 			var anno = Meta.getType(component);			
 			var className = Type.getClassName(component);
 			
-			// Create 'annotations' and 'parameters' fields, so they don't have
-			// to be added by a developer every time a new class is created.
-			Reflect.setField(component, "annotations", []);
-			Reflect.setField(component, "parameters", []);
-			
-			// Get the annotation and parameters fields from the component class.
-			var annotations : Array<Dynamic> = Reflect.field(component, "annotations");
-			var parameters : Array<Dynamic> = Reflect.field(component, "parameters");
-			
-			// Only bootstrap once.
-			if (annotations != null && annotations.length == 0)
+			if (Reflect.fields(component).indexOf('__alreadyConstructed') > -1)
 			{
-				Trace.log('=> Bootstrapping ${className}');
-					
-				for(name in Reflect.fields(anno))
-				{
-					if (validAnnotations.exists(name))
-					{
-						var field = Reflect.field(anno, name);
-						
-						// Call AnnotationExtension transform function. This transform
-						// function takes Haxe metadata input and transforms it into the
-						// data that Angular 2 expects.
-						// For example, Haxe metadata only handles constants (no class names),
-						// so the string representations of the class names must be transformed into
-						// JavaScript classes/functions at runtime.
-						Reflect.callMethod(validAnnotations[name].extension, 
-											Reflect.field(validAnnotations[name].extension, "transform"), 
-											[field[0], annotations, parameters]);
-												
-						annotations.push(Type.createInstance(validAnnotations[name].annotation, [field[0]]));
-					}
-					else
-					{
-						Trace.error(name + " is not a valid annotation.");
-					}
-				}
+				Trace.warning('WARNING: ${className} is using experimental :build annotation feature.');
+			}
+			else
+			{
+				// Create 'annotations' and 'parameters' fields, so they don't have
+				// to be added by a developer every time a new class is created.
+				Reflect.setField(component, "annotations", []);
+				Reflect.setField(component, "parameters", []);
 				
-				// Add event listener for Angular Bootstrap
-				js.Browser.document.addEventListener("DOMContentLoaded", function()
-				{			
+				// Get the annotation and parameters fields from the component class.
+				var annotations : Array<Dynamic> = Reflect.field(component, "annotations");
+				var parameters : Array<Dynamic> = Reflect.field(component, "parameters");
+				
+				// Only bootstrap once.
+				if (annotations != null && annotations.length == 0)
+				{
+					Trace.log('=> Bootstrapping ${className}');
+						
+					for(name in Reflect.fields(anno))
+					{
+						if (validAnnotations.exists(name))
+						{
+							var field = Reflect.field(anno, name);
+							
+							// Call AnnotationExtension transform function. This transform
+							// function takes Haxe metadata input and transforms it into the
+							// data that Angular 2 expects.
+							// For example, Haxe metadata only handles constants (no class names),
+							// so the string representations of the class names must be transformed into
+							// JavaScript classes/functions at runtime.
+							Reflect.callMethod(validAnnotations[name].extension, 
+												Reflect.field(validAnnotations[name].extension, "transform"), 
+												[field[0], annotations, parameters]);
+													
+							annotations.push(Type.createInstance(validAnnotations[name].annotation, [field[0]]));
+						}
+						else
+						{
+							Trace.error(name + " is not a valid annotation.");
+						}
+					}
+					
 					if (showDataInTrace)
 					{
 						Trace.log('Annotations:\n${annotations}');
 						Trace.log('Parameters:\n${parameters}');
 					}
-					
-					if (Reflect.fields(anno).indexOf("Component") >= 0)
-					{
-						Angular.bootstrap(component);
-					}
-					
-					Trace.log('=> Finished bootstrapping ${className}');
-				});
+				}
+				else
+				{
+					Trace.error('${className} does not have an "annotations" static variable in its class definition!');
+				}
 			}
-			else
-			{
-				Trace.error('${className} does not have an "annotations" static variable in its class definition!');
-			}
+			
+			// Add event listener for Angular Bootstrap
+			js.Browser.document.addEventListener("DOMContentLoaded", function()
+			{				
+				if (Reflect.fields(anno).indexOf("Component") >= 0)
+				{
+					Angular.bootstrap(component);
+				}
+				
+				Trace.log('=> Finished bootstrapping ${className}');
+			});
 		}
 	}
 }

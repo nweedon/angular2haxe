@@ -33,12 +33,20 @@ class Trace
 		}
 	}
 	
+	public static inline function warning(info : String)
+	{
+		untyped
+		{
+			console.warn(info);
+		}
+	}
+	
 	/**
 	 * Feed string to console.log
 	 * @param	info	String to display as a log message.
 	 */
 	public static inline function log(info : String)
 	{
-		trace(info);
+		//trace(info);
 	}
 }

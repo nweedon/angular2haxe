@@ -15,6 +15,11 @@ limitations under the License.
 */
 package angular2haxe;
 
+import haxe.macro.Context;
+import haxe.macro.Expr;
+import haxe.macro.ExprTools;
+import haxe.macro.Type.ClassType;
+
 class AnnotationExtension
 {
 	private function new() { }
@@ -65,6 +70,118 @@ class AnnotationExtension
 	}
 	
 	/**
+	 * Compile data at build-time rather than run-time.
+	 * @return
+	 */
+	macro static public function compile() : Array<Field>
+	{
+		var attachedClass : ClassType = Context.getLocalClass().get();
+		var attachedMetadata : Metadata = attachedClass.meta.get();
+		var fields : Array<Field> = Context.getBuildFields();
+				
+		for (meta in attachedMetadata) 
+		{
+			if (["Component", "Directive", "View"].indexOf(meta.name) > -1)
+			{
+				var data : Dynamic = { };
+				//trace(meta.name);
+				
+				for (param in meta.params)
+				{
+					//trace(param.expr.getParameters()[0][0].field);
+					var params : Array<Dynamic> = param.expr.getParameters()[0];
+					var i : Int = 0;
+					
+					// Cast all annotation values at build-time into values
+					// we can work with.
+					for (paramNames in params)
+					{
+						var e : Expr = params[i].expr;
+						var fieldValue : Dynamic;
+						//trace(e);
+						// { expr => EConst(CString(greet)), pos => #pos(src/test/HelloWorld.hx:55: characters 11-18) }
+
+						// Cast field values into values that can be worked with.
+						fieldValue = switch(e.expr) 
+						{
+							case EConst(CString(s)): s;
+							case EArrayDecl(a) : a;
+							case _: e.expr;
+						}
+						
+						// If the field value is an array, all values inside
+						// the array must also be converted.
+						if (Std.is(fieldValue, Array))
+						{
+							var array : Array<Dynamic> = fieldValue;
+							var j : Int = 0;
+								
+							for (value in array)
+							{
+								value = switch(value.expr)
+								{
+									case EConst(CString(s)): s;
+									case _: e.expr;
+								}
+								
+								array[j] = value;
+								j++;
+							}
+						}
+						
+						Reflect.setField(data, paramNames.field, fieldValue);
+						i++;
+					}
+				}
+				
+				//trace(data);
+				//trace(fields);				
+			}
+		}
+		
+		// Set default values for annotations and parameters fields.
+		var annotations : Array<Dynamic> = [];
+		var parameters : Array<Dynamic> = [];
+		
+		// Parse data into annotations and parameters arrays.
+		// Cannot use pre-existing functions currently, possibly
+		// convert from scratch?
+		
+		// Create annotations and parameters fields
+		fields.push({
+			name: 'annotations',
+			doc: null,
+			meta: [],
+			access: [AStatic, APublic],
+			//kind: FVar(macro : Array<Dynamic>, macro [new angular2haxe.ComponentAnnotation(new angular2haxe.ComponentConstructorData())]),
+			kind: FVar(macro : Array<Dynamic>, macro annotations),
+			pos: Context.currentPos()
+		});
+		
+		fields.push({
+			name: 'parameters',
+			doc: null,
+			meta: [],
+			access: [AStatic, APublic],
+			kind: FVar(macro : Array<Dynamic>, macro parameters),
+			pos: Context.currentPos()
+		});
+		
+		// Create field to note that the class has been
+		// constructed at build-time.
+		fields.push({
+			name: '__alreadyConstructed',
+			doc: null,
+			meta: [],
+			access: [AStatic, APublic],
+			kind: FVar(macro : Bool, macro true),
+			pos: Context.currentPos()
+		});
+		
+		return fields;
+	}
+	
+	/**
 	 * Parse annotation injectors to be used in the Angular, resolving
 	 * strings to their respective class/type.
 	 * service parameters.
@@ -78,7 +195,7 @@ class AnnotationExtension
 		for (app in Reflect.fields(injector))
 		{
 			var appName : String = Reflect.field(injector, app);
-			
+			trace(appName);
 			if (appName != null && appName.length > 0)
 			{
 				var cl = Type.resolveClass(appName);
@@ -118,7 +235,7 @@ class AnnotationExtension
 		
 		while (index < lifecycle.length)
 		{
-			lifecycle[index] = LifecycleEvent.toAngular(cast(lifecycle[index], String));
+			lifecycle[index] = LifecycleEventExtension.toAngular(cast(lifecycle[index], String));
 			index++;
 		}
 	}
