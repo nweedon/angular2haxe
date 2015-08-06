@@ -15,20 +15,17 @@ limitations under the License.
 */
 package angular2haxe;
 
-/**
- * Reference: 
- * 		https://angular.io/docs/js/latest/api/annotations/ViewAnnotation-class.html
- */
-class ViewConstructorData
+class AngularExtension
 {
-	public var templateUrl	: String			= "";
-	public var template		: String			= "";
-	public var directives	: Array<Dynamic>	= [];
-	public var renderer		: String			= "";
-	public var styles		: Array<String>		= [];
-	public var styleUrls	: Array<String>		= [];
+	private function new() { }
 	
-	public function new() 
-	{ 
+	public static function getAngularClasses() : Map<String, Dynamic>
+	{
+		var angularClasses : Map<String, Dynamic> = [
+			"NgFor" => NgFor,
+			"NgIf" 	=> NgIf
+		];
+	
+		return angularClasses;
 	}
 }

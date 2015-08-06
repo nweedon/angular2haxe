@@ -16,19 +16,16 @@ limitations under the License.
 package angular2haxe;
 
 /**
- * Reference: 
- * 		https://angular.io/docs/js/latest/api/annotations/ViewAnnotation-class.html
+ * ...
+ * @author Niall Weedon, Lewis Weedon, Jon Langford, Will Hurst, Ben Beagley, Matt Higgins
  */
-class ViewConstructorData
+@:native('ng.NgFor')
+extern class NgFor
 {
-	public var templateUrl	: String			= "";
-	public var template		: String			= "";
-	public var directives	: Array<Dynamic>	= [];
-	public var renderer		: String			= "";
-	public var styles		: Array<String>		= [];
-	public var styleUrls	: Array<String>		= [];
-	
-	public function new() 
-	{ 
+	// TODO: Original Constructor
+	// viewContainer: ViewContainerRef, templateRef: TemplateRef, pipes: Pipes, cdr: ChangeDetectorRef
+	public function new(viewContainer : Dynamic, templateRef : Dynamic, pipes : Dynamic, cdr : Dynamic) 
+	{
+		
 	}
 }

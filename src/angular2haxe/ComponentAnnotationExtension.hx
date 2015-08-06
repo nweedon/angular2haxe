@@ -44,7 +44,6 @@ class ComponentAnnotationExtension extends AnnotationExtension
 		}
 		
 		AnnotationExtension.transformLifecycle(output.lifecycle);
-		
 		return output;
 	}
 }

@@ -15,20 +15,13 @@ limitations under the License.
 */
 package angular2haxe;
 
-/**
- * Reference: 
- * 		https://angular.io/docs/js/latest/api/annotations/ViewAnnotation-class.html
- */
-class ViewConstructorData
+@:native('ng.NgIf')
+extern class NgIf
 {
-	public var templateUrl	: String			= "";
-	public var template		: String			= "";
-	public var directives	: Array<Dynamic>	= [];
-	public var renderer		: String			= "";
-	public var styles		: Array<String>		= [];
-	public var styleUrls	: Array<String>		= [];
-	
-	public function new() 
-	{ 
+	// TODO: Original Constructor
+	// viewContainer: ViewContainerRef, templateRef: TemplateRef
+	public function new(viewContainer : Dynamic, templateRef : Dynamic) 
+	{
+		
 	}
 }

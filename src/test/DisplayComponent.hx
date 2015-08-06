@@ -27,7 +27,7 @@ import angular2haxe.Angular;
 	hostInjector: ["test.FriendsService"]
 })
 @View({ 
-	directives: ["angular.NgFor", "angular.NgIf"],
+	directives: ["NgFor", "NgIf"],
 	template: '<p>My name: {{ myName }}</p><p>Friends:</p><ul><li *ng-for="#name of names">{{ name }}</li></ul><p *ng-if="names.length > 3">You have many friends!</p>'
 })
 class DisplayComponent

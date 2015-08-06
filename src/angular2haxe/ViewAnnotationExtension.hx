@@ -16,7 +16,7 @@ limitations under the License.
 package angular2haxe;
 
 import angular2haxe.ViewConstructorData;
-import js.Lib;
+import angular2haxe.AngularExtension;
 
 class ViewAnnotationExtension extends AnnotationExtension
 {
@@ -35,22 +35,45 @@ class ViewAnnotationExtension extends AnnotationExtension
 	public static function transform(input : Dynamic, annotations : Array<Dynamic>, parameters : Array<Dynamic>) : ViewConstructorData
 	{
 		var output : ViewConstructorData = AnnotationExtension.resolveInputAnnotation(input, ViewConstructorData);
+		var index : Int = 0;
 		
 		// Transform directive names was field[0]
 		if (output.directives != null)
 		{
-			for (directive in Reflect.fields(output.directives))
+			for (directive in output.directives)
 			{
-				var directiveName : String = Reflect.field(output.directives, directive);
-				
-				if (directiveName != null && directiveName.length > 0)
+				if (directive != null && directive.length > 0)
 				{
 					// Possible issue using eval here? The field has to exist using
 					// valid field characters, so is there even a possibility that a
 					// vulnerability exists?
-					directiveName = StringTools.htmlEscape(directiveName);
-					Reflect.setField(output.directives, directive, Lib.eval(directiveName));
+					directive = StringTools.htmlEscape(directive);
+					
+					// extern classes won't resolve
+					var resolvedClass = Type.resolveClass(directive);
+					
+					if (resolvedClass != null)
+					{
+						output.directives[index] = resolvedClass;
+					}
+					else
+					{
+						var angularClasses = AngularExtension.getAngularClasses();
+						
+						if (angularClasses.exists(directive))
+						{
+							output.directives[index] = angularClasses[directive];
+						} 
+						else
+						{
+							#if !macro
+							Trace.error('The definition for ${directive} does not exist!');
+							#end
+						}
+					}
 				}
+				
+				index++;
 			}
 		}
 		return output;

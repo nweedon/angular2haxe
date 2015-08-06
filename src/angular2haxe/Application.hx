@@ -19,12 +19,12 @@ import haxe.rtti.Meta;
 import js.Lib;
 
 class Application
-{
+{	
 	public function new(components : Array<Class<Dynamic>>) 
 	{
 		// Backwards compatibility. After alpha.28, the window
 		// variable was named 'ng' instead of 'angular'.
-		untyped window.angular = window.ng;		
+		untyped window.angular = window.ng;
 		bootstrap(components);
 	}
 	
@@ -84,7 +84,7 @@ class Application
 							Reflect.callMethod(validAnnotations[name].extension, 
 												Reflect.field(validAnnotations[name].extension, "transform"), 
 												[field[0], annotations, parameters]);
-													
+							
 							annotations.push(Type.createInstance(validAnnotations[name].annotation, [field[0]]));
 						}
 						else

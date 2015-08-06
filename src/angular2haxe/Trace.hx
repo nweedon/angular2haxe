@@ -47,6 +47,6 @@ class Trace
 	 */
 	public static inline function log(info : String)
 	{
-		//trace(info);
+		trace(info);
 	}
 }

@@ -15,6 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import angular2haxe.Angular;
 import angular2haxe.Application;
 import test.ChildComponent;
 import test.Dependency;

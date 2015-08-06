@@ -18,6 +18,7 @@ package angular2haxe;
 import haxe.macro.Context;
 import haxe.macro.Expr;
 import haxe.macro.ExprTools;
+import haxe.macro.Type in MType;
 import haxe.macro.Type.ClassType;
 
 class AnnotationExtension
@@ -78,17 +79,27 @@ class AnnotationExtension
 		var attachedClass : ClassType = Context.getLocalClass().get();
 		var attachedMetadata : Metadata = attachedClass.meta.get();
 		var fields : Array<Field> = Context.getBuildFields();
-				
+		var validAnnotations : Map<String, AnnotationPair> = [
+			"Component" => { annotation: ComponentAnnotation, extension: ComponentAnnotationExtension },
+			"Directive" => { annotation: DirectiveAnnotation, extension: DirectiveAnnotationExtension },
+			"View" 		=> { annotation: ViewAnnotation, extension: ViewAnnotationExtension },
+		];
+		
+		//trace(Context.getType("test.Greeter"));
+		
+		// Set default values for annotations and parameters fields.
+		var annotations : Array<Dynamic> = [];
+		var parameters : Array<Dynamic> = [];
+		
 		for (meta in attachedMetadata) 
 		{
 			if (["Component", "Directive", "View"].indexOf(meta.name) > -1)
 			{
 				var data : Dynamic = { };
-				//trace(meta.name);
+				var annotationName : String = meta.name;
 				
 				for (param in meta.params)
 				{
-					//trace(param.expr.getParameters()[0][0].field);
 					var params : Array<Dynamic> = param.expr.getParameters()[0];
 					var i : Int = 0;
 					
@@ -115,7 +126,7 @@ class AnnotationExtension
 						{
 							var array : Array<Dynamic> = fieldValue;
 							var j : Int = 0;
-								
+							
 							for (value in array)
 							{
 								value = switch(value.expr)
@@ -127,6 +138,8 @@ class AnnotationExtension
 								array[j] = value;
 								j++;
 							}
+							
+							fieldValue = array;
 						}
 						
 						Reflect.setField(data, paramNames.field, fieldValue);
@@ -134,18 +147,19 @@ class AnnotationExtension
 					}
 				}
 				
-				//trace(data);
-				//trace(fields);				
+				trace('@${annotationName}(${data})');
+				//trace(fields);
+				
+				Reflect.callMethod(validAnnotations[annotationName].extension, 
+									Reflect.field(validAnnotations[annotationName].extension, "transform"), 
+									[data, annotations, parameters]);
+												
+				// annotations.push(Type.createInstance(validAnnotations[name].annotation, [field[0]]));
+				
+				trace('annotations => ${annotations}');
+				trace('parameters => ${parameters}');
 			}
 		}
-		
-		// Set default values for annotations and parameters fields.
-		var annotations : Array<Dynamic> = [];
-		var parameters : Array<Dynamic> = [];
-		
-		// Parse data into annotations and parameters arrays.
-		// Cannot use pre-existing functions currently, possibly
-		// convert from scratch?
 		
 		// Create annotations and parameters fields
 		fields.push({
@@ -154,7 +168,7 @@ class AnnotationExtension
 			meta: [],
 			access: [AStatic, APublic],
 			//kind: FVar(macro : Array<Dynamic>, macro [new angular2haxe.ComponentAnnotation(new angular2haxe.ComponentConstructorData())]),
-			kind: FVar(macro : Array<Dynamic>, macro annotations),
+			kind: FVar(macro : Array<Dynamic>, Context.makeExpr(annotations, Context.currentPos())),
 			pos: Context.currentPos()
 		});
 		
@@ -163,7 +177,7 @@ class AnnotationExtension
 			doc: null,
 			meta: [],
 			access: [AStatic, APublic],
-			kind: FVar(macro : Array<Dynamic>, macro parameters),
+			kind: FVar(macro : Array<Dynamic>, Context.makeExpr(parameters, Context.currentPos())),
 			pos: Context.currentPos()
 		});
 		
@@ -188,22 +202,28 @@ class AnnotationExtension
 	 * @param	injector	Annotation injector variable (i.e. hostInjector).
 	 * @return
 	 */
-	private static function parseServiceParameters(injector : Dynamic) : Array<Dynamic>
+	private static function parseServiceParameters(injector : Array<Dynamic>) : Array<Dynamic>
 	{
 		var serviceParams : Array<Dynamic> = [];
+		var index : Int = 0;
 		
-		for (app in Reflect.fields(injector))
+		for (app in injector)
 		{
-			var appName : String = Reflect.field(injector, app);
-			trace(appName);
-			if (appName != null && appName.length > 0)
+			if (app != null && app.length > 0)
 			{
-				var cl = Type.resolveClass(appName);
+				// Resolves to null in macro
+				#if !macro
+					var cl = Type.resolveClass(app);
+				#else
+					var cl = Context.toComplexType(Context.getType(app));
+				#end
+				
 				serviceParams.push(cl);
-				Reflect.setField(injector, app, cl);
+				injector[index] = cl;
 			}
+			
+			index++;
 		}
-		
 		return serviceParams;
 	}
 	
