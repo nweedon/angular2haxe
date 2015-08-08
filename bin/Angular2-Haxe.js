@@ -434,7 +434,7 @@ var angular2haxe_ViewAnnotationExtension = function() {
 $hxClasses["angular2haxe.ViewAnnotationExtension"] = angular2haxe_ViewAnnotationExtension;
 angular2haxe_ViewAnnotationExtension.__name__ = ["angular2haxe","ViewAnnotationExtension"];
 angular2haxe_ViewAnnotationExtension.transform = function(input,annotations,parameters) {
-	var output = angular2haxe_AnnotationExtension.resolveInputAnnotation(input,angular2haxe_ViewConstructorData);
+	var output = angular2haxe_AnnotationExtension.resolveInputAnnotation(input,ng_ViewConstructorData);
 	var index = 0;
 	if(output.directives != null) {
 		var _g = 0;
@@ -474,19 +474,6 @@ angular2haxe_ViewAnnotationExtension.__super__ = angular2haxe_AnnotationExtensio
 angular2haxe_ViewAnnotationExtension.prototype = $extend(angular2haxe_AnnotationExtension.prototype,{
 	__class__: angular2haxe_ViewAnnotationExtension
 });
-var angular2haxe_ViewConstructorData = function() {
-	this.styleUrls = [];
-	this.styles = [];
-	this.renderer = "";
-	this.directives = [];
-	this.template = "";
-	this.templateUrl = "";
-};
-$hxClasses["angular2haxe.ViewConstructorData"] = angular2haxe_ViewConstructorData;
-angular2haxe_ViewConstructorData.__name__ = ["angular2haxe","ViewConstructorData"];
-angular2haxe_ViewConstructorData.prototype = {
-	__class__: angular2haxe_ViewConstructorData
-};
 var angular2haxe_buildplugin_BuildPlugin = function() {
 };
 $hxClasses["angular2haxe.buildplugin.BuildPlugin"] = angular2haxe_buildplugin_BuildPlugin;
@@ -850,6 +837,19 @@ $hxClasses["ng.DirectiveConstructorData"] = ng_DirectiveConstructorData;
 ng_DirectiveConstructorData.__name__ = ["ng","DirectiveConstructorData"];
 ng_DirectiveConstructorData.prototype = {
 	__class__: ng_DirectiveConstructorData
+};
+var ng_ViewConstructorData = function() {
+	this.styleUrls = [];
+	this.styles = [];
+	this.renderer = "";
+	this.directives = [];
+	this.template = "";
+	this.templateUrl = "";
+};
+$hxClasses["ng.ViewConstructorData"] = ng_ViewConstructorData;
+ng_ViewConstructorData.__name__ = ["ng","ViewConstructorData"];
+ng_ViewConstructorData.prototype = {
+	__class__: ng_ViewConstructorData
 };
 var test_ChildComponent = $hx_exports.test.ChildComponent = function() {
 	this.message = "I am the child.";

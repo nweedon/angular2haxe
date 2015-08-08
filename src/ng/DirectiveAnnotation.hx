@@ -19,5 +19,5 @@ import angular2haxe.Annotation;
 @:native('ng.DirectiveAnnotation')
 extern class DirectiveAnnotation extends Annotation
 {
-	function new(data : Dynamic);
+	function new(data : DirectiveConstructorData);
 }
