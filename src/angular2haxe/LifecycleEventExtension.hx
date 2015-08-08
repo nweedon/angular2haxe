@@ -15,7 +15,11 @@ limitations under the License.
 */
 package angular2haxe;
 
-import angular2haxe.LifecycleEvent;
+import ng.LifecycleEvent;
+
+#if macro
+import haxe.macro.Context;
+#end
 
 class LifecycleEventExtension
 {
@@ -48,16 +52,20 @@ class LifecycleEventExtension
 	 */
 	public static function toAngular(lifecycleEvent : String) : Dynamic
 	{
-		init();
-		
-		if (supportedLifecycleEvents.exists(lifecycleEvent))
-		{
-			return supportedLifecycleEvents[lifecycleEvent];
-		} 
-		else 
-		{
-			Trace.error('Angular does not have LifecycleEvent "${lifecycleEvent}"');
-			return null;
-		}
+		#if !macro
+			init();
+			
+			if (supportedLifecycleEvents.exists(lifecycleEvent))
+			{
+				return supportedLifecycleEvents[lifecycleEvent];
+			} 
+			else 
+			{
+				Trace.error('Angular does not have LifecycleEvent "${lifecycleEvent}"');
+				return lifecycleEvent;
+			}
+		#else
+			return lifecycleEvent;
+		#end
 	}
 }

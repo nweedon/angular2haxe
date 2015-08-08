@@ -13,33 +13,31 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package test;
-import angular2haxe.KeyboardEvent;
+package testcompile;
 
-@Directive({
-	selector: 'input',
-	lifecycle: ["onInit"],
-	host: {
-		'(keyup)' : 'onKeyUp($event)'
-	}
+import ng.Angular;
+import ng.LifecycleEvent;
+import test.Dependency.MyDirective;
+
+/*
+ * Reference:
+ * https://angular.io/docs/js/latest/guide/displaying-data.html
+ */
+
+@Component({ 
+	selector: 'c-dependency-display',
+	compileChildren: true
 })
-@:expose
-class InputDirective
-{
-	public function new() 
-	{
-		
-	}
-	
+@View({ 
+	directives: ["testcompile.Dependency", "testcompile.MyDirective", "testcompile.NgModelDirective"],
+	templateUrl: "templates/dependency.tpl.html"
+})
 #if !macro
-	public function onInit()
-	{
-		trace('InputDirective.onInit: ${this}');
-	}
-	
-	public function onKeyUp(event : KeyboardEvent)
-	{
-		trace('You just pressed a key with key code: ${event.keyCode}!');
-	}
+@:build(angular2haxe.buildplugin.BuildPlugin.compile())
 #end
+class DependencyDisplayComponent
+{	
+    public function new()
+    {
+    }
 }

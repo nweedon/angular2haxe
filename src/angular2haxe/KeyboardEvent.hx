@@ -29,5 +29,8 @@ class KeyboardEvent extends js.html.KeyboardEvent
 	}	
 }
 #else
-class KeyboardEvent { }
+class KeyboardEvent 
+{
+	
+}
 #end

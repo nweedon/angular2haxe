@@ -13,12 +13,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package angular2haxe;
+package ng;
 
-/**
- * ...
- * @author Niall Weedon, Lewis Weedon, Jon Langford, Will Hurst, Ben Beagley, Matt Higgins
- */
 @:native('ng.NgFor')
 extern class NgFor
 {

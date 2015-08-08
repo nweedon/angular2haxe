@@ -17,6 +17,10 @@ package angular2haxe;
 
 import haxe.rtti.Meta;
 import js.Lib;
+import ng.Angular;
+import ng.ComponentAnnotation;
+import ng.DirectiveAnnotation;
+import ng.ViewAnnotation;
 
 class Application
 {	
@@ -52,6 +56,31 @@ class Application
 			if (Reflect.fields(component).indexOf('__alreadyConstructed') > -1)
 			{
 				Trace.warning('WARNING: ${className} is using experimental :build annotation feature.');
+				
+				// Parse Angular Object in annotations field. This has to be done
+				// at runtime as all Angular Objects are external and do not resolve
+				// at compile-time.
+				var annotations : Array<Dynamic> = Reflect.field(component, "annotations");
+				
+				if (annotations != null)
+				{
+					// Annotations are built in the order:
+					// Component, View, Directive (see BuildPlugin.hx)
+					var metaNames : Array<String> = ["Component", "View", "Directive"];
+					var index : Int = 0;
+					
+					for (data in annotations)
+					{
+						// Call Annotation extension function to 
+						// transform all string representations 
+						// to Angular Object data
+						Reflect.callMethod(	validAnnotations[metaNames[index]].extension, 
+											Reflect.field(validAnnotations[metaNames[index]].extension, "postCompileTransform"),
+											[data]);
+											
+						index++;
+					}
+				}
 			}
 			else
 			{

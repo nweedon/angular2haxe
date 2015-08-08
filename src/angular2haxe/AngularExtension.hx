@@ -15,17 +15,64 @@ limitations under the License.
 */
 package angular2haxe;
 
+import ng.NgFor;
+import ng.NgIf;
+
 class AngularExtension
 {
+	private static var angularClasses : Map<String, Class<Dynamic>> = [
+		"NgFor" => NgFor,
+		"NgIf"	=> NgIf
+	];
+		
 	private function new() { }
 	
-	public static function getAngularClasses() : Map<String, Dynamic>
-	{
-		var angularClasses : Map<String, Dynamic> = [
-			"NgFor" => NgFor,
-			"NgIf" 	=> NgIf
-		];
-	
+	public static function getAngularClasses() : Map<String, Class<Dynamic>>
+	{	
 		return angularClasses;
+	}
+	
+	public static function getAngularClass(name : String) : Class<Dynamic>
+	{
+		if (angularClasses.exists(name))
+		{
+			return angularClasses[name];
+		}
+		
+		return null;
+	}
+	
+	public static function isAngularClass(name : String) : Bool
+	{		
+		if (name.substr(0, 3) == "ng." || name.substr(0, 8) == "angular.")
+		{
+			name = getFullyQualifiedName(name);
+		}
+		
+		return angularClasses.exists(name);
+	}
+	
+	public static function getBareName(name : String) : String
+	{
+		if (name.substr(0, 3) == "ng.")
+		{
+			return name;
+		}
+		else if (name.substr(0, 8) == "angular.")
+		{
+			return name.substr(8);
+		}
+		
+		return name;
+	}
+	
+	public static function getFullyQualifiedName(name : String) : String
+	{
+		if (isAngularClass(name)) 
+		{
+			return name;
+		}
+		
+		return "ng." + getBareName(name);
 	}
 }

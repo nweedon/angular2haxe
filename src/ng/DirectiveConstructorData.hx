@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package angular2haxe;
+package ng;
 import haxe.ds.StringMap;
 
 /**
@@ -28,7 +28,7 @@ class DirectiveConstructorData
 	public var events 			: Array<String>			= [];
 	public var host 			: Dynamic				= { };
 	public var lifecycle		: Array<Dynamic>		= [];
-	public var hostInjector		: Array<String>			= [];
+	public var hostInjector		: Array<Dynamic>		= [];
 	public var exportAs			: String				= "";
 	public var compileChildren 	: Bool					= true;
 	

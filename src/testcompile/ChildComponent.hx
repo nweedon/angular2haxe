@@ -13,15 +13,31 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package angular2haxe;
+package testcompile;
 
-/**
- * Haxe representation of Angular 2.0
+import ng.Angular;
+
+/*
+ * Reference:
+ * https://angular.io/docs/js/latest/guide/making-components.html
  */
-@:native('angular')
-extern class Angular
+
+@Component({ 
+	selector: 'c-child'
+})
+@View({
+	template: '<p>{{ message }}</p>'
+})
+#if !macro
+@:build(angular2haxe.buildplugin.BuildPlugin.compile())
+#end
+@:expose
+class ChildComponent
 {
-    function new();
+	private var message = "I am the child.";
 	
-    static function bootstrap<T>(cl : Class<T>) : Angular;
+    public function new()
+    {
+        
+    }
 }

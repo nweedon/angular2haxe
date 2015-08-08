@@ -55,9 +55,21 @@ class ViewAnnotationExtension extends AnnotationExtension
 					
 					// extern classes won't resolve
 					#if macro
-					var resolvedClass = BuildPlugin.resolveClass(directive);
+						var resolvedClass;
+						// Can't resolve angular classes at build-time (as they
+						// are extenal), so they have to be converted at run-time.
+						if (!AngularExtension.isAngularClass(directive))
+						{
+							resolvedClass = BuildPlugin.resolveClass(directive);
+						}
+						else
+						{
+							// Angular classes have to be resolved at run-time
+							// due to them being external to the build.
+							resolvedClass = directive;
+						}
 					#else
-					var resolvedClass = Type.resolveClass(directive);
+						var resolvedClass = Type.resolveClass(directive);
 					#end
 					
 					if (resolvedClass != null)
@@ -66,17 +78,15 @@ class ViewAnnotationExtension extends AnnotationExtension
 					}
 					else
 					{
-						var angularClasses = AngularExtension.getAngularClasses();
+						var angularClass = AngularExtension.getAngularClass(directive);
 						
-						if (angularClasses.exists(directive))
+						if (angularClass != null)
 						{
-							output.directives[index] = angularClasses[directive];
+							output.directives[index] = angularClass;
 						} 
 						else
 						{
-							#if !macro
 							Trace.error('The definition for ${directive} does not exist!');
-							#end
 						}
 					}
 				}
@@ -86,4 +96,25 @@ class ViewAnnotationExtension extends AnnotationExtension
 		}
 		return output;
 	}	
+	
+	public static function postCompileTransform(data : ViewConstructorData)
+	{
+		if (data != null)
+		{
+			if (data.directives != null)
+			{
+				var index : Int = 0;
+				
+				for (element in data.directives)
+				{
+					if (Std.is(element, String))
+					{
+						data.directives[index] = AngularExtension.getAngularClass(element);
+					}
+					
+					index++;
+				}
+			}
+		}
+	}
 }

@@ -13,11 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package test;
+package testcompile;
 
 import ng.Angular;
-import ng.LifecycleEvent;
-import test.Dependency.MyDirective;
 
 /*
  * Reference:
@@ -25,16 +23,28 @@ import test.Dependency.MyDirective;
  */
 
 @Component({ 
-	selector: 'dependency-display',
-	compileChildren: true
+	selector: 'c-display',
+	hostInjector: ["testcompile.FriendsService"]
 })
 @View({ 
-	directives: ["test.Dependency", "test.MyDirective", "test.NgModelDirective"],
-	templateUrl: "templates/dependency.tpl.html"
+	directives: ["NgFor", "NgIf"],
+	template: '<p>My name: {{ myName }}</p><p>Friends:</p><ul><li *ng-for="#name of names">{{ name }}</li></ul><p *ng-if="names.length > 3">You have many friends!</p>'
 })
-class DependencyDisplayComponent
-{	
-    public function new()
+#if !macro
+@:build(angular2haxe.buildplugin.BuildPlugin.compile())
+#end
+class DisplayComponent
+{
+	private var myName : String;
+	private var names : Array<String>;
+	
+    public function new(?friends : FriendsService)
     {
+		myName = "Alice";
+		
+		if (friends != null)
+		{
+			names = friends.names;
+		}
     }
 }

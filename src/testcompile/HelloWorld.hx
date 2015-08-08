@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package test;
+package testcompile;
 
 import angular2haxe.buildplugin.BuildPlugin;
 
@@ -37,12 +37,15 @@ class Greeter
 }
 
 @Directive({
-	selector: 'needs-greeter',
+	selector: 'c-needs-greeter',
 	hostInjector: [
-		"test.Greeter"
+		"testcompile.Greeter"
 	]
 })
 @:expose
+#if !macro
+@:build(angular2haxe.buildplugin.BuildPlugin.compile())
+#end
 class NeedsGreeter
 {
 	private var greeter : Greeter;
@@ -54,15 +57,18 @@ class NeedsGreeter
 }
 
 @Component({
-	selector: 'greet',
+	selector: 'c-greet',
 	hostInjector: [
-		"test.Greeter"
+		"testcompile.Greeter"
 	]
 })
 @View({
-	template: "<needs-greeter>{{ greeter.greet('World') }}</needs-greeter>",
-	directives: ["test.NeedsGreeter"]
+	template: "<c-needs-greeter>{{ greeter.greet('World') }}</c-needs-greeter>",
+	directives: ["testcompile.NeedsGreeter"]
 })
+#if !macro
+@:build(angular2haxe.buildplugin.BuildPlugin.compile())
+#end
 class HelloWorld
 {
 	private var greeter : Greeter;

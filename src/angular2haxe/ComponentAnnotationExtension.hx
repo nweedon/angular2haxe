@@ -15,8 +15,8 @@ limitations under the License.
 */
 package angular2haxe;
 
-import angular2haxe.ComponentConstructorData;
-import angular2haxe.LifecycleEvent;
+import ng.ComponentConstructorData;
+import ng.LifecycleEvent;
 
 class ComponentAnnotationExtension extends AnnotationExtension
 {
@@ -45,5 +45,26 @@ class ComponentAnnotationExtension extends AnnotationExtension
 		
 		AnnotationExtension.transformLifecycle(output.lifecycle);
 		return output;
+	}
+	
+	public static function postCompileTransform(data : ComponentConstructorData)
+	{
+		if (data != null)
+		{
+			if (data.hostInjector != null)
+			{
+				var index : Int = 0;
+				
+				for (element in data.hostInjector)
+				{
+					if (Std.is(element, String))
+					{
+						data.hostInjector[index] = AngularExtension.getAngularClass(element);
+					}
+					
+					index++;
+				}
+			}
+		}
 	}
 }

@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package test;
+package testcompile;
 
 import ng.Angular;
 import ng.EventEmitter;
@@ -28,13 +28,16 @@ import angular2haxe.Trace;
  */
 
 @Directive({
-	selector: '[dependency]',
+	selector: '[c-dependency]',
 	properties: [
-		"id: dependency"
+		"id: c-dependency"
 	],
 	lifecycle: ["onInit"]
 })
 @:expose
+#if !macro
+@:build(angular2haxe.buildplugin.BuildPlugin.compile())
+#end
 class Dependency
 {
 	public var id : String;
@@ -70,9 +73,12 @@ class Dependency
 @Directive({ 
 	selector: '[my-directive]',
 	lifecycle: ["onInit"],
-	hostInjector: ["test.Dependency"]
+	hostInjector: ["testcompile.Dependency"]
 })
 @:expose
+#if !macro
+@:build(angular2haxe.buildplugin.BuildPlugin.compile())
+#end
 class MyDirective
 {
 	private var dependency : Dependency;
@@ -96,6 +102,9 @@ class MyDirective
 	properties: ['ngModel']
 })
 @:expose
+#if !macro
+@:build(angular2haxe.buildplugin.BuildPlugin.compile())
+#end
 class NgModelDirective
 {
 	private var ngModel : String = "";

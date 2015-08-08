@@ -15,7 +15,7 @@ limitations under the License.
 */
 package angular2haxe;
 
-import angular2haxe.DirectiveConstructorData;
+import ng.DirectiveConstructorData;
 import haxe.ds.StringMap;
 import haxe.Json;
 
@@ -73,5 +73,26 @@ class DirectiveAnnotationExtension extends AnnotationExtension
 		}
 		
 		return output;
+	}
+	
+	public static function postCompileTransform(data : DirectiveConstructorData)
+	{
+		if (data != null)
+		{
+			if (data.hostInjector != null)
+			{
+				var index : Int = 0;
+				
+				for (element in data.hostInjector)
+				{
+					if (Std.is(element, String))
+					{
+						data.hostInjector[index] = AngularExtension.getAngularClass(element);
+					}
+					
+					index++;
+				}
+			}
+		}
 	}
 }

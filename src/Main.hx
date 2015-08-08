@@ -15,8 +15,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import angular2haxe.Angular;
+import ng.Angular;
 import angular2haxe.Application;
+
 import test.ChildComponent;
 import test.Dependency;
 import test.DependencyDisplayComponent;
@@ -26,6 +27,15 @@ import test.TodoList;
 import test.HelloWorld;
 import test.InputDirective;
 
+import testcompile.ChildComponent;
+import testcompile.Dependency;
+import testcompile.DependencyDisplayComponent;
+import testcompile.FriendsService;
+import testcompile.HelloWorld;
+import testcompile.InputDirective;
+import testcompile.ParentComponent;
+import testcompile.TodoList;
+
 class Main
 {
     static function main()
@@ -34,25 +44,49 @@ class Main
 		// listed classes in the process.
 		new Application([
 			
-			DisplayComponent,
-			TodoList,
-			ParentComponent,
-			ChildComponent,
+			test.DisplayComponent,
+			test.TodoList,
+			test.ParentComponent,
+			test.ChildComponent,
 			
 			// --- Dependency.hx ---
-			MyDirective,			
-			NgModelDirective,			
-			Dependency,
+			test.MyDirective,			
+			test.NgModelDirective,			
+			test.Dependency,
 			
 			// --- DependencyDisplayComponent.hx --
-			DependencyDisplayComponent,
+			test.DependencyDisplayComponent,
 			
 			// --- HelloWorld.hx ---
-			Greeter,
-			NeedsGreeter,
-			HelloWorld,
+			test.Greeter,
+			test.NeedsGreeter,
+			test.HelloWorld,
 		
-			InputDirective
+			test.InputDirective,
+			
+			// ------------------------
+			// Compiled Versions
+			// ------------------------
+			
+			testcompile.DisplayComponent,
+			testcompile.TodoList,
+			testcompile.ParentComponent,
+			testcompile.ChildComponent,
+			
+			// --- Dependency.hx ---
+			testcompile.MyDirective,			
+			testcompile.NgModelDirective,			
+			testcompile.Dependency,
+			
+			// --- DependencyDisplayComponent.hx --
+			testcompile.DependencyDisplayComponent,
+			
+			// --- HelloWorld.hx ---
+			testcompile.Greeter,
+			testcompile.NeedsGreeter,
+			testcompile.HelloWorld,
+		
+			testcompile.InputDirective
 			
 		]);
     }

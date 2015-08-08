@@ -13,33 +13,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package test;
-import angular2haxe.KeyboardEvent;
+package ng;
+import angular2haxe.Annotation;
 
-@Directive({
-	selector: 'input',
-	lifecycle: ["onInit"],
-	host: {
-		'(keyup)' : 'onKeyUp($event)'
-	}
-})
-@:expose
-class InputDirective
+@:native('ng.DirectiveAnnotation')
+extern class DirectiveAnnotation extends Annotation
 {
-	public function new() 
-	{
-		
-	}
-	
-#if !macro
-	public function onInit()
-	{
-		trace('InputDirective.onInit: ${this}');
-	}
-	
-	public function onKeyUp(event : KeyboardEvent)
-	{
-		trace('You just pressed a key with key code: ${event.keyCode}!');
-	}
-#end
+	function new(data : Dynamic);
 }

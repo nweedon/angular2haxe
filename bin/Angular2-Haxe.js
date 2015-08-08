@@ -1,15 +1,32 @@
 (function (console, $hx_exports) { "use strict";
+$hx_exports.testcompile = $hx_exports.testcompile || {};
 $hx_exports.test = $hx_exports.test || {};
-var $hxClasses = {};
+var $hxClasses = {},$estr = function() { return js_Boot.__string_rec(this,''); };
 function $extend(from, fields) {
 	function Inherit() {} Inherit.prototype = from; var proto = new Inherit();
 	for (var name in fields) proto[name] = fields[name];
 	if( fields.toString !== Object.prototype.toString ) proto.toString = fields.toString;
 	return proto;
 }
+var BuildRegistry = function() {
+};
+$hxClasses["BuildRegistry"] = BuildRegistry;
+BuildRegistry.__name__ = ["BuildRegistry"];
+BuildRegistry.prototype = {
+	__class__: BuildRegistry
+};
 var HxOverrides = function() { };
 $hxClasses["HxOverrides"] = HxOverrides;
 HxOverrides.__name__ = ["HxOverrides"];
+HxOverrides.substr = function(s,pos,len) {
+	if(pos != null && pos != 0 && len != null && len < 0) return "";
+	if(len == null) len = s.length;
+	if(pos < 0) {
+		pos = s.length + pos;
+		if(pos < 0) pos = 0;
+	} else if(len < 0) len = s.length + len - pos;
+	return s.substr(pos,len);
+};
 HxOverrides.indexOf = function(a,obj,i) {
 	var len = a.length;
 	if(i < 0) {
@@ -22,18 +39,11 @@ HxOverrides.indexOf = function(a,obj,i) {
 	}
 	return -1;
 };
-HxOverrides.iter = function(a) {
-	return { cur : 0, arr : a, hasNext : function() {
-		return this.cur < this.arr.length;
-	}, next : function() {
-		return this.arr[this.cur++];
-	}};
-};
 var Main = function() { };
 $hxClasses["Main"] = Main;
 Main.__name__ = ["Main"];
 Main.main = function() {
-	new angular2haxe_Application([test_DisplayComponent,test_TodoList,test_ParentComponent,test_ChildComponent,test_MyDirective,test_NgModelDirective,test_Dependency,test_DependencyDisplayComponent,test_Greeter,test_NeedsGreeter,test_HelloWorld,test_InputDirective]);
+	new angular2haxe_Application([test_DisplayComponent,test_TodoList,test_ParentComponent,test_ChildComponent,test_MyDirective,test_NgModelDirective,test_Dependency,test_DependencyDisplayComponent,test_Greeter,test_NeedsGreeter,test_HelloWorld,test_InputDirective,testcompile_DisplayComponent,testcompile_TodoList,testcompile_ParentComponent,testcompile_ChildComponent,testcompile_MyDirective,testcompile_NgModelDirective,testcompile_Dependency,testcompile_DependencyDisplayComponent,testcompile_Greeter,testcompile_NeedsGreeter,testcompile_HelloWorld,testcompile_InputDirective]);
 };
 Math.__name__ = ["Math"];
 var Reflect = function() { };
@@ -123,12 +133,23 @@ var angular2haxe_AngularExtension = function() {
 $hxClasses["angular2haxe.AngularExtension"] = angular2haxe_AngularExtension;
 angular2haxe_AngularExtension.__name__ = ["angular2haxe","AngularExtension"];
 angular2haxe_AngularExtension.getAngularClasses = function() {
-	var angularClasses;
-	var _g = new haxe_ds_StringMap();
-	_g.set("NgFor",ng.NgFor);
-	_g.set("NgIf",ng.NgIf);
-	angularClasses = _g;
-	return angularClasses;
+	return angular2haxe_AngularExtension.angularClasses;
+};
+angular2haxe_AngularExtension.getAngularClass = function(name) {
+	if(angular2haxe_AngularExtension.angularClasses.exists(name)) return angular2haxe_AngularExtension.angularClasses.get(name);
+	return null;
+};
+angular2haxe_AngularExtension.isAngularClass = function(name) {
+	if(HxOverrides.substr(name,0,3) == "ng." || HxOverrides.substr(name,0,8) == "angular.") name = angular2haxe_AngularExtension.getFullyQualifiedName(name);
+	return angular2haxe_AngularExtension.angularClasses.exists(name);
+};
+angular2haxe_AngularExtension.getBareName = function(name) {
+	if(HxOverrides.substr(name,0,3) == "ng.") return name; else if(HxOverrides.substr(name,0,8) == "angular.") return HxOverrides.substr(name,8,null);
+	return name;
+};
+angular2haxe_AngularExtension.getFullyQualifiedName = function(name) {
+	if(angular2haxe_AngularExtension.isAngularClass(name)) return name;
+	return "ng." + angular2haxe_AngularExtension.getBareName(name);
 };
 angular2haxe_AngularExtension.prototype = {
 	__class__: angular2haxe_AngularExtension
@@ -223,26 +244,40 @@ angular2haxe_Application.prototype = {
 				var _this = Reflect.fields(component[0]);
 				$r = HxOverrides.indexOf(_this,"__alreadyConstructed",0);
 				return $r;
-			}(this)) > -1) console.warn("WARNING: " + className[0] + " is using experimental :build annotation feature."); else {
+			}(this)) > -1) {
+				console.warn("WARNING: " + className[0] + " is using experimental :build annotation feature.");
+				var annotations = Reflect.field(component[0],"annotations");
+				if(annotations != null) {
+					var metaNames = ["Component","View","Directive"];
+					var index = 0;
+					var _g2 = 0;
+					while(_g2 < annotations.length) {
+						var data = annotations[_g2];
+						++_g2;
+						Reflect.callMethod(validAnnotations.get(metaNames[index]).extension,Reflect.field(validAnnotations.get(metaNames[index]).extension,"postCompileTransform"),[data]);
+						index++;
+					}
+				}
+			} else {
 				component[0].annotations = [];
 				component[0].parameters = [];
-				var annotations = Reflect.field(component[0],"annotations");
+				var annotations1 = Reflect.field(component[0],"annotations");
 				var parameters = Reflect.field(component[0],"parameters");
-				if(annotations != null && annotations.length == 0) {
+				if(annotations1 != null && annotations1.length == 0) {
 					console.log("=> Bootstrapping " + className[0]);
-					var _g2 = 0;
+					var _g21 = 0;
 					var _g3 = Reflect.fields(anno[0]);
-					while(_g2 < _g3.length) {
-						var name = _g3[_g2];
-						++_g2;
+					while(_g21 < _g3.length) {
+						var name = _g3[_g21];
+						++_g21;
 						if(__map_reserved[name] != null?validAnnotations.existsReserved(name):validAnnotations.h.hasOwnProperty(name)) {
 							var field = Reflect.field(anno[0],name);
-							Reflect.callMethod((__map_reserved[name] != null?validAnnotations.getReserved(name):validAnnotations.h[name]).extension,Reflect.field((__map_reserved[name] != null?validAnnotations.getReserved(name):validAnnotations.h[name]).extension,"transform"),[field[0],annotations,parameters]);
-							annotations.push(Type.createInstance((__map_reserved[name] != null?validAnnotations.getReserved(name):validAnnotations.h[name]).annotation,[field[0]]));
+							Reflect.callMethod((__map_reserved[name] != null?validAnnotations.getReserved(name):validAnnotations.h[name]).extension,Reflect.field((__map_reserved[name] != null?validAnnotations.getReserved(name):validAnnotations.h[name]).extension,"transform"),[field[0],annotations1,parameters]);
+							annotations1.push(Type.createInstance((__map_reserved[name] != null?validAnnotations.getReserved(name):validAnnotations.h[name]).annotation,[field[0]]));
 						} else console.error(name + " is not a valid annotation.");
 					}
 					if(showDataInTrace) {
-						console.log("Annotations:\n" + Std.string(annotations));
+						console.log("Annotations:\n" + Std.string(annotations1));
 						console.log("Parameters:\n" + Std.string(parameters));
 					}
 				} else console.error("" + className[0] + " does not have an \"annotations\" static variable in its class definition!");
@@ -268,31 +303,30 @@ var angular2haxe_ComponentAnnotationExtension = function() {
 $hxClasses["angular2haxe.ComponentAnnotationExtension"] = angular2haxe_ComponentAnnotationExtension;
 angular2haxe_ComponentAnnotationExtension.__name__ = ["angular2haxe","ComponentAnnotationExtension"];
 angular2haxe_ComponentAnnotationExtension.transform = function(input,annotations,parameters) {
-	var output = angular2haxe_AnnotationExtension.resolveInputAnnotation(input,angular2haxe_ComponentConstructorData);
+	var output = angular2haxe_AnnotationExtension.resolveInputAnnotation(input,ng_ComponentConstructorData);
 	if(parameters != null && output.hostInjector != null) angular2haxe_AnnotationExtension.parseInjector(parameters,output.hostInjector);
 	angular2haxe_AnnotationExtension.transformLifecycle(output.lifecycle);
 	return output;
+};
+angular2haxe_ComponentAnnotationExtension.postCompileTransform = function(data) {
+	if(data != null) {
+		if(data.hostInjector != null) {
+			var index = 0;
+			var _g = 0;
+			var _g1 = data.hostInjector;
+			while(_g < _g1.length) {
+				var element = _g1[_g];
+				++_g;
+				if(typeof(element) == "string") data.hostInjector[index] = angular2haxe_AngularExtension.getAngularClass(element);
+				index++;
+			}
+		}
+	}
 };
 angular2haxe_ComponentAnnotationExtension.__super__ = angular2haxe_AnnotationExtension;
 angular2haxe_ComponentAnnotationExtension.prototype = $extend(angular2haxe_AnnotationExtension.prototype,{
 	__class__: angular2haxe_ComponentAnnotationExtension
 });
-var angular2haxe_ComponentConstructorData = function() {
-	this.changeDetection = "DEFAULT";
-	this.compileChildren = true;
-	this.exportAs = "";
-	this.hostInjector = [];
-	this.lifecycle = [];
-	this.host = new haxe_ds_StringMap();
-	this.events = [];
-	this.properties = [];
-	this.selector = "";
-};
-$hxClasses["angular2haxe.ComponentConstructorData"] = angular2haxe_ComponentConstructorData;
-angular2haxe_ComponentConstructorData.__name__ = ["angular2haxe","ComponentConstructorData"];
-angular2haxe_ComponentConstructorData.prototype = {
-	__class__: angular2haxe_ComponentConstructorData
-};
 var angular2haxe_DirectiveAnnotationExtension = function() {
 	angular2haxe_AnnotationExtension.call(this);
 };
@@ -314,30 +348,30 @@ angular2haxe_DirectiveAnnotationExtension.transform = function(input,annotations
 		}
 		input.host = outputHost;
 	}
-	var output = angular2haxe_AnnotationExtension.resolveInputAnnotation(input,angular2haxe_DirectiveConstructorData);
+	var output = angular2haxe_AnnotationExtension.resolveInputAnnotation(input,ng_DirectiveConstructorData);
 	if(parameters != null && output.hostInjector != null) angular2haxe_AnnotationExtension.parseInjector(parameters,output.hostInjector);
 	if(output.lifecycle != null) angular2haxe_AnnotationExtension.transformLifecycle(output.lifecycle);
 	return output;
+};
+angular2haxe_DirectiveAnnotationExtension.postCompileTransform = function(data) {
+	if(data != null) {
+		if(data.hostInjector != null) {
+			var index = 0;
+			var _g = 0;
+			var _g1 = data.hostInjector;
+			while(_g < _g1.length) {
+				var element = _g1[_g];
+				++_g;
+				if(typeof(element) == "string") data.hostInjector[index] = angular2haxe_AngularExtension.getAngularClass(element);
+				index++;
+			}
+		}
+	}
 };
 angular2haxe_DirectiveAnnotationExtension.__super__ = angular2haxe_AnnotationExtension;
 angular2haxe_DirectiveAnnotationExtension.prototype = $extend(angular2haxe_AnnotationExtension.prototype,{
 	__class__: angular2haxe_DirectiveAnnotationExtension
 });
-var angular2haxe_DirectiveConstructorData = function() {
-	this.compileChildren = true;
-	this.exportAs = "";
-	this.hostInjector = [];
-	this.lifecycle = [];
-	this.host = { };
-	this.events = [];
-	this.properties = [];
-	this.selector = "";
-};
-$hxClasses["angular2haxe.DirectiveConstructorData"] = angular2haxe_DirectiveConstructorData;
-angular2haxe_DirectiveConstructorData.__name__ = ["angular2haxe","DirectiveConstructorData"];
-angular2haxe_DirectiveConstructorData.prototype = {
-	__class__: angular2haxe_DirectiveConstructorData
-};
 var angular2haxe_KeyboardEvent = function(typeArg,keyboardEventInitDict) {
 	KeyboardEvent.call(this,typeArg,keyboardEventInitDict);
 };
@@ -372,7 +406,7 @@ angular2haxe_LifecycleEventExtension.toAngular = function(lifecycleEvent) {
 	angular2haxe_LifecycleEventExtension.init();
 	if(angular2haxe_LifecycleEventExtension.supportedLifecycleEvents.exists(lifecycleEvent)) return angular2haxe_LifecycleEventExtension.supportedLifecycleEvents.get(lifecycleEvent); else {
 		console.error("Angular does not have LifecycleEvent \"" + lifecycleEvent + "\"");
-		return null;
+		return lifecycleEvent;
 	}
 };
 angular2haxe_LifecycleEventExtension.prototype = {
@@ -412,22 +446,29 @@ angular2haxe_ViewAnnotationExtension.transform = function(input,annotations,para
 				directive = StringTools.htmlEscape(directive);
 				var resolvedClass = Type.resolveClass(directive);
 				if(resolvedClass != null) output.directives[index] = resolvedClass; else {
-					var angularClasses = angular2haxe_AngularExtension.getAngularClasses();
-					if((function($this) {
-						var $r;
-						var key = directive;
-						$r = __map_reserved[key] != null?angularClasses.existsReserved(key):angularClasses.h.hasOwnProperty(key);
-						return $r;
-					}(this))) {
-						var key1 = directive;
-						output.directives[index] = __map_reserved[key1] != null?angularClasses.getReserved(key1):angularClasses.h[key1];
-					} else console.error("The definition for " + Std.string(directive) + " does not exist!");
+					var angularClass = angular2haxe_AngularExtension.getAngularClass(directive);
+					if(angularClass != null) output.directives[index] = angularClass; else console.error("The definition for " + Std.string(directive) + " does not exist!");
 				}
 			}
 			index++;
 		}
 	}
 	return output;
+};
+angular2haxe_ViewAnnotationExtension.postCompileTransform = function(data) {
+	if(data != null) {
+		if(data.directives != null) {
+			var index = 0;
+			var _g = 0;
+			var _g1 = data.directives;
+			while(_g < _g1.length) {
+				var element = _g1[_g];
+				++_g;
+				if(typeof(element) == "string") data.directives[index] = angular2haxe_AngularExtension.getAngularClass(element);
+				index++;
+			}
+		}
+	}
 };
 angular2haxe_ViewAnnotationExtension.__super__ = angular2haxe_AnnotationExtension;
 angular2haxe_ViewAnnotationExtension.prototype = $extend(angular2haxe_AnnotationExtension.prototype,{
@@ -445,6 +486,13 @@ $hxClasses["angular2haxe.ViewConstructorData"] = angular2haxe_ViewConstructorDat
 angular2haxe_ViewConstructorData.__name__ = ["angular2haxe","ViewConstructorData"];
 angular2haxe_ViewConstructorData.prototype = {
 	__class__: angular2haxe_ViewConstructorData
+};
+var angular2haxe_buildplugin_BuildPlugin = function() {
+};
+$hxClasses["angular2haxe.buildplugin.BuildPlugin"] = angular2haxe_buildplugin_BuildPlugin;
+angular2haxe_buildplugin_BuildPlugin.__name__ = ["angular2haxe","buildplugin","BuildPlugin"];
+angular2haxe_buildplugin_BuildPlugin.prototype = {
+	__class__: angular2haxe_buildplugin_BuildPlugin
 };
 var haxe_IMap = function() { };
 $hxClasses["haxe.IMap"] = haxe_IMap;
@@ -480,6 +528,138 @@ haxe_ds_StringMap.prototype = {
 	}
 	,__class__: haxe_ds_StringMap
 };
+var haxe_macro_Constant = { __ename__ : true, __constructs__ : ["CInt","CFloat","CString","CIdent","CRegexp"] };
+haxe_macro_Constant.CInt = function(v) { var $x = ["CInt",0,v]; $x.__enum__ = haxe_macro_Constant; $x.toString = $estr; return $x; };
+haxe_macro_Constant.CFloat = function(f) { var $x = ["CFloat",1,f]; $x.__enum__ = haxe_macro_Constant; $x.toString = $estr; return $x; };
+haxe_macro_Constant.CString = function(s) { var $x = ["CString",2,s]; $x.__enum__ = haxe_macro_Constant; $x.toString = $estr; return $x; };
+haxe_macro_Constant.CIdent = function(s) { var $x = ["CIdent",3,s]; $x.__enum__ = haxe_macro_Constant; $x.toString = $estr; return $x; };
+haxe_macro_Constant.CRegexp = function(r,opt) { var $x = ["CRegexp",4,r,opt]; $x.__enum__ = haxe_macro_Constant; $x.toString = $estr; return $x; };
+var haxe_macro_Binop = { __ename__ : true, __constructs__ : ["OpAdd","OpMult","OpDiv","OpSub","OpAssign","OpEq","OpNotEq","OpGt","OpGte","OpLt","OpLte","OpAnd","OpOr","OpXor","OpBoolAnd","OpBoolOr","OpShl","OpShr","OpUShr","OpMod","OpAssignOp","OpInterval","OpArrow"] };
+haxe_macro_Binop.OpAdd = ["OpAdd",0];
+haxe_macro_Binop.OpAdd.toString = $estr;
+haxe_macro_Binop.OpAdd.__enum__ = haxe_macro_Binop;
+haxe_macro_Binop.OpMult = ["OpMult",1];
+haxe_macro_Binop.OpMult.toString = $estr;
+haxe_macro_Binop.OpMult.__enum__ = haxe_macro_Binop;
+haxe_macro_Binop.OpDiv = ["OpDiv",2];
+haxe_macro_Binop.OpDiv.toString = $estr;
+haxe_macro_Binop.OpDiv.__enum__ = haxe_macro_Binop;
+haxe_macro_Binop.OpSub = ["OpSub",3];
+haxe_macro_Binop.OpSub.toString = $estr;
+haxe_macro_Binop.OpSub.__enum__ = haxe_macro_Binop;
+haxe_macro_Binop.OpAssign = ["OpAssign",4];
+haxe_macro_Binop.OpAssign.toString = $estr;
+haxe_macro_Binop.OpAssign.__enum__ = haxe_macro_Binop;
+haxe_macro_Binop.OpEq = ["OpEq",5];
+haxe_macro_Binop.OpEq.toString = $estr;
+haxe_macro_Binop.OpEq.__enum__ = haxe_macro_Binop;
+haxe_macro_Binop.OpNotEq = ["OpNotEq",6];
+haxe_macro_Binop.OpNotEq.toString = $estr;
+haxe_macro_Binop.OpNotEq.__enum__ = haxe_macro_Binop;
+haxe_macro_Binop.OpGt = ["OpGt",7];
+haxe_macro_Binop.OpGt.toString = $estr;
+haxe_macro_Binop.OpGt.__enum__ = haxe_macro_Binop;
+haxe_macro_Binop.OpGte = ["OpGte",8];
+haxe_macro_Binop.OpGte.toString = $estr;
+haxe_macro_Binop.OpGte.__enum__ = haxe_macro_Binop;
+haxe_macro_Binop.OpLt = ["OpLt",9];
+haxe_macro_Binop.OpLt.toString = $estr;
+haxe_macro_Binop.OpLt.__enum__ = haxe_macro_Binop;
+haxe_macro_Binop.OpLte = ["OpLte",10];
+haxe_macro_Binop.OpLte.toString = $estr;
+haxe_macro_Binop.OpLte.__enum__ = haxe_macro_Binop;
+haxe_macro_Binop.OpAnd = ["OpAnd",11];
+haxe_macro_Binop.OpAnd.toString = $estr;
+haxe_macro_Binop.OpAnd.__enum__ = haxe_macro_Binop;
+haxe_macro_Binop.OpOr = ["OpOr",12];
+haxe_macro_Binop.OpOr.toString = $estr;
+haxe_macro_Binop.OpOr.__enum__ = haxe_macro_Binop;
+haxe_macro_Binop.OpXor = ["OpXor",13];
+haxe_macro_Binop.OpXor.toString = $estr;
+haxe_macro_Binop.OpXor.__enum__ = haxe_macro_Binop;
+haxe_macro_Binop.OpBoolAnd = ["OpBoolAnd",14];
+haxe_macro_Binop.OpBoolAnd.toString = $estr;
+haxe_macro_Binop.OpBoolAnd.__enum__ = haxe_macro_Binop;
+haxe_macro_Binop.OpBoolOr = ["OpBoolOr",15];
+haxe_macro_Binop.OpBoolOr.toString = $estr;
+haxe_macro_Binop.OpBoolOr.__enum__ = haxe_macro_Binop;
+haxe_macro_Binop.OpShl = ["OpShl",16];
+haxe_macro_Binop.OpShl.toString = $estr;
+haxe_macro_Binop.OpShl.__enum__ = haxe_macro_Binop;
+haxe_macro_Binop.OpShr = ["OpShr",17];
+haxe_macro_Binop.OpShr.toString = $estr;
+haxe_macro_Binop.OpShr.__enum__ = haxe_macro_Binop;
+haxe_macro_Binop.OpUShr = ["OpUShr",18];
+haxe_macro_Binop.OpUShr.toString = $estr;
+haxe_macro_Binop.OpUShr.__enum__ = haxe_macro_Binop;
+haxe_macro_Binop.OpMod = ["OpMod",19];
+haxe_macro_Binop.OpMod.toString = $estr;
+haxe_macro_Binop.OpMod.__enum__ = haxe_macro_Binop;
+haxe_macro_Binop.OpAssignOp = function(op) { var $x = ["OpAssignOp",20,op]; $x.__enum__ = haxe_macro_Binop; $x.toString = $estr; return $x; };
+haxe_macro_Binop.OpInterval = ["OpInterval",21];
+haxe_macro_Binop.OpInterval.toString = $estr;
+haxe_macro_Binop.OpInterval.__enum__ = haxe_macro_Binop;
+haxe_macro_Binop.OpArrow = ["OpArrow",22];
+haxe_macro_Binop.OpArrow.toString = $estr;
+haxe_macro_Binop.OpArrow.__enum__ = haxe_macro_Binop;
+var haxe_macro_Unop = { __ename__ : true, __constructs__ : ["OpIncrement","OpDecrement","OpNot","OpNeg","OpNegBits"] };
+haxe_macro_Unop.OpIncrement = ["OpIncrement",0];
+haxe_macro_Unop.OpIncrement.toString = $estr;
+haxe_macro_Unop.OpIncrement.__enum__ = haxe_macro_Unop;
+haxe_macro_Unop.OpDecrement = ["OpDecrement",1];
+haxe_macro_Unop.OpDecrement.toString = $estr;
+haxe_macro_Unop.OpDecrement.__enum__ = haxe_macro_Unop;
+haxe_macro_Unop.OpNot = ["OpNot",2];
+haxe_macro_Unop.OpNot.toString = $estr;
+haxe_macro_Unop.OpNot.__enum__ = haxe_macro_Unop;
+haxe_macro_Unop.OpNeg = ["OpNeg",3];
+haxe_macro_Unop.OpNeg.toString = $estr;
+haxe_macro_Unop.OpNeg.__enum__ = haxe_macro_Unop;
+haxe_macro_Unop.OpNegBits = ["OpNegBits",4];
+haxe_macro_Unop.OpNegBits.toString = $estr;
+haxe_macro_Unop.OpNegBits.__enum__ = haxe_macro_Unop;
+var haxe_macro_ExprDef = { __ename__ : true, __constructs__ : ["EConst","EArray","EBinop","EField","EParenthesis","EObjectDecl","EArrayDecl","ECall","ENew","EUnop","EVars","EFunction","EBlock","EFor","EIn","EIf","EWhile","ESwitch","ETry","EReturn","EBreak","EContinue","EUntyped","EThrow","ECast","EDisplay","EDisplayNew","ETernary","ECheckType","EMeta"] };
+haxe_macro_ExprDef.EConst = function(c) { var $x = ["EConst",0,c]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
+haxe_macro_ExprDef.EArray = function(e1,e2) { var $x = ["EArray",1,e1,e2]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
+haxe_macro_ExprDef.EBinop = function(op,e1,e2) { var $x = ["EBinop",2,op,e1,e2]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
+haxe_macro_ExprDef.EField = function(e,field) { var $x = ["EField",3,e,field]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
+haxe_macro_ExprDef.EParenthesis = function(e) { var $x = ["EParenthesis",4,e]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
+haxe_macro_ExprDef.EObjectDecl = function(fields) { var $x = ["EObjectDecl",5,fields]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
+haxe_macro_ExprDef.EArrayDecl = function(values) { var $x = ["EArrayDecl",6,values]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
+haxe_macro_ExprDef.ECall = function(e,params) { var $x = ["ECall",7,e,params]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
+haxe_macro_ExprDef.ENew = function(t,params) { var $x = ["ENew",8,t,params]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
+haxe_macro_ExprDef.EUnop = function(op,postFix,e) { var $x = ["EUnop",9,op,postFix,e]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
+haxe_macro_ExprDef.EVars = function(vars) { var $x = ["EVars",10,vars]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
+haxe_macro_ExprDef.EFunction = function(name,f) { var $x = ["EFunction",11,name,f]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
+haxe_macro_ExprDef.EBlock = function(exprs) { var $x = ["EBlock",12,exprs]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
+haxe_macro_ExprDef.EFor = function(it,expr) { var $x = ["EFor",13,it,expr]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
+haxe_macro_ExprDef.EIn = function(e1,e2) { var $x = ["EIn",14,e1,e2]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
+haxe_macro_ExprDef.EIf = function(econd,eif,eelse) { var $x = ["EIf",15,econd,eif,eelse]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
+haxe_macro_ExprDef.EWhile = function(econd,e,normalWhile) { var $x = ["EWhile",16,econd,e,normalWhile]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
+haxe_macro_ExprDef.ESwitch = function(e,cases,edef) { var $x = ["ESwitch",17,e,cases,edef]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
+haxe_macro_ExprDef.ETry = function(e,catches) { var $x = ["ETry",18,e,catches]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
+haxe_macro_ExprDef.EReturn = function(e) { var $x = ["EReturn",19,e]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
+haxe_macro_ExprDef.EBreak = ["EBreak",20];
+haxe_macro_ExprDef.EBreak.toString = $estr;
+haxe_macro_ExprDef.EBreak.__enum__ = haxe_macro_ExprDef;
+haxe_macro_ExprDef.EContinue = ["EContinue",21];
+haxe_macro_ExprDef.EContinue.toString = $estr;
+haxe_macro_ExprDef.EContinue.__enum__ = haxe_macro_ExprDef;
+haxe_macro_ExprDef.EUntyped = function(e) { var $x = ["EUntyped",22,e]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
+haxe_macro_ExprDef.EThrow = function(e) { var $x = ["EThrow",23,e]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
+haxe_macro_ExprDef.ECast = function(e,t) { var $x = ["ECast",24,e,t]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
+haxe_macro_ExprDef.EDisplay = function(e,isCall) { var $x = ["EDisplay",25,e,isCall]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
+haxe_macro_ExprDef.EDisplayNew = function(t) { var $x = ["EDisplayNew",26,t]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
+haxe_macro_ExprDef.ETernary = function(econd,eif,eelse) { var $x = ["ETernary",27,econd,eif,eelse]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
+haxe_macro_ExprDef.ECheckType = function(e,t) { var $x = ["ECheckType",28,e,t]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
+haxe_macro_ExprDef.EMeta = function(s,e) { var $x = ["EMeta",29,s,e]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
+var haxe_macro_ComplexType = { __ename__ : true, __constructs__ : ["TPath","TFunction","TAnonymous","TParent","TExtend","TOptional"] };
+haxe_macro_ComplexType.TPath = function(p) { var $x = ["TPath",0,p]; $x.__enum__ = haxe_macro_ComplexType; $x.toString = $estr; return $x; };
+haxe_macro_ComplexType.TFunction = function(args,ret) { var $x = ["TFunction",1,args,ret]; $x.__enum__ = haxe_macro_ComplexType; $x.toString = $estr; return $x; };
+haxe_macro_ComplexType.TAnonymous = function(fields) { var $x = ["TAnonymous",2,fields]; $x.__enum__ = haxe_macro_ComplexType; $x.toString = $estr; return $x; };
+haxe_macro_ComplexType.TParent = function(t) { var $x = ["TParent",3,t]; $x.__enum__ = haxe_macro_ComplexType; $x.toString = $estr; return $x; };
+haxe_macro_ComplexType.TExtend = function(p,fields) { var $x = ["TExtend",4,p,fields]; $x.__enum__ = haxe_macro_ComplexType; $x.toString = $estr; return $x; };
+haxe_macro_ComplexType.TOptional = function(t) { var $x = ["TOptional",5,t]; $x.__enum__ = haxe_macro_ComplexType; $x.toString = $estr; return $x; };
 var haxe_rtti_Meta = function() { };
 $hxClasses["haxe.rtti.Meta"] = haxe_rtti_Meta;
 haxe_rtti_Meta.__name__ = ["haxe","rtti","Meta"];
@@ -640,6 +820,37 @@ js_Boot.__isNativeObj = function(o) {
 js_Boot.__resolveNativeClass = function(name) {
 	return (Function("return typeof " + name + " != \"undefined\" ? " + name + " : null"))();
 };
+var ng_ComponentConstructorData = function() {
+	this.changeDetection = "DEFAULT";
+	this.compileChildren = true;
+	this.exportAs = "";
+	this.hostInjector = [];
+	this.lifecycle = [];
+	this.host = new haxe_ds_StringMap();
+	this.events = [];
+	this.properties = [];
+	this.selector = "";
+};
+$hxClasses["ng.ComponentConstructorData"] = ng_ComponentConstructorData;
+ng_ComponentConstructorData.__name__ = ["ng","ComponentConstructorData"];
+ng_ComponentConstructorData.prototype = {
+	__class__: ng_ComponentConstructorData
+};
+var ng_DirectiveConstructorData = function() {
+	this.compileChildren = true;
+	this.exportAs = "";
+	this.hostInjector = [];
+	this.lifecycle = [];
+	this.host = { };
+	this.events = [];
+	this.properties = [];
+	this.selector = "";
+};
+$hxClasses["ng.DirectiveConstructorData"] = ng_DirectiveConstructorData;
+ng_DirectiveConstructorData.__name__ = ["ng","DirectiveConstructorData"];
+ng_DirectiveConstructorData.prototype = {
+	__class__: ng_DirectiveConstructorData
+};
 var test_ChildComponent = $hx_exports.test.ChildComponent = function() {
 	this.message = "I am the child.";
 };
@@ -733,7 +944,7 @@ test_NeedsGreeter.__name__ = ["test","NeedsGreeter"];
 test_NeedsGreeter.prototype = {
 	__class__: test_NeedsGreeter
 };
-var test_HelloWorld = $hx_exports.test.HelloWorld = function(greeter) {
+var test_HelloWorld = function(greeter) {
 	this.greeter = greeter;
 };
 $hxClasses["test.HelloWorld"] = test_HelloWorld;
@@ -794,6 +1005,160 @@ test_TodoList.prototype = {
 	}
 	,__class__: test_TodoList
 };
+var testcompile_ChildComponent = $hx_exports.testcompile.ChildComponent = function() {
+	this.message = "I am the child.";
+};
+$hxClasses["testcompile.ChildComponent"] = testcompile_ChildComponent;
+testcompile_ChildComponent.__name__ = ["testcompile","ChildComponent"];
+testcompile_ChildComponent.prototype = {
+	__class__: testcompile_ChildComponent
+};
+var testcompile_Dependency = $hx_exports.testcompile.Dependency = function() {
+};
+$hxClasses["testcompile.Dependency"] = testcompile_Dependency;
+testcompile_Dependency.__name__ = ["testcompile","Dependency"];
+testcompile_Dependency.prototype = {
+	onInit: function() {
+		console.log("Dependency.hx result:\n" + Std.string(this));
+	}
+	,onMouseEnter: function(event) {
+		console.log("onMouseEnter: " + this.id);
+	}
+	,onMouseLeave: function() {
+		console.log("onMouseLeave: " + this.id);
+	}
+	,onResize: function(event) {
+		console.log("resize " + Std.string(event));
+	}
+	,__class__: testcompile_Dependency
+};
+var testcompile_MyDirective = $hx_exports.testcompile.MyDirective = function(dependency) {
+	if(dependency != null) this.dependency = dependency;
+};
+$hxClasses["testcompile.MyDirective"] = testcompile_MyDirective;
+testcompile_MyDirective.__name__ = ["testcompile","MyDirective"];
+testcompile_MyDirective.prototype = {
+	onInit: function() {
+		console.log("MyDirective Dependency:\n" + Std.string(this.dependency));
+	}
+	,__class__: testcompile_MyDirective
+};
+var testcompile_NgModelDirective = $hx_exports.testcompile.NgModelDirective = function() {
+	this.ngModelChanged = new angular.EventEmitter();
+	this.ngModel = "";
+};
+$hxClasses["testcompile.NgModelDirective"] = testcompile_NgModelDirective;
+testcompile_NgModelDirective.__name__ = ["testcompile","NgModelDirective"];
+testcompile_NgModelDirective.prototype = {
+	modelChanged: function(event) {
+		angular2haxe_Trace.log(event);
+		this.ngModelChanged.next(event.target.value);
+	}
+	,__class__: testcompile_NgModelDirective
+};
+var testcompile_DependencyDisplayComponent = function() {
+};
+$hxClasses["testcompile.DependencyDisplayComponent"] = testcompile_DependencyDisplayComponent;
+testcompile_DependencyDisplayComponent.__name__ = ["testcompile","DependencyDisplayComponent"];
+testcompile_DependencyDisplayComponent.prototype = {
+	__class__: testcompile_DependencyDisplayComponent
+};
+var testcompile_FriendsService = $hx_exports.testcompile.FriendsService = function() {
+	this.names = ["Aarav","Martín","Shannon","Ariana","Kai"];
+};
+$hxClasses["testcompile.FriendsService"] = testcompile_FriendsService;
+testcompile_FriendsService.__name__ = ["testcompile","FriendsService"];
+testcompile_FriendsService.prototype = {
+	__class__: testcompile_FriendsService
+};
+var testcompile_DisplayComponent = function(friends) {
+	this.myName = "Alice";
+	if(friends != null) this.names = friends.names;
+};
+$hxClasses["testcompile.DisplayComponent"] = testcompile_DisplayComponent;
+testcompile_DisplayComponent.__name__ = ["testcompile","DisplayComponent"];
+testcompile_DisplayComponent.prototype = {
+	__class__: testcompile_DisplayComponent
+};
+var testcompile_Greeter = $hx_exports.testcompile.Greeter = function() {
+};
+$hxClasses["testcompile.Greeter"] = testcompile_Greeter;
+testcompile_Greeter.__name__ = ["testcompile","Greeter"];
+testcompile_Greeter.prototype = {
+	greet: function(name) {
+		return "Hello " + name + "!";
+	}
+	,__class__: testcompile_Greeter
+};
+var testcompile_NeedsGreeter = $hx_exports.testcompile.NeedsGreeter = function(greeter) {
+	this.greeter = greeter;
+};
+$hxClasses["testcompile.NeedsGreeter"] = testcompile_NeedsGreeter;
+testcompile_NeedsGreeter.__name__ = ["testcompile","NeedsGreeter"];
+testcompile_NeedsGreeter.prototype = {
+	__class__: testcompile_NeedsGreeter
+};
+var testcompile_HelloWorld = function(greeter) {
+	this.greeter = greeter;
+};
+$hxClasses["testcompile.HelloWorld"] = testcompile_HelloWorld;
+testcompile_HelloWorld.__name__ = ["testcompile","HelloWorld"];
+testcompile_HelloWorld.prototype = {
+	__class__: testcompile_HelloWorld
+};
+var testcompile_InputDirective = $hx_exports.testcompile.InputDirective = function() {
+};
+$hxClasses["testcompile.InputDirective"] = testcompile_InputDirective;
+testcompile_InputDirective.__name__ = ["testcompile","InputDirective"];
+testcompile_InputDirective.prototype = {
+	onInit: function() {
+		console.log("InputDirective.onInit: " + Std.string(this));
+	}
+	,onKeyUp: function(event) {
+		console.log("You just pressed a key with key code: " + event.keyCode + "!");
+	}
+	,__class__: testcompile_InputDirective
+};
+var testcompile_ParentComponent = function() {
+	this.message = "I am the parent.";
+};
+$hxClasses["testcompile.ParentComponent"] = testcompile_ParentComponent;
+testcompile_ParentComponent.__name__ = ["testcompile","ParentComponent"];
+testcompile_ParentComponent.prototype = {
+	__class__: testcompile_ParentComponent
+};
+var testcompile_TodoList = function() {
+	this.lastValue = "";
+	this.todos = ["Eat Breakfast","Walk Dog","Breathe"];
+	this.lastValue = this.todos[this.todos.length - 1];
+};
+$hxClasses["testcompile.TodoList"] = testcompile_TodoList;
+testcompile_TodoList.__name__ = ["testcompile","TodoList"];
+testcompile_TodoList.prototype = {
+	doneTyping: function(event) {
+		if(event.which == 13) {
+			this.addTodo(event.target.value);
+			event.target.value = "";
+		}
+	}
+	,addTodo: function(todo) {
+		this.lastValue = todo;
+		this.todos.push(todo);
+	}
+	,onInit: function() {
+		console.log("Lifecycle onInit:\n" + Std.string(this));
+	}
+	,onCheck: function() {
+		console.log("Lifecycle onCheck");
+	}
+	,onChange: function(changes) {
+		console.log("Lifecycle onChange: " + Std.string(changes));
+	}
+	,onAllChangesDone: function() {
+		console.log("Lifecycle onAllChangesDone");
+	}
+	,__class__: testcompile_TodoList
+};
 if(Array.prototype.indexOf) HxOverrides.indexOf = function(a,o,i) {
 	return Array.prototype.indexOf.call(a,o,i);
 };
@@ -811,6 +1176,14 @@ Bool.__ename__ = ["Bool"];
 var Class = $hxClasses.Class = { __name__ : ["Class"]};
 var Enum = { };
 var __map_reserved = {}
+angular2haxe_AngularExtension.angularClasses = (function($this) {
+	var $r;
+	var _g = new haxe_ds_StringMap();
+	_g.set("NgFor",ng.NgFor);
+	_g.set("NgIf",ng.NgIf);
+	$r = _g;
+	return $r;
+}(this));
 angular2haxe_LifecycleEventExtension.initialised = false;
 js_Boot.__toStr = {}.toString;
 test_ChildComponent.__meta__ = { obj : { Component : [{ selector : "child"}], View : [{ template : "<p>{{ message }}</p>"}]}};
@@ -820,45 +1193,51 @@ test_NgModelDirective.__meta__ = { obj : { Directive : [{ selector : "[ng-model]
 test_DependencyDisplayComponent.__meta__ = { obj : { Component : [{ selector : "dependency-display", compileChildren : true}], View : [{ directives : ["test.Dependency","test.MyDirective","test.NgModelDirective"], templateUrl : "templates/dependency.tpl.html"}]}};
 test_DisplayComponent.__meta__ = { obj : { Component : [{ selector : "display", hostInjector : ["test.FriendsService"]}], View : [{ directives : ["NgFor","NgIf"], template : "<p>My name: {{ myName }}</p><p>Friends:</p><ul><li *ng-for=\"#name of names\">{{ name }}</li></ul><p *ng-if=\"names.length > 3\">You have many friends!</p>"}]}};
 test_NeedsGreeter.__meta__ = { obj : { Directive : [{ selector : "needs-greeter", hostInjector : ["test.Greeter"]}]}};
-test_HelloWorld.__meta__ = { obj : { Component : [{ selector : "greet", hostInjector : ["test.Greeter"]}], View : [{ template : "test!<needs-greeter>{{ greeter.greet('World') }}</needs-greeter>", directives : ["test.NeedsGreeter"]}]}};
-test_HelloWorld.annotations = (function(annotationKeys,annotationData) {
-	var ret = [];
-	var index = 0;
-	var _g = 0;
-	while(_g < annotationData.length) {
-		var anno = annotationData[_g];
-		++_g;
-		ret.push((function($this) {
-			var $r;
-			var _g1 = annotationKeys[index];
-			$r = (function($this) {
-				var $r;
-				switch(_g1) {
-				case "Component":
-					$r = new ng.ComponentAnnotation(anno);
-					break;
-				case "Directive":
-					$r = new ng.DirectiveAnnotation(anno);
-					break;
-				case "View":
-					$r = new ng.ViewAnnotation(anno);
-					break;
-				default:
-					$r = index;
-				}
-				return $r;
-			}($this));
-			return $r;
-		}(this)));
-		index++;
-	}
-	return ret;
-})(["Component","View"],[{ selector : "greet", hostInjector : [test_Greeter]},{ template : "test!<needs-greeter>{{ greeter.greet('World') }}</needs-greeter>", directives : [test_NeedsGreeter]}]);
-test_HelloWorld.parameters = [[test_Greeter]];
-test_HelloWorld.__alreadyConstructed = true;
+test_HelloWorld.__meta__ = { obj : { Component : [{ selector : "greet", hostInjector : ["test.Greeter"]}], View : [{ template : "<needs-greeter>{{ greeter.greet('World') }}</needs-greeter>", directives : ["test.NeedsGreeter"]}]}};
 test_InputDirective.__meta__ = { obj : { Directive : [{ selector : "input", lifecycle : ["onInit"], host : { '@$__hx__(keyup)' : "onKeyUp($event)"}}]}};
 test_ParentComponent.__meta__ = { obj : { Component : [{ selector : "parent"}], View : [{ directives : ["test.ChildComponent"], template : "<h1>{{ message }}</h1><child></child>"}]}};
 test_TodoList.__meta__ = { obj : { Component : [{ selector : "todo-list", properties : ["lastValue","todos"], lifecycle : ["onInit","onChange","onAllChangesDone","onCheck"], changeDetection : "CHECK_ALWAYS"}], View : [{ directives : ["NgFor","NgIf","test.InputDirective"], template : "Last value: {{lastValue}}<ul><li *ng-for=\"#todo of todos\">{{ todo }}</li></ul><input #textbox (keyup)=\"doneTyping($event)\"><button (click)=\"addTodo(textbox.value)\">Add Todo</button>"}]}};
+testcompile_ChildComponent.__meta__ = { obj : { Component : [{ selector : "c-child"}], View : [{ template : "<p>{{ message }}</p>"}]}};
+testcompile_ChildComponent.annotations = [true ? new ng.ComponentAnnotation({ selector : "c-child"}) : null,true ? new ng.ViewAnnotation({ template : "<p>{{ message }}</p>"}) : null,false ? new ng.DirectiveAnnotation(null) : null];
+testcompile_ChildComponent.parameters = [];
+testcompile_ChildComponent.__alreadyConstructed = true;
+testcompile_Dependency.__meta__ = { obj : { Directive : [{ selector : "[c-dependency]", properties : ["id: c-dependency"], lifecycle : ["onInit"]}]}};
+testcompile_Dependency.annotations = [false ? new ng.ComponentAnnotation(null) : null,false ? new ng.ViewAnnotation(null) : null,true ? new ng.DirectiveAnnotation({ lifecycle : ["onInit"], selector : "[c-dependency]", properties : ["id: c-dependency"]}) : null];
+testcompile_Dependency.parameters = [];
+testcompile_Dependency.__alreadyConstructed = true;
+testcompile_MyDirective.__meta__ = { obj : { Directive : [{ selector : "[my-directive]", lifecycle : ["onInit"], hostInjector : ["testcompile.Dependency"]}]}};
+testcompile_MyDirective.annotations = [false ? new ng.ComponentAnnotation(null) : null,false ? new ng.ViewAnnotation(null) : null,true ? new ng.DirectiveAnnotation({ lifecycle : ["onInit"], selector : "[my-directive]", hostInjector : [testcompile_Dependency]}) : null];
+testcompile_MyDirective.parameters = [[testcompile_Dependency]];
+testcompile_MyDirective.__alreadyConstructed = true;
+testcompile_NgModelDirective.__meta__ = { obj : { Directive : [{ selector : "[ng-model]", properties : ["ngModel"]}]}};
+testcompile_NgModelDirective.annotations = [false ? new ng.ComponentAnnotation(null) : null,false ? new ng.ViewAnnotation(null) : null,true ? new ng.DirectiveAnnotation({ selector : "[ng-model]", properties : ["ngModel"]}) : null];
+testcompile_NgModelDirective.parameters = [];
+testcompile_NgModelDirective.__alreadyConstructed = true;
+testcompile_DependencyDisplayComponent.__meta__ = { obj : { Component : [{ selector : "c-dependency-display", compileChildren : true}], View : [{ directives : ["testcompile.Dependency","testcompile.MyDirective","testcompile.NgModelDirective"], templateUrl : "templates/dependency.tpl.html"}]}};
+testcompile_DependencyDisplayComponent.annotations = [true ? new ng.ComponentAnnotation({ selector : "c-dependency-display", compileChildren : haxe_macro_ExprDef.EConst(haxe_macro_Constant.CIdent("true"))}) : null,true ? new ng.ViewAnnotation({ directives : [testcompile_Dependency,testcompile_MyDirective,testcompile_NgModelDirective], templateUrl : "templates/dependency.tpl.html"}) : null,false ? new ng.DirectiveAnnotation(null) : null];
+testcompile_DependencyDisplayComponent.parameters = [];
+testcompile_DependencyDisplayComponent.__alreadyConstructed = true;
+testcompile_DisplayComponent.__meta__ = { obj : { Component : [{ selector : "c-display", hostInjector : ["testcompile.FriendsService"]}], View : [{ directives : ["NgFor","NgIf"], template : "<p>My name: {{ myName }}</p><p>Friends:</p><ul><li *ng-for=\"#name of names\">{{ name }}</li></ul><p *ng-if=\"names.length > 3\">You have many friends!</p>"}]}};
+testcompile_DisplayComponent.annotations = [true ? new ng.ComponentAnnotation({ selector : "c-display", hostInjector : [testcompile_FriendsService]}) : null,true ? new ng.ViewAnnotation({ template : "<p>My name: {{ myName }}</p><p>Friends:</p><ul><li *ng-for=\"#name of names\">{{ name }}</li></ul><p *ng-if=\"names.length > 3\">You have many friends!</p>", directives : ["NgFor","NgIf"]}) : null,false ? new ng.DirectiveAnnotation(null) : null];
+testcompile_DisplayComponent.parameters = [[testcompile_FriendsService]];
+testcompile_DisplayComponent.__alreadyConstructed = true;
+testcompile_NeedsGreeter.__meta__ = { obj : { Directive : [{ selector : "c-needs-greeter", hostInjector : ["testcompile.Greeter"]}]}};
+testcompile_NeedsGreeter.annotations = [false ? new ng.ComponentAnnotation(null) : null,false ? new ng.ViewAnnotation(null) : null,true ? new ng.DirectiveAnnotation({ selector : "c-needs-greeter", hostInjector : [testcompile_Greeter]}) : null];
+testcompile_NeedsGreeter.parameters = [[testcompile_Greeter]];
+testcompile_NeedsGreeter.__alreadyConstructed = true;
+testcompile_HelloWorld.__meta__ = { obj : { Component : [{ selector : "c-greet", hostInjector : ["testcompile.Greeter"]}], View : [{ template : "<c-needs-greeter>{{ greeter.greet('World') }}</c-needs-greeter>", directives : ["testcompile.NeedsGreeter"]}]}};
+testcompile_HelloWorld.annotations = [true ? new ng.ComponentAnnotation({ selector : "c-greet", hostInjector : [testcompile_Greeter]}) : null,true ? new ng.ViewAnnotation({ template : "<c-needs-greeter>{{ greeter.greet('World') }}</c-needs-greeter>", directives : [testcompile_NeedsGreeter]}) : null,false ? new ng.DirectiveAnnotation(null) : null];
+testcompile_HelloWorld.parameters = [[testcompile_Greeter]];
+testcompile_HelloWorld.__alreadyConstructed = true;
+testcompile_InputDirective.__meta__ = { obj : { Directive : [{ selector : "input", lifecycle : ["onInit"], host : { '@$__hx__(keyup)' : "onKeyUp($event)"}}]}};
+testcompile_ParentComponent.__meta__ = { obj : { Component : [{ selector : "c-parent"}], View : [{ directives : ["testcompile.ChildComponent"], template : "<h1>{{ message }}</h1><c-child></c-child>"}]}};
+testcompile_ParentComponent.annotations = [true ? new ng.ComponentAnnotation({ selector : "c-parent"}) : null,true ? new ng.ViewAnnotation({ template : "<h1>{{ message }}</h1><c-child></c-child>", directives : [testcompile_ChildComponent]}) : null,false ? new ng.DirectiveAnnotation(null) : null];
+testcompile_ParentComponent.parameters = [];
+testcompile_ParentComponent.__alreadyConstructed = true;
+testcompile_TodoList.__meta__ = { obj : { Component : [{ selector : "c-todo-list", properties : ["lastValue","todos"], lifecycle : ["onInit","onChange","onAllChangesDone","onCheck"], changeDetection : "CHECK_ALWAYS"}], View : [{ directives : ["NgFor","NgIf","testcompile.InputDirective"], template : "Last value: {{lastValue}}<ul><li *ng-for=\"#todo of todos\">{{ todo }}</li></ul><input #textbox (keyup)=\"doneTyping($event)\"><button (click)=\"addTodo(textbox.value)\">Add Todo</button>"}]}};
+testcompile_TodoList.annotations = [true ? new ng.ComponentAnnotation({ changeDetection : "CHECK_ALWAYS", lifecycle : ["onInit","onChange","onAllChangesDone","onCheck"], selector : "c-todo-list", properties : ["lastValue","todos"]}) : null,true ? new ng.ViewAnnotation({ template : "Last value: {{lastValue}}<ul><li *ng-for=\"#todo of todos\">{{ todo }}</li></ul><input #textbox (keyup)=\"doneTyping($event)\"><button (click)=\"addTodo(textbox.value)\">Add Todo</button>", directives : ["NgFor","NgIf",testcompile_InputDirective]}) : null,false ? new ng.DirectiveAnnotation(null) : null];
+testcompile_TodoList.parameters = [];
+testcompile_TodoList.__alreadyConstructed = true;
 Main.main();
 })(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : exports);
 

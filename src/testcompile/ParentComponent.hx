@@ -13,11 +13,31 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package angular2haxe;
+package testcompile;
 
-@:native('angular.EventEmitter')
-extern class EventEmitter
+import ng.Angular;
+
+/*
+ * Reference:
+ * https://angular.io/docs/js/latest/guide/making-components.html
+ */
+
+@Component({ 
+	selector: 'c-parent'
+})
+@View({ 
+	directives: ["testcompile.ChildComponent"],
+	template: '<h1>{{ message }}</h1><c-child></c-child>'
+})
+#if !macro
+@:build(angular2haxe.buildplugin.BuildPlugin.compile())
+#end
+class ParentComponent 
 {
-	function new();
-	public function next(event : Dynamic) : EventEmitter;
+	private var message = "I am the parent.";
+	
+    public function new()
+    {
+		
+    }
 }

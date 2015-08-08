@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package test;
+package testcompile;
 
 import angular2haxe.KeyboardEvent;
 import angular2haxe.Trace;
@@ -25,15 +25,17 @@ import test.InputDirective;
  */
 
 @Component({ 
-	selector: 'todo-list',
+	selector: 'c-todo-list',
 	properties: ["lastValue", "todos"],
 	lifecycle: ["onInit", "onChange", "onAllChangesDone", "onCheck"],
 	changeDetection: "CHECK_ALWAYS"
 })
 @View({ 
-	directives: ["NgFor", "NgIf", "test.InputDirective"],
+	directives: ["NgFor", "NgIf", "testcompile.InputDirective"],
 	template: 'Last value: {{lastValue}}<ul><li *ng-for="#todo of todos">{{ todo }}</li></ul><input #textbox (keyup)="doneTyping($event)"><button (click)="addTodo(textbox.value)">Add Todo</button>',
 })
+#if !macro
+@:build(angular2haxe.buildplugin.BuildPlugin.compile())
 class TodoList
 {
 	private var todos : Array<String>;
@@ -44,7 +46,7 @@ class TodoList
 		todos = ["Eat Breakfast", "Walk Dog", "Breathe"];
 		lastValue = todos[todos.length - 1];
 	}
-#if !macro
+	
 	public function doneTyping(event : KeyboardEvent)
 	{
 		if (event.which == 13)
@@ -53,7 +55,7 @@ class TodoList
 			event._target.value = "";
 		}
 	}
-#end
+	
 	public function addTodo(todo : String)
 	{
 		lastValue = todo;
@@ -80,3 +82,4 @@ class TodoList
 		Trace.log('Lifecycle onAllChangesDone');
 	}
 }
+#end

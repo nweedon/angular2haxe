@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package angular2haxe;
+package ng;
 
 /**
  * Reference: 
@@ -30,7 +30,7 @@ class ComponentConstructorData
 	public var events 			: Array<String>			= [];
 	public var host 			: Map<String, String>	= new Map<String, String>();
 	public var lifecycle		: Array<Dynamic>		= [];
-	public var hostInjector		: Array<String>			= [];
+	public var hostInjector		: Array<Dynamic>		= [];
 	public var exportAs			: String				= "";
 	public var compileChildren 	: Bool					= true;
 	public var changeDetection 	: String				= "DEFAULT";

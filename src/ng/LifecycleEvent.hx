@@ -1,4 +1,4 @@
-package angular2haxe;
+package ng;
 
 /**
  * ...
