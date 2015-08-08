@@ -15,6 +15,7 @@ limitations under the License.
 */
 package angular2haxe;
 
+#if !macro
 import js.html.KeyboardEventInit;
 
 class KeyboardEvent extends js.html.KeyboardEvent
@@ -27,3 +28,6 @@ class KeyboardEvent extends js.html.KeyboardEvent
 		super(typeArg, keyboardEventInitDict);
 	}	
 }
+#else
+class KeyboardEvent { }
+#end

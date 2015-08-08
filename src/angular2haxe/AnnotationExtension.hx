@@ -15,11 +15,17 @@ limitations under the License.
 */
 package angular2haxe;
 
+import haxe.macro.Compiler;
 import haxe.macro.Context;
 import haxe.macro.Expr;
 import haxe.macro.ExprTools;
 import haxe.macro.Type in MType;
 import haxe.macro.Type.ClassType;
+import haxe.macro.MacroStringTools;
+import haxe.Template;
+
+// Type.resolveClass in macro works if type is imported
+//import test.HelloWorld;
 
 class AnnotationExtension
 {
@@ -58,7 +64,9 @@ class AnnotationExtension
 				{
 					var inputClassName : String = Type.getClassName(Type.getClass(inputField));
 					var outputClassName : String = Type.getClassName(outputClass);
+					#if !macro
 					Trace.error('Input type of field "${field}" (${inputClassName}) does not match type of output field (${outputClassName}).');
+					#end
 				}
 			}
 			else 
@@ -74,22 +82,26 @@ class AnnotationExtension
 	 * Compile data at build-time rather than run-time.
 	 * @return
 	 */
-	macro static public function compile() : Array<Field>
-	{
+	#if macro
+	static public function compile() : Array<Field>
+	{		
 		var attachedClass : ClassType = Context.getLocalClass().get();
 		var attachedMetadata : Metadata = attachedClass.meta.get();
 		var fields : Array<Field> = Context.getBuildFields();
+		
+		// Use template strings to build final output code / macro
 		var validAnnotations : Map<String, AnnotationPair> = [
 			"Component" => { annotation: ComponentAnnotation, extension: ComponentAnnotationExtension },
 			"Directive" => { annotation: DirectiveAnnotation, extension: DirectiveAnnotationExtension },
 			"View" 		=> { annotation: ViewAnnotation, extension: ViewAnnotationExtension },
 		];
 		
-		//trace(Context.getType("test.Greeter"));
-		
 		// Set default values for annotations and parameters fields.
-		var annotations : Array<Dynamic> = [];
+		var annotationData : Array<Dynamic> = [];
+		var annotationKeys : Array<String> = [];
 		var parameters : Array<Dynamic> = [];
+		
+		Trace.log('=> Started compiling "${attachedClass.name}"');
 		
 		for (meta in attachedMetadata) 
 		{
@@ -97,6 +109,8 @@ class AnnotationExtension
 			{
 				var data : Dynamic = { };
 				var annotationName : String = meta.name;
+				
+				Trace.log('\t-> Parsing ${meta.name} annotation');
 				
 				for (param in meta.params)
 				{
@@ -109,8 +123,6 @@ class AnnotationExtension
 					{
 						var e : Expr = params[i].expr;
 						var fieldValue : Dynamic;
-						//trace(e);
-						// { expr => EConst(CString(greet)), pos => #pos(src/test/HelloWorld.hx:55: characters 11-18) }
 
 						// Cast field values into values that can be worked with.
 						fieldValue = switch(e.expr) 
@@ -147,28 +159,41 @@ class AnnotationExtension
 					}
 				}
 				
-				trace('@${annotationName}(${data})');
-				//trace(fields);
-				
 				Reflect.callMethod(validAnnotations[annotationName].extension, 
 									Reflect.field(validAnnotations[annotationName].extension, "transform"), 
-									[data, annotations, parameters]);
-												
-				// annotations.push(Type.createInstance(validAnnotations[name].annotation, [field[0]]));
+									[data, annotationData, parameters]);
 				
-				trace('annotations => ${annotations}');
-				trace('parameters => ${parameters}');
+				annotationData.push(data);
+				annotationKeys.push(annotationName);
 			}
 		}
-		
+				
 		// Create annotations and parameters fields
 		fields.push({
 			name: 'annotations',
 			doc: null,
 			meta: [],
 			access: [AStatic, APublic],
-			//kind: FVar(macro : Array<Dynamic>, macro [new angular2haxe.ComponentAnnotation(new angular2haxe.ComponentConstructorData())]),
-			kind: FVar(macro : Array<Dynamic>, Context.makeExpr(annotations, Context.currentPos())),
+			kind: FVar(macro : Array<Dynamic>, macro function(annotationKeys : Array<String>, annotationData : Array<Dynamic>) { 
+				var ret : Array<Dynamic> = [];
+				var index : Int = 0;
+				
+				// Build array of annotations
+				for (anno in annotationData)
+				{
+					ret.push(switch(annotationKeys[index])
+					{
+						case "Component": new angular2haxe.ComponentAnnotation(anno);
+						case "Directive": new angular2haxe.DirectiveAnnotation(anno);
+						case "View": new angular2haxe.ViewAnnotation(anno);
+						case _: index;
+					});
+					
+					index++;
+				}
+				
+				return ret;
+			}($v{ annotationKeys }, $v{ annotationData })),
 			pos: Context.currentPos()
 		});
 		
@@ -192,8 +217,10 @@ class AnnotationExtension
 			pos: Context.currentPos()
 		});
 		
+		Trace.log('=> Finished compiling "${attachedClass.name}"');
 		return fields;
 	}
+	#end
 	
 	/**
 	 * Parse annotation injectors to be used in the Angular, resolving
@@ -211,13 +238,7 @@ class AnnotationExtension
 		{
 			if (app != null && app.length > 0)
 			{
-				// Resolves to null in macro
-				#if !macro
-					var cl = Type.resolveClass(app);
-				#else
-					var cl = Context.toComplexType(Context.getType(app));
-				#end
-				
+				var cl = Type.resolveClass(app);
 				serviceParams.push(cl);
 				injector[index] = cl;
 			}

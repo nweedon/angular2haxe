@@ -17,7 +17,7 @@ package angular2haxe;
 
 import angular2haxe.ComponentConstructorData;
 
-@:native('angular.ComponentAnnotation')
+@:native('ng.ComponentAnnotation')
 extern class ComponentAnnotation extends Annotation
 {
 	function new(data : ComponentConstructorData);

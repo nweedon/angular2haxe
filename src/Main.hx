@@ -29,7 +29,7 @@ import test.InputDirective;
 class Main
 {
     static function main()
-    {
+	{
 		// Create a new application, bootstrapping the
 		// listed classes in the process.
 		new Application([

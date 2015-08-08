@@ -15,7 +15,7 @@ limitations under the License.
 */
 package angular2haxe;
 
-@:native('angular.ViewAnnotation')
+@:native('ng.ViewAnnotation')
 extern class ViewAnnotation extends Annotation
 {
 	function new(data : Dynamic);

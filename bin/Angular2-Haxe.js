@@ -1,6 +1,6 @@
 (function (console, $hx_exports) { "use strict";
 $hx_exports.test = $hx_exports.test || {};
-var $hxClasses = {},$estr = function() { return js_Boot.__string_rec(this,''); };
+var $hxClasses = {};
 function $extend(from, fields) {
 	function Inherit() {} Inherit.prototype = from; var proto = new Inherit();
 	for (var name in fields) proto[name] = fields[name];
@@ -21,6 +21,13 @@ HxOverrides.indexOf = function(a,obj,i) {
 		i++;
 	}
 	return -1;
+};
+HxOverrides.iter = function(a) {
+	return { cur : 0, arr : a, hasNext : function() {
+		return this.cur < this.arr.length;
+	}, next : function() {
+		return this.arr[this.cur++];
+	}};
 };
 var Main = function() { };
 $hxClasses["Main"] = Main;
@@ -201,9 +208,9 @@ angular2haxe_Application.prototype = {
 		var showDataInTrace = false;
 		var validAnnotations;
 		var _g = new haxe_ds_StringMap();
-		_g.set("Component",{ annotation : angular.ComponentAnnotation, extension : angular2haxe_ComponentAnnotationExtension});
-		_g.set("Directive",{ annotation : angular.DirectiveAnnotation, extension : angular2haxe_DirectiveAnnotationExtension});
-		_g.set("View",{ annotation : angular.ViewAnnotation, extension : angular2haxe_ViewAnnotationExtension});
+		_g.set("Component",{ annotation : ng.ComponentAnnotation, extension : angular2haxe_ComponentAnnotationExtension});
+		_g.set("Directive",{ annotation : ng.DirectiveAnnotation, extension : angular2haxe_DirectiveAnnotationExtension});
+		_g.set("View",{ annotation : ng.ViewAnnotation, extension : angular2haxe_ViewAnnotationExtension});
 		validAnnotations = _g;
 		var _g1 = 0;
 		while(_g1 < components.length) {
@@ -473,16 +480,6 @@ haxe_ds_StringMap.prototype = {
 	}
 	,__class__: haxe_ds_StringMap
 };
-var haxe_macro_ComplexType = { __ename__ : true, __constructs__ : ["TPath","TFunction","TAnonymous","TParent","TExtend","TOptional"] };
-haxe_macro_ComplexType.TPath = function(p) { var $x = ["TPath",0,p]; $x.__enum__ = haxe_macro_ComplexType; $x.toString = $estr; return $x; };
-haxe_macro_ComplexType.TFunction = function(args,ret) { var $x = ["TFunction",1,args,ret]; $x.__enum__ = haxe_macro_ComplexType; $x.toString = $estr; return $x; };
-haxe_macro_ComplexType.TAnonymous = function(fields) { var $x = ["TAnonymous",2,fields]; $x.__enum__ = haxe_macro_ComplexType; $x.toString = $estr; return $x; };
-haxe_macro_ComplexType.TParent = function(t) { var $x = ["TParent",3,t]; $x.__enum__ = haxe_macro_ComplexType; $x.toString = $estr; return $x; };
-haxe_macro_ComplexType.TExtend = function(p,fields) { var $x = ["TExtend",4,p,fields]; $x.__enum__ = haxe_macro_ComplexType; $x.toString = $estr; return $x; };
-haxe_macro_ComplexType.TOptional = function(t) { var $x = ["TOptional",5,t]; $x.__enum__ = haxe_macro_ComplexType; $x.toString = $estr; return $x; };
-var haxe_macro_TypeParam = { __ename__ : true, __constructs__ : ["TPType","TPExpr"] };
-haxe_macro_TypeParam.TPType = function(t) { var $x = ["TPType",0,t]; $x.__enum__ = haxe_macro_TypeParam; $x.toString = $estr; return $x; };
-haxe_macro_TypeParam.TPExpr = function(e) { var $x = ["TPExpr",1,e]; $x.__enum__ = haxe_macro_TypeParam; $x.toString = $estr; return $x; };
 var haxe_rtti_Meta = function() { };
 $hxClasses["haxe.rtti.Meta"] = haxe_rtti_Meta;
 haxe_rtti_Meta.__name__ = ["haxe","rtti","Meta"];
@@ -738,7 +735,6 @@ test_NeedsGreeter.prototype = {
 };
 var test_HelloWorld = $hx_exports.test.HelloWorld = function(greeter) {
 	this.greeter = greeter;
-	console.log(this);
 };
 $hxClasses["test.HelloWorld"] = test_HelloWorld;
 test_HelloWorld.__name__ = ["test","HelloWorld"];
@@ -824,9 +820,41 @@ test_NgModelDirective.__meta__ = { obj : { Directive : [{ selector : "[ng-model]
 test_DependencyDisplayComponent.__meta__ = { obj : { Component : [{ selector : "dependency-display", compileChildren : true}], View : [{ directives : ["test.Dependency","test.MyDirective","test.NgModelDirective"], templateUrl : "templates/dependency.tpl.html"}]}};
 test_DisplayComponent.__meta__ = { obj : { Component : [{ selector : "display", hostInjector : ["test.FriendsService"]}], View : [{ directives : ["NgFor","NgIf"], template : "<p>My name: {{ myName }}</p><p>Friends:</p><ul><li *ng-for=\"#name of names\">{{ name }}</li></ul><p *ng-if=\"names.length > 3\">You have many friends!</p>"}]}};
 test_NeedsGreeter.__meta__ = { obj : { Directive : [{ selector : "needs-greeter", hostInjector : ["test.Greeter"]}]}};
-test_HelloWorld.__meta__ = { obj : { Component : [{ selector : "greet", hostInjector : ["test.Greeter"]}], View : [{ template : "<needs-greeter>{{ greeter.greet('World') }}</needs-greeter>", directives : ["test.NeedsGreeter"]}]}};
-test_HelloWorld.annotations = [];
-test_HelloWorld.parameters = [[haxe_macro_ComplexType.TPath({ sub : "Greeter", params : [], pack : ["test"], name : "HelloWorld"})]];
+test_HelloWorld.__meta__ = { obj : { Component : [{ selector : "greet", hostInjector : ["test.Greeter"]}], View : [{ template : "test!<needs-greeter>{{ greeter.greet('World') }}</needs-greeter>", directives : ["test.NeedsGreeter"]}]}};
+test_HelloWorld.annotations = (function(annotationKeys,annotationData) {
+	var ret = [];
+	var index = 0;
+	var _g = 0;
+	while(_g < annotationData.length) {
+		var anno = annotationData[_g];
+		++_g;
+		ret.push((function($this) {
+			var $r;
+			var _g1 = annotationKeys[index];
+			$r = (function($this) {
+				var $r;
+				switch(_g1) {
+				case "Component":
+					$r = new ng.ComponentAnnotation(anno);
+					break;
+				case "Directive":
+					$r = new ng.DirectiveAnnotation(anno);
+					break;
+				case "View":
+					$r = new ng.ViewAnnotation(anno);
+					break;
+				default:
+					$r = index;
+				}
+				return $r;
+			}($this));
+			return $r;
+		}(this)));
+		index++;
+	}
+	return ret;
+})(["Component","View"],[{ selector : "greet", hostInjector : [test_Greeter]},{ template : "test!<needs-greeter>{{ greeter.greet('World') }}</needs-greeter>", directives : [test_NeedsGreeter]}]);
+test_HelloWorld.parameters = [[test_Greeter]];
 test_HelloWorld.__alreadyConstructed = true;
 test_InputDirective.__meta__ = { obj : { Directive : [{ selector : "input", lifecycle : ["onInit"], host : { '@$__hx__(keyup)' : "onKeyUp($event)"}}]}};
 test_ParentComponent.__meta__ = { obj : { Component : [{ selector : "parent"}], View : [{ directives : ["test.ChildComponent"], template : "<h1>{{ message }}</h1><child></child>"}]}};

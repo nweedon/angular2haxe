@@ -15,6 +15,10 @@ limitations under the License.
 */
 package angular2haxe;
 
+#if macro
+import haxe.macro.Context;
+#end
+
 class Trace
 {
 	private function new() 
@@ -27,18 +31,26 @@ class Trace
 	 */
 	public static inline function error(info : String)
 	{
+		#if macro
+		Context.error(info, Context.currentPos());
+		#else
 		untyped
 		{
 			console.error(info);
 		}
+		#end
 	}
 	
 	public static inline function warning(info : String)
 	{
+		#if macro
+		Context.warning(info, Context.currentPos());
+		#else
 		untyped
 		{
 			console.warn(info);
 		}
+		#end
 	}
 	
 	/**

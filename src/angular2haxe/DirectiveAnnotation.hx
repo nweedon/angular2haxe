@@ -15,7 +15,7 @@ limitations under the License.
 */
 package angular2haxe;
 
-@:native('angular.DirectiveAnnotation')
+@:native('ng.DirectiveAnnotation')
 extern class DirectiveAnnotation extends Annotation
 {
 	function new(data : Dynamic);

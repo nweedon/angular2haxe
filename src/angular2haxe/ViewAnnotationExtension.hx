@@ -18,6 +18,10 @@ package angular2haxe;
 import angular2haxe.ViewConstructorData;
 import angular2haxe.AngularExtension;
 
+#if macro
+import angular2haxe.buildplugin.BuildPlugin;
+#end
+
 class ViewAnnotationExtension extends AnnotationExtension
 {
 	private function new() 
@@ -50,7 +54,11 @@ class ViewAnnotationExtension extends AnnotationExtension
 					directive = StringTools.htmlEscape(directive);
 					
 					// extern classes won't resolve
+					#if macro
+					var resolvedClass = BuildPlugin.resolveClass(directive);
+					#else
 					var resolvedClass = Type.resolveClass(directive);
+					#end
 					
 					if (resolvedClass != null)
 					{
