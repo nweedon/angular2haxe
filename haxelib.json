@@ -1,12 +1,12 @@
 {
 	"name" : "angular2haxe",
-	"url" : "https://github.com/nweedon/Angular2-Haxe",
-	"license" : "MIT",
+	"url" : "https://github.com/nweedon/angular2haxe",
+	"license" : "Apache",
 	"tags" : ["angular", "web", "language bindings"],
 	"description" : "Haxe language bindings for Angular 2",
-	"version" : "0.2.0",
+	"version" : "0.3.0-alpha",
 	"classpath" : "angular2haxe/",
-	"releasenote" : "Removed the need to provide annotations and parameters variables explicitly in Angular classes.",
+	"releasenote" : "Experimental build via @:build macro. View repo for more information.",
 	"contributors" : ["nweedon"],
 	"dependencies" : { }
 }
