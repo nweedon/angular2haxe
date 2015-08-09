@@ -27,20 +27,19 @@ import haxe.macro.MacroStringTools;
 
 import angular2haxe.Trace;
 import angular2haxe.AngularExtension;
-import haxe.Template;
-import test.HelloWorld;
-import test.HelloWorld.Greeter;
-import test.InputDirective;
 
-import ng.ComponentAnnotation;
-import ng.DirectiveAnnotation;
-import ng.ViewAnnotation;
-import ng.NgFor;
-
+// Command line: -D using_registry
+#if using_registry
 /* Import a build registry. The registry
  * holds all imports that need to be resolved 
- * at build-time. */
+ * at build-time. 
+ * If you don't have one, follow the link for a
+ * reference implementation:
+ * 
+ * https://github.com/nweedon/Angular2-Haxe/blob/master/src/BuildRegistry.hx 
+ */
 import BuildRegistry;
+#end
 /* --- */
 
 class BuildPlugin
@@ -85,17 +84,17 @@ class BuildPlugin
 	 * Compile data at build-time rather than run-time.
 	 * @return
 	 */
-	static public function compile() : Array<Field>
+	static public function build() : Array<Field>
 	{		
 		var attachedClass : ClassType = Context.getLocalClass().get();
 		var attachedMetadata : Metadata = attachedClass.meta.get();
 		var fields : Array<Field> = Context.getBuildFields();
 		
 		// Use template strings to build final output code / macro
-		var validAnnotations : Map<String, AnnotationPair> = [
-			"Component" => { annotation: ComponentAnnotation, extension: ComponentAnnotationExtension },
-			"Directive" => { annotation: DirectiveAnnotation, extension: DirectiveAnnotationExtension },
-			"View" 		=> { annotation: ViewAnnotation, extension: ViewAnnotationExtension },
+		var validAnnotations : Map<String, Class<AnnotationExtension>> = [
+			"Component" => ComponentAnnotationExtension,
+			"Directive" => DirectiveAnnotationExtension,
+			"View" 		=> ViewAnnotationExtension
 		];
 
 		// Set default values for annotations and parameters fields.
@@ -161,8 +160,8 @@ class BuildPlugin
 					}
 				}
 				
-				Reflect.callMethod(validAnnotations[annotationName].extension, 
-									Reflect.field(validAnnotations[annotationName].extension, "transform"), 
+				Reflect.callMethod(validAnnotations[annotationName], 
+									Reflect.field(validAnnotations[annotationName], "transform"), 
 									[data, annotationData, parameters]);
 				
 				annotationData.push(data);

@@ -15,8 +15,8 @@ limitations under the License.
 */
 package angular2haxe;
 
-import ng.NgFor;
-import ng.NgIf;
+import angular2haxe.ng.NgFor;
+import angular2haxe.ng.NgIf;
 
 class AngularExtension
 {

@@ -15,8 +15,8 @@ limitations under the License.
 */
 package testcompile;
 
-import ng.Angular;
-import ng.LifecycleEvent;
+import angular2haxe.ng.Angular;
+import angular2haxe.ng.LifecycleEvent;
 import test.Dependency.MyDirective;
 
 /*
@@ -33,7 +33,7 @@ import test.Dependency.MyDirective;
 	templateUrl: "templates/dependency.tpl.html"
 })
 #if !macro
-@:build(angular2haxe.buildplugin.BuildPlugin.compile())
+@:build(angular2haxe.buildplugin.BuildPlugin.build())
 #end
 class DependencyDisplayComponent
 {	

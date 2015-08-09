@@ -303,7 +303,7 @@ var angular2haxe_ComponentAnnotationExtension = function() {
 $hxClasses["angular2haxe.ComponentAnnotationExtension"] = angular2haxe_ComponentAnnotationExtension;
 angular2haxe_ComponentAnnotationExtension.__name__ = ["angular2haxe","ComponentAnnotationExtension"];
 angular2haxe_ComponentAnnotationExtension.transform = function(input,annotations,parameters) {
-	var output = angular2haxe_AnnotationExtension.resolveInputAnnotation(input,ng_ComponentConstructorData);
+	var output = angular2haxe_AnnotationExtension.resolveInputAnnotation(input,angular2haxe_ng_ComponentConstructorData);
 	if(parameters != null && output.hostInjector != null) angular2haxe_AnnotationExtension.parseInjector(parameters,output.hostInjector);
 	angular2haxe_AnnotationExtension.transformLifecycle(output.lifecycle);
 	return output;
@@ -348,7 +348,7 @@ angular2haxe_DirectiveAnnotationExtension.transform = function(input,annotations
 		}
 		input.host = outputHost;
 	}
-	var output = angular2haxe_AnnotationExtension.resolveInputAnnotation(input,ng_DirectiveConstructorData);
+	var output = angular2haxe_AnnotationExtension.resolveInputAnnotation(input,angular2haxe_ng_DirectiveConstructorData);
 	if(parameters != null && output.hostInjector != null) angular2haxe_AnnotationExtension.parseInjector(parameters,output.hostInjector);
 	if(output.lifecycle != null) angular2haxe_AnnotationExtension.transformLifecycle(output.lifecycle);
 	return output;
@@ -434,7 +434,7 @@ var angular2haxe_ViewAnnotationExtension = function() {
 $hxClasses["angular2haxe.ViewAnnotationExtension"] = angular2haxe_ViewAnnotationExtension;
 angular2haxe_ViewAnnotationExtension.__name__ = ["angular2haxe","ViewAnnotationExtension"];
 angular2haxe_ViewAnnotationExtension.transform = function(input,annotations,parameters) {
-	var output = angular2haxe_AnnotationExtension.resolveInputAnnotation(input,ng_ViewConstructorData);
+	var output = angular2haxe_AnnotationExtension.resolveInputAnnotation(input,angular2haxe_ng_ViewConstructorData);
 	var index = 0;
 	if(output.directives != null) {
 		var _g = 0;
@@ -480,6 +480,50 @@ $hxClasses["angular2haxe.buildplugin.BuildPlugin"] = angular2haxe_buildplugin_Bu
 angular2haxe_buildplugin_BuildPlugin.__name__ = ["angular2haxe","buildplugin","BuildPlugin"];
 angular2haxe_buildplugin_BuildPlugin.prototype = {
 	__class__: angular2haxe_buildplugin_BuildPlugin
+};
+var angular2haxe_ng_ComponentConstructorData = function() {
+	this.changeDetection = "DEFAULT";
+	this.compileChildren = true;
+	this.exportAs = "";
+	this.hostInjector = [];
+	this.lifecycle = [];
+	this.host = new haxe_ds_StringMap();
+	this.events = [];
+	this.properties = [];
+	this.selector = "";
+};
+$hxClasses["angular2haxe.ng.ComponentConstructorData"] = angular2haxe_ng_ComponentConstructorData;
+angular2haxe_ng_ComponentConstructorData.__name__ = ["angular2haxe","ng","ComponentConstructorData"];
+angular2haxe_ng_ComponentConstructorData.prototype = {
+	__class__: angular2haxe_ng_ComponentConstructorData
+};
+var angular2haxe_ng_DirectiveConstructorData = function() {
+	this.compileChildren = true;
+	this.exportAs = "";
+	this.hostInjector = [];
+	this.lifecycle = [];
+	this.host = { };
+	this.events = [];
+	this.properties = [];
+	this.selector = "";
+};
+$hxClasses["angular2haxe.ng.DirectiveConstructorData"] = angular2haxe_ng_DirectiveConstructorData;
+angular2haxe_ng_DirectiveConstructorData.__name__ = ["angular2haxe","ng","DirectiveConstructorData"];
+angular2haxe_ng_DirectiveConstructorData.prototype = {
+	__class__: angular2haxe_ng_DirectiveConstructorData
+};
+var angular2haxe_ng_ViewConstructorData = function() {
+	this.styleUrls = [];
+	this.styles = [];
+	this.renderer = "";
+	this.directives = [];
+	this.template = "";
+	this.templateUrl = "";
+};
+$hxClasses["angular2haxe.ng.ViewConstructorData"] = angular2haxe_ng_ViewConstructorData;
+angular2haxe_ng_ViewConstructorData.__name__ = ["angular2haxe","ng","ViewConstructorData"];
+angular2haxe_ng_ViewConstructorData.prototype = {
+	__class__: angular2haxe_ng_ViewConstructorData
 };
 var haxe_IMap = function() { };
 $hxClasses["haxe.IMap"] = haxe_IMap;
@@ -806,50 +850,6 @@ js_Boot.__isNativeObj = function(o) {
 };
 js_Boot.__resolveNativeClass = function(name) {
 	return (Function("return typeof " + name + " != \"undefined\" ? " + name + " : null"))();
-};
-var ng_ComponentConstructorData = function() {
-	this.changeDetection = "DEFAULT";
-	this.compileChildren = true;
-	this.exportAs = "";
-	this.hostInjector = [];
-	this.lifecycle = [];
-	this.host = new haxe_ds_StringMap();
-	this.events = [];
-	this.properties = [];
-	this.selector = "";
-};
-$hxClasses["ng.ComponentConstructorData"] = ng_ComponentConstructorData;
-ng_ComponentConstructorData.__name__ = ["ng","ComponentConstructorData"];
-ng_ComponentConstructorData.prototype = {
-	__class__: ng_ComponentConstructorData
-};
-var ng_DirectiveConstructorData = function() {
-	this.compileChildren = true;
-	this.exportAs = "";
-	this.hostInjector = [];
-	this.lifecycle = [];
-	this.host = { };
-	this.events = [];
-	this.properties = [];
-	this.selector = "";
-};
-$hxClasses["ng.DirectiveConstructorData"] = ng_DirectiveConstructorData;
-ng_DirectiveConstructorData.__name__ = ["ng","DirectiveConstructorData"];
-ng_DirectiveConstructorData.prototype = {
-	__class__: ng_DirectiveConstructorData
-};
-var ng_ViewConstructorData = function() {
-	this.styleUrls = [];
-	this.styles = [];
-	this.renderer = "";
-	this.directives = [];
-	this.template = "";
-	this.templateUrl = "";
-};
-$hxClasses["ng.ViewConstructorData"] = ng_ViewConstructorData;
-ng_ViewConstructorData.__name__ = ["ng","ViewConstructorData"];
-ng_ViewConstructorData.prototype = {
-	__class__: ng_ViewConstructorData
 };
 var test_ChildComponent = $hx_exports.test.ChildComponent = function() {
 	this.message = "I am the child.";

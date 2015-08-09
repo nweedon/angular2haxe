@@ -15,7 +15,7 @@ limitations under the License.
 */
 package angular2haxe;
 
-import ng.LifecycleEvent;
+import angular2haxe.ng.LifecycleEvent;
 
 #if macro
 import haxe.macro.Context;

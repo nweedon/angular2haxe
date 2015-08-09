@@ -15,7 +15,7 @@ limitations under the License.
 */
 package testcompile;
 
-import ng.Angular;
+import angular2haxe.ng.Angular;
 
 /*
  * Reference:
@@ -31,7 +31,7 @@ import ng.Angular;
 	template: '<p>My name: {{ myName }}</p><p>Friends:</p><ul><li *ng-for="#name of names">{{ name }}</li></ul><p *ng-if="names.length > 3">You have many friends!</p>'
 })
 #if !macro
-@:build(angular2haxe.buildplugin.BuildPlugin.compile())
+@:build(angular2haxe.buildplugin.BuildPlugin.build())
 #end
 class DisplayComponent
 {

@@ -13,13 +13,25 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package ng;
+package angular2haxe.ng;
 
-import ng.ComponentConstructorData;
-import angular2haxe.Annotation;
-
-@:native('ng.ComponentAnnotation')
-extern class ComponentAnnotation extends Annotation
+@:native('ng.LifecycleEvent')
+extern class LifecycleEvent
 {
-	function new(data : ComponentConstructorData);
+	@:native('onChange')
+	public static var onChange : Dynamic;
+	
+	@:native('onInit')
+	public static var onInit : Dynamic;
+	
+	@:native('onCheck')
+	public static var onCheck : Dynamic;
+	
+	@:native('onAllChangesDone')
+	public static var onAllChangesDone : Dynamic;
+	
+	@:native('onDestroy')
+	public static var onDestroy : Dynamic;
+	
+	private function new() { }
 }

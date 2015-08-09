@@ -13,15 +13,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package ng;
+package angular2haxe.ng;
 
-@:native('ng.NgFor')
-extern class NgFor
+/**
+ * Haxe representation of Angular 2.0
+ */
+@:native('angular')
+extern class Angular
 {
-	// TODO: Original Constructor
-	// viewContainer: ViewContainerRef, templateRef: TemplateRef, pipes: Pipes, cdr: ChangeDetectorRef
-	public function new(viewContainer : Dynamic, templateRef : Dynamic, pipes : Dynamic, cdr : Dynamic) 
-	{
-		
-	}
+    function new();
+	
+    static function bootstrap<T>(cl : Class<T>) : Angular;
 }

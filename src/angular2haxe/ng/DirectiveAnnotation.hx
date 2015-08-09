@@ -13,15 +13,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package ng;
+package angular2haxe.ng;
+import angular2haxe.Annotation;
 
-@:native('ng.NgIf')
-extern class NgIf
-{	
-	// TODO: Original Constructor
-	// viewContainer: ViewContainerRef, templateRef: TemplateRef
-	public function new(viewContainer : Dynamic, templateRef : Dynamic) 
-	{
-		
-	}
+@:native('ng.DirectiveAnnotation')
+extern class DirectiveAnnotation extends Annotation
+{
+	function new(data : DirectiveConstructorData);
 }

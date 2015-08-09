@@ -15,8 +15,8 @@ limitations under the License.
 */
 package test;
 
-import ng.Angular;
-import ng.EventEmitter;
+import angular2haxe.ng.Angular;
+import angular2haxe.ng.EventEmitter;
 import angular2haxe.Trace;
 
 /*

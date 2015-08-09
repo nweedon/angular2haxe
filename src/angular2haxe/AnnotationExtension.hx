@@ -16,9 +16,9 @@ limitations under the License.
 package angular2haxe;
 
 import angular2haxe.buildplugin.BuildPlugin;
-import ng.ComponentAnnotation;
-import ng.DirectiveAnnotation;
-import ng.ViewAnnotation;
+import angular2haxe.ng.ComponentAnnotation;
+import angular2haxe.ng.DirectiveAnnotation;
+import angular2haxe.ng.ViewAnnotation;
 
 // Type.resolveClass in macro works if type is imported
 //import test.HelloWorld;

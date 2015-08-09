@@ -13,11 +13,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package ng;
+package angular2haxe.ng;
+
+import angular2haxe.ng.ComponentConstructorData;
 import angular2haxe.Annotation;
 
-@:native('ng.DirectiveAnnotation')
-extern class DirectiveAnnotation extends Annotation
+@:native('ng.ComponentAnnotation')
+extern class ComponentAnnotation extends Annotation
 {
-	function new(data : DirectiveConstructorData);
+	function new(data : ComponentConstructorData);
 }

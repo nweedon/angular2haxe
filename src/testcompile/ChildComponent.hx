@@ -15,7 +15,7 @@ limitations under the License.
 */
 package testcompile;
 
-import ng.Angular;
+import angular2haxe.ng.Angular;
 
 /*
  * Reference:
@@ -29,7 +29,7 @@ import ng.Angular;
 	template: '<p>{{ message }}</p>'
 })
 #if !macro
-@:build(angular2haxe.buildplugin.BuildPlugin.compile())
+@:build(angular2haxe.buildplugin.BuildPlugin.build())
 #end
 @:expose
 class ChildComponent

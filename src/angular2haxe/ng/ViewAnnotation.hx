@@ -13,25 +13,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package ng;
+package angular2haxe.ng;
+import angular2haxe.Annotation;
+import angular2haxe.ng.ViewConstructorData;
 
-@:native('ng.LifecycleEvent')
-extern class LifecycleEvent
+@:native('ng.ViewAnnotation')
+extern class ViewAnnotation extends Annotation
 {
-	@:native('onChange')
-	public static var onChange : Dynamic;
-	
-	@:native('onInit')
-	public static var onInit : Dynamic;
-	
-	@:native('onCheck')
-	public static var onCheck : Dynamic;
-	
-	@:native('onAllChangesDone')
-	public static var onAllChangesDone : Dynamic;
-	
-	@:native('onDestroy')
-	public static var onDestroy : Dynamic;
-	
-	private function new() { }
+	function new(data : ViewConstructorData);
 }

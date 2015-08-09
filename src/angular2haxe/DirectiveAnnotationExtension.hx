@@ -15,7 +15,7 @@ limitations under the License.
 */
 package angular2haxe;
 
-import ng.DirectiveConstructorData;
+import angular2haxe.ng.DirectiveConstructorData;
 import haxe.ds.StringMap;
 import haxe.Json;
 

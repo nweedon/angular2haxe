@@ -15,7 +15,7 @@ limitations under the License.
 */
 package test;
 
-import ng.Angular;
+import angular2haxe.ng.Angular;
 
 /*
  * Reference:

@@ -13,27 +13,24 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package ng;
+package angular2haxe.ng;
+import haxe.ds.StringMap;
 
 /**
  * Reference: 
+ * 		https://angular.io/docs/js/latest/api/annotations/DirectiveAnnotation-class.html
  * 		https://github.com/angular/angular/blob/master/modules/angular2/src/core/annotations_impl/annotations.ts
- * 
- * Notes:
- * 		- 'exportAs' is included in the constructor, but according to the source (25 July 2015),
- * 		doesn't do anything yet.
  */
-class ComponentConstructorData
+class DirectiveConstructorData
 {
 	public var selector 		: String 				= "";
 	public var properties		: Array<String> 		= [];
 	public var events 			: Array<String>			= [];
-	public var host 			: Map<String, String>	= new Map<String, String>();
+	public var host 			: Dynamic				= { };
 	public var lifecycle		: Array<Dynamic>		= [];
 	public var hostInjector		: Array<Dynamic>		= [];
 	public var exportAs			: String				= "";
 	public var compileChildren 	: Bool					= true;
-	public var changeDetection 	: String				= "DEFAULT";
 	
 	public function new() 
 	{ 

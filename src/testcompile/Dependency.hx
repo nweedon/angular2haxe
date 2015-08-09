@@ -15,8 +15,8 @@ limitations under the License.
 */
 package testcompile;
 
-import ng.Angular;
-import ng.EventEmitter;
+import angular2haxe.ng.Angular;
+import angular2haxe.ng.EventEmitter;
 import angular2haxe.Trace;
 
 /*
@@ -36,7 +36,7 @@ import angular2haxe.Trace;
 })
 @:expose
 #if !macro
-@:build(angular2haxe.buildplugin.BuildPlugin.compile())
+@:build(angular2haxe.buildplugin.BuildPlugin.build())
 #end
 class Dependency
 {
@@ -77,7 +77,7 @@ class Dependency
 })
 @:expose
 #if !macro
-@:build(angular2haxe.buildplugin.BuildPlugin.compile())
+@:build(angular2haxe.buildplugin.BuildPlugin.build())
 #end
 class MyDirective
 {
@@ -103,7 +103,7 @@ class MyDirective
 })
 @:expose
 #if !macro
-@:build(angular2haxe.buildplugin.BuildPlugin.compile())
+@:build(angular2haxe.buildplugin.BuildPlugin.build())
 #end
 class NgModelDirective
 {

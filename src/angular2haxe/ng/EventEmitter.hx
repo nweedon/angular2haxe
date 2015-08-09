@@ -13,12 +13,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package ng;
-import angular2haxe.Annotation;
-import ng.ViewConstructorData;
+package angular2haxe.ng;
 
-@:native('ng.ViewAnnotation')
-extern class ViewAnnotation extends Annotation
+@:native('angular.EventEmitter')
+extern class EventEmitter
 {
-	function new(data : ViewConstructorData);
+	function new();
+	public function next(event : Dynamic) : EventEmitter;
 }

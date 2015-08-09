@@ -15,8 +15,8 @@ limitations under the License.
 */
 package angular2haxe;
 
-import ng.ComponentConstructorData;
-import ng.LifecycleEvent;
+import angular2haxe.ng.ComponentConstructorData;
+import angular2haxe.ng.LifecycleEvent;
 
 class ComponentAnnotationExtension extends AnnotationExtension
 {

@@ -15,7 +15,7 @@ limitations under the License.
 */
 package angular2haxe;
 
-import ng.ViewConstructorData;
+import angular2haxe.ng.ViewConstructorData;
 import angular2haxe.AngularExtension;
 
 #if macro

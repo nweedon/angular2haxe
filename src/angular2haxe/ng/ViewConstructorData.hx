@@ -13,24 +13,20 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package ng;
-import haxe.ds.StringMap;
+package angular2haxe.ng;
 
 /**
  * Reference: 
- * 		https://angular.io/docs/js/latest/api/annotations/DirectiveAnnotation-class.html
- * 		https://github.com/angular/angular/blob/master/modules/angular2/src/core/annotations_impl/annotations.ts
+ * 		https://angular.io/docs/js/latest/api/annotations/ViewAnnotation-class.html
  */
-class DirectiveConstructorData
+class ViewConstructorData
 {
-	public var selector 		: String 				= "";
-	public var properties		: Array<String> 		= [];
-	public var events 			: Array<String>			= [];
-	public var host 			: Dynamic				= { };
-	public var lifecycle		: Array<Dynamic>		= [];
-	public var hostInjector		: Array<Dynamic>		= [];
-	public var exportAs			: String				= "";
-	public var compileChildren 	: Bool					= true;
+	public var templateUrl	: String			= "";
+	public var template		: String			= "";
+	public var directives	: Array<Dynamic>	= [];
+	public var renderer		: String			= "";
+	public var styles		: Array<String>		= [];
+	public var styleUrls	: Array<String>		= [];
 	
 	public function new() 
 	{ 

@@ -44,7 +44,7 @@ class Greeter
 })
 @:expose
 #if !macro
-@:build(angular2haxe.buildplugin.BuildPlugin.compile())
+@:build(angular2haxe.buildplugin.BuildPlugin.build())
 #end
 class NeedsGreeter
 {
@@ -67,7 +67,7 @@ class NeedsGreeter
 	directives: ["testcompile.NeedsGreeter"]
 })
 #if !macro
-@:build(angular2haxe.buildplugin.BuildPlugin.compile())
+@:build(angular2haxe.buildplugin.BuildPlugin.build())
 #end
 class HelloWorld
 {

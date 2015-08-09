@@ -17,10 +17,10 @@ package angular2haxe;
 
 import haxe.rtti.Meta;
 import js.Lib;
-import ng.Angular;
-import ng.ComponentAnnotation;
-import ng.DirectiveAnnotation;
-import ng.ViewAnnotation;
+import angular2haxe.ng.Angular;
+import angular2haxe.ng.ComponentAnnotation;
+import angular2haxe.ng.DirectiveAnnotation;
+import angular2haxe.ng.ViewAnnotation;
 
 class Application
 {	

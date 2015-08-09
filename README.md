@@ -15,6 +15,49 @@ haxelib install angular2haxe 0.2.0
 ```
 Also, add ```-lib angular2haxe``` to the build command of your project.
 
+### Building components at build-time *(as of 0.3.0)*
+Use the ```@:build``` component metadata to build the component
+at build-time. All classes (except for Angular externs) will be resolved
+at build-time so that the component does not have to be fully resolved when
+the web page loads.
+
+All test components build correctly, although this feature is still experimental.
+If you find any problems, please let me know!
+
+*Note:* for class names to resolve at build-time, the class needs to be imported. To
+solve this, the library utilises a build registry, which holds all imports you want to
+resolve. This doesn't come with the library by default, you must provide this yourself; if
+you don't know how to do this, I recommend looking at BuildRegistry.hx.
+
+Finally, to use the build registry, include the following on the command line:
+```-D using_registry```
+
+Example:
+```
+@Component({
+	selector: 'c-greet',
+	hostInjector: [
+		"testcompile.Greeter"
+	]
+})
+@View({
+	template: "<c-needs-greeter>{{ greeter.greet('World') }}</c-needs-greeter>",
+	directives: ["testcompile.NeedsGreeter"]
+})
+#if !macro
+@:build(angular2haxe.buildplugin.BuildPlugin.build())
+#end
+class HelloWorld
+{
+	private var greeter : Greeter;
+	
+	public function new(greeter : Greeter) 
+	{
+		this.greeter = greeter;
+	}
+}
+```
+
 ### Creating an application
 Creating an application this way allows you to import and bootstrap all of your components with ease. All data transformation (from Haxe metadata to Angular annotations) is done under the hood! (See 'src/Main.hx').
 ```
