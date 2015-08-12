@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-	- "iojs"
+  - "iojs"
 before_install:
-	- "npm install mocha -g"
+  - "npm install mocha -g"
 script: mocha runTests.js -t 5000
