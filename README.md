@@ -9,7 +9,7 @@ I plan to expand this readme in the future, but below are a few pieces of info t
 * The Haxe components required are in the 'src/angular2haxe' folders. Alternatively, install via haxelib.
 * If you want to see the Haxe code which creates Angular 2 components, view 'src/Main.hx' and the code in the 'src/test' folder.
 
-https://travis-ci.org/nweedon/angular2haxe.svg?branch=master
+[![Build Status](https://travis-ci.org/nweedon/angular2haxe.svg?branch=master)](https://travis-ci.org/nweedon/angular2haxe)
 
 ### Haxelib Installation
 * Stable: ```haxelib install angular2haxe 0.2.0```
