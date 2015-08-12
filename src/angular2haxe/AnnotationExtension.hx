@@ -54,7 +54,32 @@ class AnnotationExtension
 				// If outputClass is null, the output class is most likely Dynamic
 				if (Std.is(inputField, outputClass) || outputClass == null)
 				{
-					Reflect.setField(output, field, Reflect.field(input, field));
+					var result = null;
+					#if !macro
+						// Deep copy array objects, so original meta is
+						// preserved.
+						// Reference: https://gist.github.com/Asmageddon/4013485
+						if (Std.is(inputField, Array)) 
+						{
+							result = Type.createInstance(outputClass, []);
+							
+							untyped
+							{
+								for (i in 0...inputField.length)
+								{
+									result.push(inputField[i]);
+								}
+							}
+						}
+						else
+						{
+							result = inputField;
+						}
+					#else
+						result = inputField;
+					#end
+					
+					Reflect.setField(output, field, result);
 				} 
 				else 
 				{

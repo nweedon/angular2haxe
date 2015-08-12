@@ -25,13 +25,13 @@ package angular2haxe.ng;
  */
 class ComponentConstructorData
 {
-	public var selector 		: String 				= "";
+	public var selector 		: String 				= null;
 	public var properties		: Array<String> 		= [];
 	public var events 			: Array<String>			= [];
 	public var host 			: Map<String, String>	= new Map<String, String>();
 	public var lifecycle		: Array<Dynamic>		= [];
 	public var hostInjector		: Array<Dynamic>		= [];
-	public var exportAs			: String				= "";
+	public var exportAs			: String				= null;
 	public var compileChildren 	: Bool					= true;
 	public var changeDetection 	: String				= "DEFAULT";
 	

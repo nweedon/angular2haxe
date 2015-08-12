@@ -179,7 +179,19 @@ angular2haxe_AnnotationExtension.resolveInputAnnotation = function(input,outputT
 		if(Object.prototype.hasOwnProperty.call(output,field)) {
 			var inputField = Reflect.field(input,field);
 			var outputClass = Type.getClass(Reflect.field(output,field));
-			if(js_Boot.__instanceof(inputField,outputClass) || outputClass == null) Reflect.setField(output,field,Reflect.field(input,field)); else {
+			if(js_Boot.__instanceof(inputField,outputClass) || outputClass == null) {
+				var result = null;
+				if((inputField instanceof Array) && inputField.__enum__ == null) {
+					result = Type.createInstance(outputClass,[]);
+					var _g3 = 0;
+					var _g2 = inputField.length;
+					while(_g3 < _g2) {
+						var i = _g3++;
+						result.push(inputField[i]);
+					}
+				} else result = inputField;
+				output[field] = result;
+			} else {
 				var inputClassName = Type.getClassName(inputField == null?null:js_Boot.getClass(inputField));
 				var outputClassName = Type.getClassName(outputClass);
 				console.error("Input type of field \"" + field + "\" (" + inputClassName + ") does not match type of output field (" + outputClassName + ").");
@@ -245,7 +257,7 @@ angular2haxe_Application.prototype = {
 				$r = HxOverrides.indexOf(_this,"__alreadyConstructed",0);
 				return $r;
 			}(this)) > -1) {
-				console.warn("WARNING: " + className[0] + " is using experimental :build annotation feature.");
+				if(angular2haxe_Trace.logLevel == "WARN" || angular2haxe_Trace.logLevel == "ALL") console.warn("WARNING: " + className[0] + " is using experimental :build annotation feature.");
 				var annotations = Reflect.field(component[0],"annotations");
 				if(annotations != null) {
 					var metaNames = ["Component","View","Directive"];
@@ -264,7 +276,7 @@ angular2haxe_Application.prototype = {
 				var annotations1 = Reflect.field(component[0],"annotations");
 				var parameters = Reflect.field(component[0],"parameters");
 				if(annotations1 != null && annotations1.length == 0) {
-					console.log("=> Bootstrapping " + className[0]);
+					if(angular2haxe_Trace.logLevel == "ALL") console.log("=> Bootstrapping " + className[0]);
 					var _g21 = 0;
 					var _g3 = Reflect.fields(anno[0]);
 					while(_g21 < _g3.length) {
@@ -272,13 +284,14 @@ angular2haxe_Application.prototype = {
 						++_g21;
 						if(__map_reserved[name] != null?validAnnotations.existsReserved(name):validAnnotations.h.hasOwnProperty(name)) {
 							var field = Reflect.field(anno[0],name);
-							Reflect.callMethod((__map_reserved[name] != null?validAnnotations.getReserved(name):validAnnotations.h[name]).extension,Reflect.field((__map_reserved[name] != null?validAnnotations.getReserved(name):validAnnotations.h[name]).extension,"transform"),[field[0],annotations1,parameters]);
-							annotations1.push(Type.createInstance((__map_reserved[name] != null?validAnnotations.getReserved(name):validAnnotations.h[name]).annotation,[field[0]]));
+							var input = field[0];
+							var result = Reflect.callMethod((__map_reserved[name] != null?validAnnotations.getReserved(name):validAnnotations.h[name]).extension,Reflect.field((__map_reserved[name] != null?validAnnotations.getReserved(name):validAnnotations.h[name]).extension,"transform"),[input,annotations1,parameters]);
+							annotations1.push(Type.createInstance((__map_reserved[name] != null?validAnnotations.getReserved(name):validAnnotations.h[name]).annotation,[result]));
 						} else console.error(name + " is not a valid annotation.");
 					}
 					if(showDataInTrace) {
-						console.log("Annotations:\n" + Std.string(annotations1));
-						console.log("Parameters:\n" + Std.string(parameters));
+						if(angular2haxe_Trace.logLevel == "ALL") console.log("Annotations:\n" + Std.string(annotations1));
+						if(angular2haxe_Trace.logLevel == "ALL") console.log("Parameters:\n" + Std.string(parameters));
 					}
 				} else console.error("" + className[0] + " does not have an \"annotations\" static variable in its class definition!");
 			}
@@ -290,7 +303,7 @@ angular2haxe_Application.prototype = {
 						$r = HxOverrides.indexOf(_this1,"Component",0);
 						return $r;
 					}(this)) >= 0) angular.bootstrap(component[0]);
-					console.log("=> Finished bootstrapping " + className[0]);
+					if(angular2haxe_Trace.logLevel == "ALL") console.log("=> Finished bootstrapping " + className[0]);
 				};
 			})(className,anno,component));
 		}
@@ -420,10 +433,10 @@ angular2haxe_Trace.error = function(info) {
 	console.error(info);
 };
 angular2haxe_Trace.warning = function(info) {
-	console.warn(info);
+	if(angular2haxe_Trace.logLevel == "WARN" || angular2haxe_Trace.logLevel == "ALL") console.warn(info);
 };
 angular2haxe_Trace.log = function(info) {
-	console.log(info);
+	if(angular2haxe_Trace.logLevel == "ALL") console.log(info);
 };
 angular2haxe_Trace.prototype = {
 	__class__: angular2haxe_Trace
@@ -484,13 +497,13 @@ angular2haxe_buildplugin_BuildPlugin.prototype = {
 var angular2haxe_ng_ComponentConstructorData = function() {
 	this.changeDetection = "DEFAULT";
 	this.compileChildren = true;
-	this.exportAs = "";
+	this.exportAs = null;
 	this.hostInjector = [];
 	this.lifecycle = [];
 	this.host = new haxe_ds_StringMap();
 	this.events = [];
 	this.properties = [];
-	this.selector = "";
+	this.selector = null;
 };
 $hxClasses["angular2haxe.ng.ComponentConstructorData"] = angular2haxe_ng_ComponentConstructorData;
 angular2haxe_ng_ComponentConstructorData.__name__ = ["angular2haxe","ng","ComponentConstructorData"];
@@ -499,13 +512,13 @@ angular2haxe_ng_ComponentConstructorData.prototype = {
 };
 var angular2haxe_ng_DirectiveConstructorData = function() {
 	this.compileChildren = true;
-	this.exportAs = "";
+	this.exportAs = null;
 	this.hostInjector = [];
 	this.lifecycle = [];
-	this.host = { };
+	this.host = null;
 	this.events = [];
 	this.properties = [];
-	this.selector = "";
+	this.selector = null;
 };
 $hxClasses["angular2haxe.ng.DirectiveConstructorData"] = angular2haxe_ng_DirectiveConstructorData;
 angular2haxe_ng_DirectiveConstructorData.__name__ = ["angular2haxe","ng","DirectiveConstructorData"];
@@ -515,10 +528,10 @@ angular2haxe_ng_DirectiveConstructorData.prototype = {
 var angular2haxe_ng_ViewConstructorData = function() {
 	this.styleUrls = [];
 	this.styles = [];
-	this.renderer = "";
+	this.renderer = null;
 	this.directives = [];
-	this.template = "";
-	this.templateUrl = "";
+	this.template = null;
+	this.templateUrl = null;
 };
 $hxClasses["angular2haxe.ng.ViewConstructorData"] = angular2haxe_ng_ViewConstructorData;
 angular2haxe_ng_ViewConstructorData.__name__ = ["angular2haxe","ng","ViewConstructorData"];
@@ -865,7 +878,7 @@ $hxClasses["test.Dependency"] = test_Dependency;
 test_Dependency.__name__ = ["test","Dependency"];
 test_Dependency.prototype = {
 	onInit: function() {
-		console.log("Dependency.hx result:\n" + Std.string(this));
+		if(angular2haxe_Trace.logLevel == "ALL") console.log("Dependency.hx result:\n" + Std.string(this));
 	}
 	,onMouseEnter: function(event) {
 		console.log("onMouseEnter: " + this.id);
@@ -885,7 +898,7 @@ $hxClasses["test.MyDirective"] = test_MyDirective;
 test_MyDirective.__name__ = ["test","MyDirective"];
 test_MyDirective.prototype = {
 	onInit: function() {
-		console.log("MyDirective Dependency:\n" + Std.string(this.dependency));
+		if(angular2haxe_Trace.logLevel == "ALL") console.log("MyDirective Dependency:\n" + Std.string(this.dependency));
 	}
 	,__class__: test_MyDirective
 };
@@ -992,16 +1005,16 @@ test_TodoList.prototype = {
 		this.todos.push(todo);
 	}
 	,onInit: function() {
-		console.log("Lifecycle onInit:\n" + Std.string(this));
+		if(angular2haxe_Trace.logLevel == "ALL") console.log("Lifecycle onInit:\n" + Std.string(this));
 	}
 	,onCheck: function() {
-		console.log("Lifecycle onCheck");
+		if(angular2haxe_Trace.logLevel == "ALL") console.log("Lifecycle onCheck");
 	}
 	,onChange: function(changes) {
-		console.log("Lifecycle onChange: " + Std.string(changes));
+		if(angular2haxe_Trace.logLevel == "ALL") console.log("Lifecycle onChange: " + Std.string(changes));
 	}
 	,onAllChangesDone: function() {
-		console.log("Lifecycle onAllChangesDone");
+		if(angular2haxe_Trace.logLevel == "ALL") console.log("Lifecycle onAllChangesDone");
 	}
 	,__class__: test_TodoList
 };
@@ -1019,7 +1032,7 @@ $hxClasses["testcompile.Dependency"] = testcompile_Dependency;
 testcompile_Dependency.__name__ = ["testcompile","Dependency"];
 testcompile_Dependency.prototype = {
 	onInit: function() {
-		console.log("Dependency.hx result:\n" + Std.string(this));
+		if(angular2haxe_Trace.logLevel == "ALL") console.log("Dependency.hx result:\n" + Std.string(this));
 	}
 	,onMouseEnter: function(event) {
 		console.log("onMouseEnter: " + this.id);
@@ -1039,7 +1052,7 @@ $hxClasses["testcompile.MyDirective"] = testcompile_MyDirective;
 testcompile_MyDirective.__name__ = ["testcompile","MyDirective"];
 testcompile_MyDirective.prototype = {
 	onInit: function() {
-		console.log("MyDirective Dependency:\n" + Std.string(this.dependency));
+		if(angular2haxe_Trace.logLevel == "ALL") console.log("MyDirective Dependency:\n" + Std.string(this.dependency));
 	}
 	,__class__: testcompile_MyDirective
 };
@@ -1146,16 +1159,16 @@ testcompile_TodoList.prototype = {
 		this.todos.push(todo);
 	}
 	,onInit: function() {
-		console.log("Lifecycle onInit:\n" + Std.string(this));
+		if(angular2haxe_Trace.logLevel == "ALL") console.log("Lifecycle onInit:\n" + Std.string(this));
 	}
 	,onCheck: function() {
-		console.log("Lifecycle onCheck");
+		if(angular2haxe_Trace.logLevel == "ALL") console.log("Lifecycle onCheck");
 	}
 	,onChange: function(changes) {
-		console.log("Lifecycle onChange: " + Std.string(changes));
+		if(angular2haxe_Trace.logLevel == "ALL") console.log("Lifecycle onChange: " + Std.string(changes));
 	}
 	,onAllChangesDone: function() {
-		console.log("Lifecycle onAllChangesDone");
+		if(angular2haxe_Trace.logLevel == "ALL") console.log("Lifecycle onAllChangesDone");
 	}
 	,__class__: testcompile_TodoList
 };
@@ -1185,6 +1198,7 @@ angular2haxe_AngularExtension.angularClasses = (function($this) {
 	return $r;
 }(this));
 angular2haxe_LifecycleEventExtension.initialised = false;
+angular2haxe_Trace.logLevel = "ERROR";
 js_Boot.__toStr = {}.toString;
 test_ChildComponent.__meta__ = { obj : { Component : [{ selector : "child"}], View : [{ template : "<p>{{ message }}</p>"}]}};
 test_Dependency.__meta__ = { obj : { Directive : [{ selector : "[dependency]", properties : ["id: dependency"], lifecycle : ["onInit"]}]}};
@@ -1240,5 +1254,3 @@ testcompile_TodoList.parameters = [];
 testcompile_TodoList.__alreadyConstructed = true;
 Main.main();
 })(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : exports);
-
-//# sourceMappingURL=Angular2-Haxe.js.map

@@ -110,11 +110,13 @@ class Application
 							// For example, Haxe metadata only handles constants (no class names),
 							// so the string representations of the class names must be transformed into
 							// JavaScript classes/functions at runtime.
-							Reflect.callMethod(validAnnotations[name].extension, 
-												Reflect.field(validAnnotations[name].extension, "transform"), 
-												[field[0], annotations, parameters]);
+							var input = field[0];
 							
-							annotations.push(Type.createInstance(validAnnotations[name].annotation, [field[0]]));
+							var result = Reflect.callMethod(validAnnotations[name].extension, 
+												Reflect.field(validAnnotations[name].extension, "transform"), 
+												[input, annotations, parameters]);
+							
+							annotations.push(Type.createInstance(validAnnotations[name].annotation, [result]));
 						}
 						else
 						{

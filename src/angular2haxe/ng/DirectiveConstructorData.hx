@@ -23,13 +23,13 @@ import haxe.ds.StringMap;
  */
 class DirectiveConstructorData
 {
-	public var selector 		: String 				= "";
+	public var selector 		: String 				= null;
 	public var properties		: Array<String> 		= [];
 	public var events 			: Array<String>			= [];
-	public var host 			: Dynamic				= { };
+	public var host 			: Dynamic				= null;
 	public var lifecycle		: Array<Dynamic>		= [];
 	public var hostInjector		: Array<Dynamic>		= [];
-	public var exportAs			: String				= "";
+	public var exportAs			: String				= null;
 	public var compileChildren 	: Bool					= true;
 	
 	public function new() 

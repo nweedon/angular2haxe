@@ -19,8 +19,23 @@ package angular2haxe;
 import haxe.macro.Context;
 #end
 
+/**
+ * Debug Level:
+ * 
+ * ALL: Show all log messages (trace, warning, error)
+ * WARN: Show warning and error messages
+ * ERROR: Show just error messages
+ */
 class Trace
 {
+	#if (debug_level=="WARN")
+	private static var logLevel : String = "WARN";
+	#elseif (debug_level == "ERROR")
+	private static var logLevel : String = "ERROR";
+	#else
+	private static var logLevel : String = "ALL";
+	#end
+	
 	private function new() 
 	{		
 	}
@@ -32,24 +47,27 @@ class Trace
 	public static inline function error(info : String)
 	{
 		#if macro
-		Context.error(info, Context.currentPos());
+			Context.error(info, Context.currentPos());
 		#else
-		untyped
-		{
-			console.error(info);
-		}
+			untyped
+			{
+				console.error(info);
+			}
 		#end
 	}
 	
 	public static inline function warning(info : String)
 	{
 		#if macro
-		Context.warning(info, Context.currentPos());
+			Context.warning(info, Context.currentPos());
 		#else
-		untyped
-		{
-			console.warn(info);
-		}
+			if (logLevel == "WARN" || logLevel == "ALL")
+			{
+				untyped
+				{
+					console.warn(info);
+				}
+			}
 		#end
 	}
 	
@@ -59,6 +77,9 @@ class Trace
 	 */
 	public static inline function log(info : String)
 	{
-		trace(info);
+		if (logLevel == "ALL")
+		{
+			trace(info);
+		}
 	}
 }

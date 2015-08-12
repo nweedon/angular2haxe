@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "connect": "^3.4.0",
+    "expect.js": "^0.3.1",
+    "serve-static": "^1.10.0",
+    "zombie": "^4.0.13"
+  }
+}

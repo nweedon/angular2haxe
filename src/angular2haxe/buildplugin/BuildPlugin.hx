@@ -70,7 +70,6 @@ class BuildPlugin
 		if (cl == null)
 		{
 			// Skip compiling Angular classes.
-			trace(name);
 			if (!AngularExtension.isAngularClass(name))
 			{
 				Trace.error('${name} has not resolved to a class. Make sure it is imported in the BuildPlugin file.');
@@ -84,7 +83,7 @@ class BuildPlugin
 	 * Compile data at build-time rather than run-time.
 	 * @return
 	 */
-	static public function build() : Array<Field>
+	macro static public function build() : Array<Field>
 	{		
 		var attachedClass : ClassType = Context.getLocalClass().get();
 		var attachedMetadata : Metadata = attachedClass.meta.get();

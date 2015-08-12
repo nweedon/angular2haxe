@@ -19,7 +19,26 @@ limitations under the License.
 	<meta charset="utf-8"/>
 	<title>Angular2-Haxe</title>
 	<meta name="description" content="" />
-	<script src="https://jspm.io/system@0.16.js"></script>
+	<script>
+	/**
+	 * ZombieJS patches. 
+	 * 1) HTMLElement.prototype.onclick is undefined in ZombieJS and as such
+	 * 		Angular 2 complains because object.configurable is false.
+	 *
+	 * 2) window.KeyboardEvent is undefined in ZombieJS. As we're not actually
+	 * 		testing functionality, just whether angular2haxe parses properly, 
+	 *		it's okay (currently) for us to just defined it as a blank function.
+	*/
+	if(Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'onclick') === undefined)
+	{
+		Object.defineProperty(HTMLElement.prototype, 'onclick', { configurable: true, writable: true });
+	}
+	
+	if(window.KeyboardEvent === undefined)
+	{
+		window.KeyboardEvent = function() { }
+	}
+	</script>
 	<script src="https://code.angularjs.org/2.0.0-alpha.33/angular2.sfx.dev.js"></script>
 	<link rel="stylesheet" href="css/style.css"/>
 </head>
