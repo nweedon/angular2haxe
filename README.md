@@ -1,5 +1,7 @@
 Haxe Language Bindings for Angular 2
 ===
+[![Build Status](https://travis-ci.org/nweedon/angular2haxe.svg?branch=master)](https://travis-ci.org/nweedon/angular2haxe)
+[![Haxelib](https://img.shields.io/github/tag/nweedon/angular2haxe.svg?style=flat&label=haxelib)](http://lib.haxe.org/p/angular2haxe/)
 
 I plan to expand this readme in the future, but below are a few pieces of info to let you know where I am currently at with the project:
 
@@ -8,8 +10,6 @@ I plan to expand this readme in the future, but below are a few pieces of info t
 * View 'bin/index.html' (with a webserver) to see the current examples which work with these language bindings.
 * The Haxe components required are in the 'src/angular2haxe' folders. Alternatively, install via haxelib.
 * If you want to see the Haxe code which creates Angular 2 components, view 'src/Main.hx' and the code in the 'src/test' folder.
-
-[![Build Status](https://travis-ci.org/nweedon/angular2haxe.svg?branch=master)](https://travis-ci.org/nweedon/angular2haxe)
 
 ### Haxelib Installation
 * Stable: ```haxelib install angular2haxe 0.2.0```
