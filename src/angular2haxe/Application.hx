@@ -69,6 +69,17 @@ class Application
 					var metaNames : Array<String> = ["Component", "View", "Directive"];
 					var index : Int = 0;
 					
+					// Filter out all null entries.
+					for (index in 0...annotations.length)
+					{
+						if (annotations[index] == null) 
+						{
+							annotations.remove(null);
+						}
+					}
+					
+					index = 0;
+					
 					for (data in annotations)
 					{
 						// Call Annotation extension function to 

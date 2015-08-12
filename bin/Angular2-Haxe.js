@@ -39,6 +39,12 @@ HxOverrides.indexOf = function(a,obj,i) {
 	}
 	return -1;
 };
+HxOverrides.remove = function(a,obj) {
+	var i = HxOverrides.indexOf(a,obj,0);
+	if(i == -1) return false;
+	a.splice(i,1);
+	return true;
+};
 var Main = function() { };
 $hxClasses["Main"] = Main;
 Main.__name__ = ["Main"];
@@ -262,10 +268,17 @@ angular2haxe_Application.prototype = {
 				if(annotations != null) {
 					var metaNames = ["Component","View","Directive"];
 					var index = 0;
-					var _g2 = 0;
-					while(_g2 < annotations.length) {
-						var data = annotations[_g2];
-						++_g2;
+					var _g3 = 0;
+					var _g2 = annotations.length;
+					while(_g3 < _g2) {
+						var index1 = _g3++;
+						if(annotations[index1] == null) HxOverrides.remove(annotations,null);
+					}
+					index = 0;
+					var _g21 = 0;
+					while(_g21 < annotations.length) {
+						var data = annotations[_g21];
+						++_g21;
 						Reflect.callMethod(validAnnotations.get(metaNames[index]).extension,Reflect.field(validAnnotations.get(metaNames[index]).extension,"postCompileTransform"),[data]);
 						index++;
 					}
@@ -277,11 +290,11 @@ angular2haxe_Application.prototype = {
 				var parameters = Reflect.field(component[0],"parameters");
 				if(annotations1 != null && annotations1.length == 0) {
 					if(angular2haxe_Trace.logLevel == "ALL") console.log("=> Bootstrapping " + className[0]);
-					var _g21 = 0;
-					var _g3 = Reflect.fields(anno[0]);
-					while(_g21 < _g3.length) {
-						var name = _g3[_g21];
-						++_g21;
+					var _g22 = 0;
+					var _g31 = Reflect.fields(anno[0]);
+					while(_g22 < _g31.length) {
+						var name = _g31[_g22];
+						++_g22;
 						if(__map_reserved[name] != null?validAnnotations.existsReserved(name):validAnnotations.h.hasOwnProperty(name)) {
 							var field = Reflect.field(anno[0],name);
 							var input = field[0];
@@ -973,6 +986,12 @@ test_InputDirective.prototype = {
 	onInit: function() {
 		console.log("InputDirective.onInit: " + Std.string(this));
 	}
+	,onChange: function() {
+	}
+	,onAllChangesDone: function() {
+	}
+	,onCheck: function() {
+	}
 	,onKeyUp: function(event) {
 		console.log("You just pressed a key with key code: " + event.keyCode + "!");
 	}
@@ -986,7 +1005,7 @@ test_ParentComponent.__name__ = ["test","ParentComponent"];
 test_ParentComponent.prototype = {
 	__class__: test_ParentComponent
 };
-var test_TodoList = function() {
+var test_TodoList = $hx_exports.test.TodoList = function() {
 	this.lastValue = "";
 	this.todos = ["Eat Breakfast","Walk Dog","Breathe"];
 	this.lastValue = this.todos[this.todos.length - 1];
@@ -1127,6 +1146,12 @@ testcompile_InputDirective.prototype = {
 	onInit: function() {
 		console.log("InputDirective.onInit: " + Std.string(this));
 	}
+	,onChange: function() {
+	}
+	,onAllChangesDone: function() {
+	}
+	,onCheck: function() {
+	}
 	,onKeyUp: function(event) {
 		console.log("You just pressed a key with key code: " + event.keyCode + "!");
 	}
@@ -1208,7 +1233,7 @@ test_DependencyDisplayComponent.__meta__ = { obj : { Component : [{ selector : "
 test_DisplayComponent.__meta__ = { obj : { Component : [{ selector : "display", hostInjector : ["test.FriendsService"]}], View : [{ directives : ["NgFor","NgIf"], template : "<p>My name: {{ myName }}</p><p>Friends:</p><ul><li *ng-for=\"#name of names\">{{ name }}</li></ul><p *ng-if=\"names.length > 3\">You have many friends!</p>"}]}};
 test_NeedsGreeter.__meta__ = { obj : { Directive : [{ selector : "needs-greeter", hostInjector : ["test.Greeter"]}]}};
 test_HelloWorld.__meta__ = { obj : { Component : [{ selector : "greet", hostInjector : ["test.Greeter"]}], View : [{ template : "<needs-greeter>{{ greeter.greet('World') }}</needs-greeter>", directives : ["test.NeedsGreeter"]}]}};
-test_InputDirective.__meta__ = { obj : { Directive : [{ selector : "input", lifecycle : ["onInit"], host : { '@$__hx__(keyup)' : "onKeyUp($event)"}}]}};
+test_InputDirective.__meta__ = { obj : { Directive : [{ selector : "input", lifecycle : ["onInit","onChange","onAllChangesDone","onCheck"], host : { '@$__hx__(keyup)' : "onKeyUp($event)"}, exportAs : "input-directive"}]}};
 test_ParentComponent.__meta__ = { obj : { Component : [{ selector : "parent"}], View : [{ directives : ["test.ChildComponent"], template : "<h1>{{ message }}</h1><child></child>"}]}};
 test_TodoList.__meta__ = { obj : { Component : [{ selector : "todo-list", properties : ["lastValue","todos"], lifecycle : ["onInit","onChange","onAllChangesDone","onCheck"], changeDetection : "CHECK_ALWAYS"}], View : [{ directives : ["NgFor","NgIf","test.InputDirective"], template : "Last value: {{lastValue}}<ul><li *ng-for=\"#todo of todos\">{{ todo }}</li></ul><input #textbox (keyup)=\"doneTyping($event)\"><button (click)=\"addTodo(textbox.value)\">Add Todo</button>"}]}};
 testcompile_ChildComponent.__meta__ = { obj : { Component : [{ selector : "c-child"}], View : [{ template : "<p>{{ message }}</p>"}]}};
@@ -1243,7 +1268,7 @@ testcompile_HelloWorld.__meta__ = { obj : { Component : [{ selector : "c-greet",
 testcompile_HelloWorld.annotations = [true ? new ng.ComponentAnnotation({ selector : "c-greet", hostInjector : [testcompile_Greeter]}) : null,true ? new ng.ViewAnnotation({ template : "<c-needs-greeter>{{ greeter.greet('World') }}</c-needs-greeter>", directives : [testcompile_NeedsGreeter]}) : null,false ? new ng.DirectiveAnnotation(null) : null];
 testcompile_HelloWorld.parameters = [[testcompile_Greeter]];
 testcompile_HelloWorld.__alreadyConstructed = true;
-testcompile_InputDirective.__meta__ = { obj : { Directive : [{ selector : "input", lifecycle : ["onInit"], host : { '@$__hx__(keyup)' : "onKeyUp($event)"}}]}};
+testcompile_InputDirective.__meta__ = { obj : { Directive : [{ selector : "input", lifecycle : ["onInit","onChange","onAllChangesDone","onCheck"], host : { '@$__hx__(keyup)' : "onKeyUp($event)"}, exportAs : "input-directive"}]}};
 testcompile_ParentComponent.__meta__ = { obj : { Component : [{ selector : "c-parent"}], View : [{ directives : ["testcompile.ChildComponent"], template : "<h1>{{ message }}</h1><c-child></c-child>"}]}};
 testcompile_ParentComponent.annotations = [true ? new ng.ComponentAnnotation({ selector : "c-parent"}) : null,true ? new ng.ViewAnnotation({ template : "<h1>{{ message }}</h1><c-child></c-child>", directives : [testcompile_ChildComponent]}) : null,false ? new ng.DirectiveAnnotation(null) : null];
 testcompile_ParentComponent.parameters = [];
@@ -1254,3 +1279,5 @@ testcompile_TodoList.parameters = [];
 testcompile_TodoList.__alreadyConstructed = true;
 Main.main();
 })(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : exports);
+
+//# sourceMappingURL=Angular2-Haxe.js.map

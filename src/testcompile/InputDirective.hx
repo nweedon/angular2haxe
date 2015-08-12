@@ -19,10 +19,11 @@ import angular2haxe.KeyboardEvent;
 
 @Directive({
 	selector: 'input',
-	lifecycle: ["onInit"],
+	lifecycle: ["onInit", "onChange", "onAllChangesDone", "onCheck"],
 	host: {
 		'(keyup)' : 'onKeyUp($event)'
-	}
+	},
+	exportAs: 'input-directive'
 })
 @:expose
 class InputDirective
@@ -36,6 +37,21 @@ class InputDirective
 	public function onInit()
 	{
 		trace('InputDirective.onInit: ${this}');
+	}
+	
+	public function onChange()
+	{
+	
+	}
+	
+	public function onAllChangesDone()
+	{
+		
+	}
+	
+	public function onCheck()
+	{
+		
 	}
 	
 	public function onKeyUp(event : KeyboardEvent)

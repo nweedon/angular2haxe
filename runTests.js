@@ -44,5 +44,14 @@ zombie.localhost('localhost', port);
 
 // Run tests.
 for(var spec of specs) {
-	require('./spec/' + spec).spec(zombie, expect);
+	// Test compiled and non-compiled.
+	for(var b of [false, true]) {
+		const browser = new zombie({ 
+			waitFor: 2000,
+			loadCSS: false,
+			runScripts: true
+		});
+
+		require('./spec/' + spec).spec(browser, expect, b);
+	}
 }
