@@ -60,7 +60,8 @@ class NeedsGreeter
 	selector: 'c-greet',
 	viewBindings: [
 		"testcompile.Greeter"
-	]
+	],
+	exportAs: 'componentGreet'
 })
 @View({
 	template: "<c-needs-greeter>{{ greeter.greet('World') }}</c-needs-greeter>",
@@ -69,6 +70,7 @@ class NeedsGreeter
 #if !macro
 @:build(angular2haxe.buildplugin.BuildPlugin.build())
 #end
+@:expose
 class HelloWorld
 {
 	private var greeter : Greeter;

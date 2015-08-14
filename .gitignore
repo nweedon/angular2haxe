@@ -1,5 +1,6 @@
 *.zip
 node_modules/
+bin/angular.sfx.dev.js
 
 # Windows image file caches
 Thumbs.db

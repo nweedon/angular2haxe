@@ -48,7 +48,11 @@ class ComponentAnnotationExtension extends AnnotationExtension
 			AnnotationExtension.parseInjector(parameters, output.bindings);
 		}
 		
-		AnnotationExtension.transformLifecycle(output.lifecycle);
+		if (output.lifecycle != null)
+		{
+			AnnotationExtension.transformLifecycle(output.lifecycle);
+		}
+		
 		return output;
 	}
 	
@@ -75,6 +79,11 @@ class ComponentAnnotationExtension extends AnnotationExtension
 					}
 				}
 			}
+		}
+		
+		if (data.lifecycle != null)
+		{
+			AnnotationExtension.transformLifecycle(data.lifecycle);
 		}
 	}
 }

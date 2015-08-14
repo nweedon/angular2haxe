@@ -69,6 +69,23 @@ class Application
 					var metaNames : Array<String> = ["Component", "View", "Directive"];
 					var index : Int = 0;
 					
+					for (data in annotations)
+					{
+						if (data != null)
+						{
+							// Call Annotation extension function to 
+							// transform all string representations 
+							// to Angular Object data
+							Reflect.callMethod(	validAnnotations[metaNames[index]].extension, 
+												Reflect.field(validAnnotations[metaNames[index]].extension, "postCompileTransform"),
+												[data]);
+						}
+						
+						index++;
+					}
+					
+					index = 0;
+					
 					// Filter out all null entries.
 					for (index in 0...annotations.length)
 					{
@@ -76,20 +93,6 @@ class Application
 						{
 							annotations.remove(null);
 						}
-					}
-					
-					index = 0;
-					
-					for (data in annotations)
-					{
-						// Call Annotation extension function to 
-						// transform all string representations 
-						// to Angular Object data
-						Reflect.callMethod(	validAnnotations[metaNames[index]].extension, 
-											Reflect.field(validAnnotations[metaNames[index]].extension, "postCompileTransform"),
-											[data]);
-											
-						index++;
 					}
 				}
 			}

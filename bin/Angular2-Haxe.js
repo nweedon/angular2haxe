@@ -1,7 +1,7 @@
 (function (console, $hx_exports) { "use strict";
 $hx_exports.testcompile = $hx_exports.testcompile || {};
 $hx_exports.test = $hx_exports.test || {};
-var $hxClasses = {},$estr = function() { return js_Boot.__string_rec(this,''); };
+var $hxClasses = {};
 function $extend(from, fields) {
 	function Inherit() {} Inherit.prototype = from; var proto = new Inherit();
 	for (var name in fields) proto[name] = fields[name];
@@ -268,19 +268,19 @@ angular2haxe_Application.prototype = {
 				if(annotations != null) {
 					var metaNames = ["Component","View","Directive"];
 					var index = 0;
-					var _g3 = 0;
-					var _g2 = annotations.length;
-					while(_g3 < _g2) {
-						var index1 = _g3++;
-						if(annotations[index1] == null) HxOverrides.remove(annotations,null);
+					var _g2 = 0;
+					while(_g2 < annotations.length) {
+						var data = annotations[_g2];
+						++_g2;
+						if(data != null) Reflect.callMethod(validAnnotations.get(metaNames[index]).extension,Reflect.field(validAnnotations.get(metaNames[index]).extension,"postCompileTransform"),[data]);
+						index++;
 					}
 					index = 0;
-					var _g21 = 0;
-					while(_g21 < annotations.length) {
-						var data = annotations[_g21];
-						++_g21;
-						Reflect.callMethod(validAnnotations.get(metaNames[index]).extension,Reflect.field(validAnnotations.get(metaNames[index]).extension,"postCompileTransform"),[data]);
-						index++;
+					var _g3 = 0;
+					var _g21 = annotations.length;
+					while(_g3 < _g21) {
+						var index1 = _g3++;
+						if(annotations[index1] == null) HxOverrides.remove(annotations,null);
 					}
 				}
 			} else {
@@ -332,7 +332,7 @@ angular2haxe_ComponentAnnotationExtension.transform = function(input,annotations
 	var output = angular2haxe_AnnotationExtension.resolveInputAnnotation(input,angular2haxe_ng_ComponentConstructorData);
 	if(parameters != null && output.viewBindings != null) angular2haxe_AnnotationExtension.parseInjector(parameters,output.viewBindings);
 	if(parameters != null && output.bindings != null) angular2haxe_AnnotationExtension.parseInjector(parameters,output.bindings);
-	angular2haxe_AnnotationExtension.transformLifecycle(output.lifecycle);
+	if(output.lifecycle != null) angular2haxe_AnnotationExtension.transformLifecycle(output.lifecycle);
 	return output;
 };
 angular2haxe_ComponentAnnotationExtension.postCompileTransform = function(data) {
@@ -354,6 +354,7 @@ angular2haxe_ComponentAnnotationExtension.postCompileTransform = function(data) 
 			}
 		}
 	}
+	if(data.lifecycle != null) angular2haxe_AnnotationExtension.transformLifecycle(data.lifecycle);
 };
 angular2haxe_ComponentAnnotationExtension.__super__ = angular2haxe_AnnotationExtension;
 angular2haxe_ComponentAnnotationExtension.prototype = $extend(angular2haxe_AnnotationExtension.prototype,{
@@ -398,6 +399,7 @@ angular2haxe_DirectiveAnnotationExtension.postCompileTransform = function(data) 
 				index++;
 			}
 		}
+		if(data.lifecycle != null) angular2haxe_AnnotationExtension.transformLifecycle(data.lifecycle);
 	}
 };
 angular2haxe_DirectiveAnnotationExtension.__super__ = angular2haxe_AnnotationExtension;
@@ -613,138 +615,6 @@ haxe_ds_StringMap.prototype = {
 	}
 	,__class__: haxe_ds_StringMap
 };
-var haxe_macro_Constant = { __ename__ : true, __constructs__ : ["CInt","CFloat","CString","CIdent","CRegexp"] };
-haxe_macro_Constant.CInt = function(v) { var $x = ["CInt",0,v]; $x.__enum__ = haxe_macro_Constant; $x.toString = $estr; return $x; };
-haxe_macro_Constant.CFloat = function(f) { var $x = ["CFloat",1,f]; $x.__enum__ = haxe_macro_Constant; $x.toString = $estr; return $x; };
-haxe_macro_Constant.CString = function(s) { var $x = ["CString",2,s]; $x.__enum__ = haxe_macro_Constant; $x.toString = $estr; return $x; };
-haxe_macro_Constant.CIdent = function(s) { var $x = ["CIdent",3,s]; $x.__enum__ = haxe_macro_Constant; $x.toString = $estr; return $x; };
-haxe_macro_Constant.CRegexp = function(r,opt) { var $x = ["CRegexp",4,r,opt]; $x.__enum__ = haxe_macro_Constant; $x.toString = $estr; return $x; };
-var haxe_macro_Binop = { __ename__ : true, __constructs__ : ["OpAdd","OpMult","OpDiv","OpSub","OpAssign","OpEq","OpNotEq","OpGt","OpGte","OpLt","OpLte","OpAnd","OpOr","OpXor","OpBoolAnd","OpBoolOr","OpShl","OpShr","OpUShr","OpMod","OpAssignOp","OpInterval","OpArrow"] };
-haxe_macro_Binop.OpAdd = ["OpAdd",0];
-haxe_macro_Binop.OpAdd.toString = $estr;
-haxe_macro_Binop.OpAdd.__enum__ = haxe_macro_Binop;
-haxe_macro_Binop.OpMult = ["OpMult",1];
-haxe_macro_Binop.OpMult.toString = $estr;
-haxe_macro_Binop.OpMult.__enum__ = haxe_macro_Binop;
-haxe_macro_Binop.OpDiv = ["OpDiv",2];
-haxe_macro_Binop.OpDiv.toString = $estr;
-haxe_macro_Binop.OpDiv.__enum__ = haxe_macro_Binop;
-haxe_macro_Binop.OpSub = ["OpSub",3];
-haxe_macro_Binop.OpSub.toString = $estr;
-haxe_macro_Binop.OpSub.__enum__ = haxe_macro_Binop;
-haxe_macro_Binop.OpAssign = ["OpAssign",4];
-haxe_macro_Binop.OpAssign.toString = $estr;
-haxe_macro_Binop.OpAssign.__enum__ = haxe_macro_Binop;
-haxe_macro_Binop.OpEq = ["OpEq",5];
-haxe_macro_Binop.OpEq.toString = $estr;
-haxe_macro_Binop.OpEq.__enum__ = haxe_macro_Binop;
-haxe_macro_Binop.OpNotEq = ["OpNotEq",6];
-haxe_macro_Binop.OpNotEq.toString = $estr;
-haxe_macro_Binop.OpNotEq.__enum__ = haxe_macro_Binop;
-haxe_macro_Binop.OpGt = ["OpGt",7];
-haxe_macro_Binop.OpGt.toString = $estr;
-haxe_macro_Binop.OpGt.__enum__ = haxe_macro_Binop;
-haxe_macro_Binop.OpGte = ["OpGte",8];
-haxe_macro_Binop.OpGte.toString = $estr;
-haxe_macro_Binop.OpGte.__enum__ = haxe_macro_Binop;
-haxe_macro_Binop.OpLt = ["OpLt",9];
-haxe_macro_Binop.OpLt.toString = $estr;
-haxe_macro_Binop.OpLt.__enum__ = haxe_macro_Binop;
-haxe_macro_Binop.OpLte = ["OpLte",10];
-haxe_macro_Binop.OpLte.toString = $estr;
-haxe_macro_Binop.OpLte.__enum__ = haxe_macro_Binop;
-haxe_macro_Binop.OpAnd = ["OpAnd",11];
-haxe_macro_Binop.OpAnd.toString = $estr;
-haxe_macro_Binop.OpAnd.__enum__ = haxe_macro_Binop;
-haxe_macro_Binop.OpOr = ["OpOr",12];
-haxe_macro_Binop.OpOr.toString = $estr;
-haxe_macro_Binop.OpOr.__enum__ = haxe_macro_Binop;
-haxe_macro_Binop.OpXor = ["OpXor",13];
-haxe_macro_Binop.OpXor.toString = $estr;
-haxe_macro_Binop.OpXor.__enum__ = haxe_macro_Binop;
-haxe_macro_Binop.OpBoolAnd = ["OpBoolAnd",14];
-haxe_macro_Binop.OpBoolAnd.toString = $estr;
-haxe_macro_Binop.OpBoolAnd.__enum__ = haxe_macro_Binop;
-haxe_macro_Binop.OpBoolOr = ["OpBoolOr",15];
-haxe_macro_Binop.OpBoolOr.toString = $estr;
-haxe_macro_Binop.OpBoolOr.__enum__ = haxe_macro_Binop;
-haxe_macro_Binop.OpShl = ["OpShl",16];
-haxe_macro_Binop.OpShl.toString = $estr;
-haxe_macro_Binop.OpShl.__enum__ = haxe_macro_Binop;
-haxe_macro_Binop.OpShr = ["OpShr",17];
-haxe_macro_Binop.OpShr.toString = $estr;
-haxe_macro_Binop.OpShr.__enum__ = haxe_macro_Binop;
-haxe_macro_Binop.OpUShr = ["OpUShr",18];
-haxe_macro_Binop.OpUShr.toString = $estr;
-haxe_macro_Binop.OpUShr.__enum__ = haxe_macro_Binop;
-haxe_macro_Binop.OpMod = ["OpMod",19];
-haxe_macro_Binop.OpMod.toString = $estr;
-haxe_macro_Binop.OpMod.__enum__ = haxe_macro_Binop;
-haxe_macro_Binop.OpAssignOp = function(op) { var $x = ["OpAssignOp",20,op]; $x.__enum__ = haxe_macro_Binop; $x.toString = $estr; return $x; };
-haxe_macro_Binop.OpInterval = ["OpInterval",21];
-haxe_macro_Binop.OpInterval.toString = $estr;
-haxe_macro_Binop.OpInterval.__enum__ = haxe_macro_Binop;
-haxe_macro_Binop.OpArrow = ["OpArrow",22];
-haxe_macro_Binop.OpArrow.toString = $estr;
-haxe_macro_Binop.OpArrow.__enum__ = haxe_macro_Binop;
-var haxe_macro_Unop = { __ename__ : true, __constructs__ : ["OpIncrement","OpDecrement","OpNot","OpNeg","OpNegBits"] };
-haxe_macro_Unop.OpIncrement = ["OpIncrement",0];
-haxe_macro_Unop.OpIncrement.toString = $estr;
-haxe_macro_Unop.OpIncrement.__enum__ = haxe_macro_Unop;
-haxe_macro_Unop.OpDecrement = ["OpDecrement",1];
-haxe_macro_Unop.OpDecrement.toString = $estr;
-haxe_macro_Unop.OpDecrement.__enum__ = haxe_macro_Unop;
-haxe_macro_Unop.OpNot = ["OpNot",2];
-haxe_macro_Unop.OpNot.toString = $estr;
-haxe_macro_Unop.OpNot.__enum__ = haxe_macro_Unop;
-haxe_macro_Unop.OpNeg = ["OpNeg",3];
-haxe_macro_Unop.OpNeg.toString = $estr;
-haxe_macro_Unop.OpNeg.__enum__ = haxe_macro_Unop;
-haxe_macro_Unop.OpNegBits = ["OpNegBits",4];
-haxe_macro_Unop.OpNegBits.toString = $estr;
-haxe_macro_Unop.OpNegBits.__enum__ = haxe_macro_Unop;
-var haxe_macro_ExprDef = { __ename__ : true, __constructs__ : ["EConst","EArray","EBinop","EField","EParenthesis","EObjectDecl","EArrayDecl","ECall","ENew","EUnop","EVars","EFunction","EBlock","EFor","EIn","EIf","EWhile","ESwitch","ETry","EReturn","EBreak","EContinue","EUntyped","EThrow","ECast","EDisplay","EDisplayNew","ETernary","ECheckType","EMeta"] };
-haxe_macro_ExprDef.EConst = function(c) { var $x = ["EConst",0,c]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
-haxe_macro_ExprDef.EArray = function(e1,e2) { var $x = ["EArray",1,e1,e2]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
-haxe_macro_ExprDef.EBinop = function(op,e1,e2) { var $x = ["EBinop",2,op,e1,e2]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
-haxe_macro_ExprDef.EField = function(e,field) { var $x = ["EField",3,e,field]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
-haxe_macro_ExprDef.EParenthesis = function(e) { var $x = ["EParenthesis",4,e]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
-haxe_macro_ExprDef.EObjectDecl = function(fields) { var $x = ["EObjectDecl",5,fields]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
-haxe_macro_ExprDef.EArrayDecl = function(values) { var $x = ["EArrayDecl",6,values]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
-haxe_macro_ExprDef.ECall = function(e,params) { var $x = ["ECall",7,e,params]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
-haxe_macro_ExprDef.ENew = function(t,params) { var $x = ["ENew",8,t,params]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
-haxe_macro_ExprDef.EUnop = function(op,postFix,e) { var $x = ["EUnop",9,op,postFix,e]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
-haxe_macro_ExprDef.EVars = function(vars) { var $x = ["EVars",10,vars]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
-haxe_macro_ExprDef.EFunction = function(name,f) { var $x = ["EFunction",11,name,f]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
-haxe_macro_ExprDef.EBlock = function(exprs) { var $x = ["EBlock",12,exprs]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
-haxe_macro_ExprDef.EFor = function(it,expr) { var $x = ["EFor",13,it,expr]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
-haxe_macro_ExprDef.EIn = function(e1,e2) { var $x = ["EIn",14,e1,e2]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
-haxe_macro_ExprDef.EIf = function(econd,eif,eelse) { var $x = ["EIf",15,econd,eif,eelse]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
-haxe_macro_ExprDef.EWhile = function(econd,e,normalWhile) { var $x = ["EWhile",16,econd,e,normalWhile]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
-haxe_macro_ExprDef.ESwitch = function(e,cases,edef) { var $x = ["ESwitch",17,e,cases,edef]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
-haxe_macro_ExprDef.ETry = function(e,catches) { var $x = ["ETry",18,e,catches]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
-haxe_macro_ExprDef.EReturn = function(e) { var $x = ["EReturn",19,e]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
-haxe_macro_ExprDef.EBreak = ["EBreak",20];
-haxe_macro_ExprDef.EBreak.toString = $estr;
-haxe_macro_ExprDef.EBreak.__enum__ = haxe_macro_ExprDef;
-haxe_macro_ExprDef.EContinue = ["EContinue",21];
-haxe_macro_ExprDef.EContinue.toString = $estr;
-haxe_macro_ExprDef.EContinue.__enum__ = haxe_macro_ExprDef;
-haxe_macro_ExprDef.EUntyped = function(e) { var $x = ["EUntyped",22,e]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
-haxe_macro_ExprDef.EThrow = function(e) { var $x = ["EThrow",23,e]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
-haxe_macro_ExprDef.ECast = function(e,t) { var $x = ["ECast",24,e,t]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
-haxe_macro_ExprDef.EDisplay = function(e,isCall) { var $x = ["EDisplay",25,e,isCall]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
-haxe_macro_ExprDef.EDisplayNew = function(t) { var $x = ["EDisplayNew",26,t]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
-haxe_macro_ExprDef.ETernary = function(econd,eif,eelse) { var $x = ["ETernary",27,econd,eif,eelse]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
-haxe_macro_ExprDef.ECheckType = function(e,t) { var $x = ["ECheckType",28,e,t]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
-haxe_macro_ExprDef.EMeta = function(s,e) { var $x = ["EMeta",29,s,e]; $x.__enum__ = haxe_macro_ExprDef; $x.toString = $estr; return $x; };
-var haxe_macro_ComplexType = { __ename__ : true, __constructs__ : ["TPath","TFunction","TAnonymous","TParent","TExtend","TOptional"] };
-haxe_macro_ComplexType.TPath = function(p) { var $x = ["TPath",0,p]; $x.__enum__ = haxe_macro_ComplexType; $x.toString = $estr; return $x; };
-haxe_macro_ComplexType.TFunction = function(args,ret) { var $x = ["TFunction",1,args,ret]; $x.__enum__ = haxe_macro_ComplexType; $x.toString = $estr; return $x; };
-haxe_macro_ComplexType.TAnonymous = function(fields) { var $x = ["TAnonymous",2,fields]; $x.__enum__ = haxe_macro_ComplexType; $x.toString = $estr; return $x; };
-haxe_macro_ComplexType.TParent = function(t) { var $x = ["TParent",3,t]; $x.__enum__ = haxe_macro_ComplexType; $x.toString = $estr; return $x; };
-haxe_macro_ComplexType.TExtend = function(p,fields) { var $x = ["TExtend",4,p,fields]; $x.__enum__ = haxe_macro_ComplexType; $x.toString = $estr; return $x; };
-haxe_macro_ComplexType.TOptional = function(t) { var $x = ["TOptional",5,t]; $x.__enum__ = haxe_macro_ComplexType; $x.toString = $estr; return $x; };
 var haxe_rtti_Meta = function() { };
 $hxClasses["haxe.rtti.Meta"] = haxe_rtti_Meta;
 haxe_rtti_Meta.__name__ = ["haxe","rtti","Meta"];
@@ -998,7 +868,7 @@ test_NeedsGreeter.__name__ = ["test","NeedsGreeter"];
 test_NeedsGreeter.prototype = {
 	__class__: test_NeedsGreeter
 };
-var test_HelloWorld = function(greeter) {
+var test_HelloWorld = $hx_exports.test.HelloWorld = function(greeter) {
 	this.greeter = greeter;
 };
 $hxClasses["test.HelloWorld"] = test_HelloWorld;
@@ -1158,7 +1028,7 @@ testcompile_NeedsGreeter.__name__ = ["testcompile","NeedsGreeter"];
 testcompile_NeedsGreeter.prototype = {
 	__class__: testcompile_NeedsGreeter
 };
-var testcompile_HelloWorld = function(greeter) {
+var testcompile_HelloWorld = $hx_exports.testcompile.HelloWorld = function(greeter) {
 	this.greeter = greeter;
 };
 $hxClasses["testcompile.HelloWorld"] = testcompile_HelloWorld;
@@ -1193,7 +1063,7 @@ testcompile_ParentComponent.__name__ = ["testcompile","ParentComponent"];
 testcompile_ParentComponent.prototype = {
 	__class__: testcompile_ParentComponent
 };
-var testcompile_TodoList = function() {
+var testcompile_TodoList = $hx_exports.testcompile.TodoList = function() {
 	this.lastValue = "";
 	this.todos = ["Eat Breakfast","Walk Dog","Breathe"];
 	this.lastValue = this.todos[this.todos.length - 1];
@@ -1260,7 +1130,7 @@ test_NgModelDirective.__meta__ = { obj : { Directive : [{ selector : "[ng-model]
 test_DependencyDisplayComponent.__meta__ = { obj : { Component : [{ selector : "dependency-display", compileChildren : true}], View : [{ directives : ["test.Dependency","test.MyDirective","test.NgModelDirective"], templateUrl : "templates/dependency.tpl.html"}]}};
 test_DisplayComponent.__meta__ = { obj : { Component : [{ selector : "display", viewBindings : ["test.FriendsService"]}], View : [{ directives : ["NgFor","NgIf"], template : "<p>My name: {{ myName }}</p><p>Friends:</p><ul><li *ng-for=\"#name of names\">{{ name }}</li></ul><p *ng-if=\"names.length > 3\">You have many friends!</p>"}]}};
 test_NeedsGreeter.__meta__ = { obj : { Directive : [{ selector : "needs-greeter", bindings : ["test.Greeter"]}]}};
-test_HelloWorld.__meta__ = { obj : { Component : [{ selector : "greet", viewBindings : ["test.Greeter"]}], View : [{ template : "<needs-greeter>{{ greeter.greet('World') }}</needs-greeter>", directives : ["test.NeedsGreeter"]}]}};
+test_HelloWorld.__meta__ = { obj : { Component : [{ selector : "greet", viewBindings : ["test.Greeter"], exportAs : "componentGreet"}], View : [{ template : "<needs-greeter>{{ greeter.greet('World') }}</needs-greeter>", directives : ["test.NeedsGreeter"]}]}};
 test_InputDirective.__meta__ = { obj : { Directive : [{ selector : "input", lifecycle : ["onInit","onChange","onAllChangesDone","onCheck"], host : { '@$__hx__(keyup)' : "onKeyUp($event)"}, exportAs : "input-directive"}]}};
 test_ParentComponent.__meta__ = { obj : { Component : [{ selector : "parent"}], View : [{ directives : ["test.ChildComponent"], template : "<h1>{{ message }}</h1><child></child>"}]}};
 test_TodoList.__meta__ = { obj : { Component : [{ selector : "todo-list", properties : ["lastValue","todos"], lifecycle : ["onInit","onChange","onAllChangesDone","onCheck"], changeDetection : "CHECK_ALWAYS"}], View : [{ directives : ["NgFor","NgIf","test.InputDirective"], template : "Last value: {{lastValue}}<ul><li *ng-for=\"#todo of todos\">{{ todo }}</li></ul><input #textbox (keyup)=\"doneTyping($event)\"><button (click)=\"addTodo(textbox.value)\">Add Todo</button>"}]}};
@@ -1281,7 +1151,7 @@ testcompile_NgModelDirective.annotations = [false ? new ng.ComponentAnnotation(n
 testcompile_NgModelDirective.parameters = [];
 testcompile_NgModelDirective.__alreadyConstructed = true;
 testcompile_DependencyDisplayComponent.__meta__ = { obj : { Component : [{ selector : "c-dependency-display", compileChildren : true}], View : [{ directives : ["testcompile.Dependency","testcompile.MyDirective","testcompile.NgModelDirective"], templateUrl : "templates/dependency.tpl.html", encapsulation : "EMULATED"}]}};
-testcompile_DependencyDisplayComponent.annotations = [true ? new ng.ComponentAnnotation({ selector : "c-dependency-display", compileChildren : haxe_macro_ExprDef.EConst(haxe_macro_Constant.CIdent("true"))}) : null,true ? new ng.ViewAnnotation({ directives : [testcompile_Dependency,testcompile_MyDirective,testcompile_NgModelDirective], templateUrl : "templates/dependency.tpl.html", encapsulation : "EMULATED"}) : null,false ? new ng.DirectiveAnnotation(null) : null];
+testcompile_DependencyDisplayComponent.annotations = [true ? new ng.ComponentAnnotation({ selector : "c-dependency-display", compileChildren : true}) : null,true ? new ng.ViewAnnotation({ directives : [testcompile_Dependency,testcompile_MyDirective,testcompile_NgModelDirective], templateUrl : "templates/dependency.tpl.html", encapsulation : "EMULATED"}) : null,false ? new ng.DirectiveAnnotation(null) : null];
 testcompile_DependencyDisplayComponent.parameters = [];
 testcompile_DependencyDisplayComponent.__alreadyConstructed = true;
 testcompile_DisplayComponent.__meta__ = { obj : { Component : [{ selector : "c-display", viewBindings : ["testcompile.FriendsService"]}], View : [{ directives : ["NgFor","NgIf"], template : "<p>My name: {{ myName }}</p><p>Friends:</p><ul><li *ng-for=\"#name of names\">{{ name }}</li></ul><p *ng-if=\"names.length > 3\">You have many friends!</p>"}]}};
@@ -1292,11 +1162,14 @@ testcompile_NeedsGreeter.__meta__ = { obj : { Directive : [{ selector : "c-needs
 testcompile_NeedsGreeter.annotations = [false ? new ng.ComponentAnnotation(null) : null,false ? new ng.ViewAnnotation(null) : null,true ? new ng.DirectiveAnnotation({ selector : "c-needs-greeter", bindings : [testcompile_Greeter]}) : null];
 testcompile_NeedsGreeter.parameters = [[testcompile_Greeter]];
 testcompile_NeedsGreeter.__alreadyConstructed = true;
-testcompile_HelloWorld.__meta__ = { obj : { Component : [{ selector : "c-greet", viewBindings : ["testcompile.Greeter"]}], View : [{ template : "<c-needs-greeter>{{ greeter.greet('World') }}</c-needs-greeter>", directives : ["testcompile.NeedsGreeter"]}]}};
-testcompile_HelloWorld.annotations = [true ? new ng.ComponentAnnotation({ viewBindings : [testcompile_Greeter], selector : "c-greet"}) : null,true ? new ng.ViewAnnotation({ template : "<c-needs-greeter>{{ greeter.greet('World') }}</c-needs-greeter>", directives : [testcompile_NeedsGreeter]}) : null,false ? new ng.DirectiveAnnotation(null) : null];
+testcompile_HelloWorld.__meta__ = { obj : { Component : [{ selector : "c-greet", viewBindings : ["testcompile.Greeter"], exportAs : "componentGreet"}], View : [{ template : "<c-needs-greeter>{{ greeter.greet('World') }}</c-needs-greeter>", directives : ["testcompile.NeedsGreeter"]}]}};
+testcompile_HelloWorld.annotations = [true ? new ng.ComponentAnnotation({ viewBindings : [testcompile_Greeter], selector : "c-greet", exportAs : "componentGreet"}) : null,true ? new ng.ViewAnnotation({ template : "<c-needs-greeter>{{ greeter.greet('World') }}</c-needs-greeter>", directives : [testcompile_NeedsGreeter]}) : null,false ? new ng.DirectiveAnnotation(null) : null];
 testcompile_HelloWorld.parameters = [[testcompile_Greeter]];
 testcompile_HelloWorld.__alreadyConstructed = true;
 testcompile_InputDirective.__meta__ = { obj : { Directive : [{ selector : "input", lifecycle : ["onInit","onChange","onAllChangesDone","onCheck"], host : { '@$__hx__(keyup)' : "onKeyUp($event)"}, exportAs : "input-directive"}]}};
+testcompile_InputDirective.annotations = [false ? new ng.ComponentAnnotation(null) : null,false ? new ng.ViewAnnotation(null) : null,true ? new ng.DirectiveAnnotation({ lifecycle : ["onInit","onChange","onAllChangesDone","onCheck"], selector : "input", exportAs : "input-directive", host : { '(keyup)' : "onKeyUp($event)"}}) : null];
+testcompile_InputDirective.parameters = [];
+testcompile_InputDirective.__alreadyConstructed = true;
 testcompile_ParentComponent.__meta__ = { obj : { Component : [{ selector : "c-parent"}], View : [{ directives : ["testcompile.ChildComponent"], template : "<h1>{{ message }}</h1><c-child></c-child>"}]}};
 testcompile_ParentComponent.annotations = [true ? new ng.ComponentAnnotation({ selector : "c-parent"}) : null,true ? new ng.ViewAnnotation({ template : "<h1>{{ message }}</h1><c-child></c-child>", directives : [testcompile_ChildComponent]}) : null,false ? new ng.DirectiveAnnotation(null) : null];
 testcompile_ParentComponent.parameters = [];

@@ -25,6 +25,9 @@ import angular2haxe.KeyboardEvent;
 	},
 	exportAs: 'input-directive'
 })
+#if !macro
+@:build(angular2haxe.buildplugin.BuildPlugin.build())
+#end
 @:expose
 class InputDirective
 {

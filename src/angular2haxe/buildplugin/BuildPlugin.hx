@@ -50,6 +50,8 @@ class BuildPlugin
 	}
 	
 #if macro
+	private static var QUOTED_FIELD_PREFIX = "@$__hx__";
+	
 	/**
 	 * Resolve class by name at build time. Classes will resolve if
 	 * they are imported explicitly in this file.
@@ -80,10 +82,63 @@ class BuildPlugin
 	}
 	
 	/**
+	 * Extract value from expression. Credit to nadako:
+	 * https://gist.github.com/nadako/9081608
+	 * @param	e
+	 * @return
+	 */
+	private static function extractValue(e : Expr) : Dynamic
+	{
+		switch (e.expr)
+		{
+			case EConst(c):
+				switch (c)
+				{
+					case CInt(s):
+						var i = Std.parseInt(s);
+						return (i != null) ? i : Std.parseFloat(s); // if the number exceeds standard int return as float
+					case CFloat(s):
+						return Std.parseFloat(s);
+					case CString(s):
+						return s;
+					case CIdent("null"):
+						return null;
+					case CIdent("true"):
+						return true;
+					case CIdent("false"):
+						return false;
+					default:
+				}
+			case EBlock([]):
+				return {};
+			case EObjectDecl(fields):
+				var object = {};
+				for (field in fields)
+					Reflect.setField(object, unquoteField(field.field), extractValue(field.expr));
+				return object;
+			case EArrayDecl(exprs):
+				return [for (e in exprs) extractValue(e)];
+			default:
+		}
+		throw new Error("Invalid JSON expression", e.pos);
+	}
+
+	/**
+	 * Strips "@$__hx__" from all object declarations.
+	 * see https://github.com/HaxeFoundation/haxe/issues/2642
+	 * @param	name
+	 * @return
+	 */
+	private static function unquoteField(name:String):String
+	{
+		return (name.indexOf(QUOTED_FIELD_PREFIX) == 0) ? name.substr(QUOTED_FIELD_PREFIX.length) : name;
+	}
+	
+	/**
 	 * Compile data at build-time rather than run-time.
 	 * @return
 	 */
-	macro static public function build() : Array<Field>
+	macro public static function build() : Array<Field>
 	{		
 		var attachedClass : ClassType = Context.getLocalClass().get();
 		var attachedMetadata : Metadata = attachedClass.meta.get();
@@ -123,36 +178,9 @@ class BuildPlugin
 					{
 						var e : Expr = params[i].expr;
 						var fieldValue : Dynamic;
-
-						// Cast field values into values that can be worked with.
-						fieldValue = switch(e.expr) 
-						{
-							case EConst(CString(s)): s;
-							case EArrayDecl(a) : a;
-							case _: e.expr;
-						}
 						
-						// If the field value is an array, all values inside
-						// the array must also be converted.
-						if (Std.is(fieldValue, Array))
-						{
-							var array : Array<Dynamic> = fieldValue;
-							var j : Int = 0;
-							
-							for (value in array)
-							{
-								value = switch(value.expr)
-								{
-									case EConst(CString(s)): s;
-									case _: e.expr;
-								}
-								
-								array[j] = value;
-								j++;
-							}
-							
-							fieldValue = array;
-						}
+						// Extract value from expression.
+						fieldValue = extractValue(e);
 						
 						Reflect.setField(data, paramNames.field, fieldValue);
 						i++;

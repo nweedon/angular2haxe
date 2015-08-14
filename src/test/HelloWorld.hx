@@ -57,12 +57,14 @@ class NeedsGreeter
 	selector: 'greet',
 	viewBindings: [
 		"test.Greeter"
-	]
+	],
+	exportAs: 'componentGreet'
 })
 @View({
 	template: "<needs-greeter>{{ greeter.greet('World') }}</needs-greeter>",
 	directives: ["test.NeedsGreeter"]
 })
+@:expose
 class HelloWorld
 {
 	private var greeter : Greeter;

@@ -36,6 +36,8 @@ import test.InputDirective;
 })
 #if !macro
 @:build(angular2haxe.buildplugin.BuildPlugin.build())
+#end
+@:expose
 class TodoList
 {
 	private var todos : Array<String>;
@@ -47,6 +49,7 @@ class TodoList
 		lastValue = todos[todos.length - 1];
 	}
 	
+	#if !macro
 	public function doneTyping(event : KeyboardEvent)
 	{
 		if (event.which == 13)
@@ -55,6 +58,7 @@ class TodoList
 			event._target.value = "";
 		}
 	}
+	#end
 	
 	public function addTodo(todo : String)
 	{
@@ -82,4 +86,3 @@ class TodoList
 		Trace.log('Lifecycle onAllChangesDone');
 	}
 }
-#end
