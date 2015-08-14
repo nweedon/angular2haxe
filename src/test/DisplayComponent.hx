@@ -24,7 +24,7 @@ import angular2haxe.ng.Angular;
 
 @Component({ 
 	selector: 'display',
-	hostInjector: ["test.FriendsService"]
+	viewBindings: ["test.FriendsService"]
 })
 @View({ 
 	directives: ["NgFor", "NgIf"],

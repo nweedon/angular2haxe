@@ -17,6 +17,7 @@ package angular2haxe;
 
 import angular2haxe.ng.ViewConstructorData;
 import angular2haxe.AngularExtension;
+import angular2haxe.ng.ViewEncapsulation;
 
 #if macro
 import angular2haxe.buildplugin.BuildPlugin;
@@ -38,6 +39,13 @@ class ViewAnnotationExtension extends AnnotationExtension
 	 */
 	public static function transform(input : Dynamic, annotations : Array<Dynamic>, parameters : Array<Dynamic>) : ViewConstructorData
 	{
+		#if !macro
+			if (input.encapsulation != null)
+			{
+				input.encapsulation = ViewEncapsulationExtension.toAngular(input.encapsulation);
+			}
+		#end
+		
 		var output : ViewConstructorData = AnnotationExtension.resolveInputAnnotation(input, ViewConstructorData);
 		var index : Int = 0;
 		
@@ -94,6 +102,7 @@ class ViewAnnotationExtension extends AnnotationExtension
 				index++;
 			}
 		}
+		
 		return output;
 	}	
 	
@@ -114,6 +123,11 @@ class ViewAnnotationExtension extends AnnotationExtension
 					
 					index++;
 				}
+			}
+			
+			if (data.encapsulation != null)
+			{
+				data.encapsulation = ViewEncapsulationExtension.toAngular(data.encapsulation);
 			}
 		}
 	}

@@ -28,7 +28,7 @@ class DirectiveConstructorData
 	public var events 			: Array<String>			= [];
 	public var host 			: Dynamic				= null;
 	public var lifecycle		: Array<Dynamic>		= [];
-	public var hostInjector		: Array<Dynamic>		= [];
+	public var bindings			: Array<Dynamic>		= [];
 	public var exportAs			: String				= null;
 	public var compileChildren 	: Bool					= true;
 	

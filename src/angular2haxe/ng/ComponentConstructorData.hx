@@ -30,9 +30,10 @@ class ComponentConstructorData
 	public var events 			: Array<String>			= [];
 	public var host 			: Map<String, String>	= new Map<String, String>();
 	public var lifecycle		: Array<Dynamic>		= [];
-	public var hostInjector		: Array<Dynamic>		= [];
+	public var bindings			: Array<Dynamic>	 	= [];
 	public var exportAs			: String				= null;
 	public var compileChildren 	: Bool					= true;
+	public var viewBindings		: Array<Dynamic>		= [];
 	public var changeDetection 	: String				= "DEFAULT";
 	
 	public function new() 

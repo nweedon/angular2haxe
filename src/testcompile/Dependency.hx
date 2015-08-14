@@ -73,7 +73,7 @@ class Dependency
 @Directive({ 
 	selector: '[my-directive]',
 	lifecycle: ["onInit"],
-	hostInjector: ["testcompile.Dependency"]
+	bindings: ["testcompile.Dependency"]
 })
 @:expose
 #if !macro

@@ -24,7 +24,7 @@ import angular2haxe.ng.Angular;
 
 @Component({ 
 	selector: 'c-display',
-	hostInjector: ["testcompile.FriendsService"]
+	viewBindings: ["testcompile.FriendsService"]
 })
 @View({ 
 	directives: ["NgFor", "NgIf"],

@@ -330,21 +330,27 @@ $hxClasses["angular2haxe.ComponentAnnotationExtension"] = angular2haxe_Component
 angular2haxe_ComponentAnnotationExtension.__name__ = ["angular2haxe","ComponentAnnotationExtension"];
 angular2haxe_ComponentAnnotationExtension.transform = function(input,annotations,parameters) {
 	var output = angular2haxe_AnnotationExtension.resolveInputAnnotation(input,angular2haxe_ng_ComponentConstructorData);
-	if(parameters != null && output.hostInjector != null) angular2haxe_AnnotationExtension.parseInjector(parameters,output.hostInjector);
+	if(parameters != null && output.viewBindings != null) angular2haxe_AnnotationExtension.parseInjector(parameters,output.viewBindings);
+	if(parameters != null && output.bindings != null) angular2haxe_AnnotationExtension.parseInjector(parameters,output.bindings);
 	angular2haxe_AnnotationExtension.transformLifecycle(output.lifecycle);
 	return output;
 };
 angular2haxe_ComponentAnnotationExtension.postCompileTransform = function(data) {
 	if(data != null) {
-		if(data.hostInjector != null) {
-			var index = 0;
-			var _g = 0;
-			var _g1 = data.hostInjector;
-			while(_g < _g1.length) {
-				var element = _g1[_g];
-				++_g;
-				if(typeof(element) == "string") data.hostInjector[index] = angular2haxe_AngularExtension.getAngularClass(element);
-				index++;
+		var bindings = [data.viewBindings,data.bindings];
+		var _g = 0;
+		while(_g < bindings.length) {
+			var binding = bindings[_g];
+			++_g;
+			if(binding != null) {
+				var index = 0;
+				var _g1 = 0;
+				while(_g1 < binding.length) {
+					var element = binding[_g1];
+					++_g1;
+					if(typeof(element) == "string") binding[index] = angular2haxe_AngularExtension.getAngularClass(element);
+					index++;
+				}
 			}
 		}
 	}
@@ -375,20 +381,20 @@ angular2haxe_DirectiveAnnotationExtension.transform = function(input,annotations
 		input.host = outputHost;
 	}
 	var output = angular2haxe_AnnotationExtension.resolveInputAnnotation(input,angular2haxe_ng_DirectiveConstructorData);
-	if(parameters != null && output.hostInjector != null) angular2haxe_AnnotationExtension.parseInjector(parameters,output.hostInjector);
+	if(parameters != null && output.bindings != null) angular2haxe_AnnotationExtension.parseInjector(parameters,output.bindings);
 	if(output.lifecycle != null) angular2haxe_AnnotationExtension.transformLifecycle(output.lifecycle);
 	return output;
 };
 angular2haxe_DirectiveAnnotationExtension.postCompileTransform = function(data) {
 	if(data != null) {
-		if(data.hostInjector != null) {
+		if(data.bindings != null) {
 			var index = 0;
 			var _g = 0;
-			var _g1 = data.hostInjector;
+			var _g1 = data.bindings;
 			while(_g < _g1.length) {
 				var element = _g1[_g];
 				++_g;
-				if(typeof(element) == "string") data.hostInjector[index] = angular2haxe_AngularExtension.getAngularClass(element);
+				if(typeof(element) == "string") data.bindings[index] = angular2haxe_AngularExtension.getAngularClass(element);
 				index++;
 			}
 		}
@@ -460,6 +466,7 @@ var angular2haxe_ViewAnnotationExtension = function() {
 $hxClasses["angular2haxe.ViewAnnotationExtension"] = angular2haxe_ViewAnnotationExtension;
 angular2haxe_ViewAnnotationExtension.__name__ = ["angular2haxe","ViewAnnotationExtension"];
 angular2haxe_ViewAnnotationExtension.transform = function(input,annotations,parameters) {
+	if(input.encapsulation != null) input.encapsulation = angular2haxe_ViewEncapsulationExtension.toAngular(input.encapsulation);
 	var output = angular2haxe_AnnotationExtension.resolveInputAnnotation(input,angular2haxe_ng_ViewConstructorData);
 	var index = 0;
 	if(output.directives != null) {
@@ -494,12 +501,32 @@ angular2haxe_ViewAnnotationExtension.postCompileTransform = function(data) {
 				index++;
 			}
 		}
+		if(data.encapsulation != null) data.encapsulation = angular2haxe_ViewEncapsulationExtension.toAngular(data.encapsulation);
 	}
 };
 angular2haxe_ViewAnnotationExtension.__super__ = angular2haxe_AnnotationExtension;
 angular2haxe_ViewAnnotationExtension.prototype = $extend(angular2haxe_AnnotationExtension.prototype,{
 	__class__: angular2haxe_ViewAnnotationExtension
 });
+var angular2haxe_ViewEncapsulationExtension = function() {
+};
+$hxClasses["angular2haxe.ViewEncapsulationExtension"] = angular2haxe_ViewEncapsulationExtension;
+angular2haxe_ViewEncapsulationExtension.__name__ = ["angular2haxe","ViewEncapsulationExtension"];
+angular2haxe_ViewEncapsulationExtension.toAngular = function(name) {
+	switch(name) {
+	case "EMULATED":
+		return ng.ViewEncapsulation.EMULATED;
+	case "NATIVE":
+		return ng.ViewEncapsulation.NATIVE;
+	case "NONE":
+		return ng.ViewEncapsulation.NONE;
+	default:
+		return ng.ViewEncapsulation.NONE;
+	}
+};
+angular2haxe_ViewEncapsulationExtension.prototype = {
+	__class__: angular2haxe_ViewEncapsulationExtension
+};
 var angular2haxe_buildplugin_BuildPlugin = function() {
 };
 $hxClasses["angular2haxe.buildplugin.BuildPlugin"] = angular2haxe_buildplugin_BuildPlugin;
@@ -509,9 +536,10 @@ angular2haxe_buildplugin_BuildPlugin.prototype = {
 };
 var angular2haxe_ng_ComponentConstructorData = function() {
 	this.changeDetection = "DEFAULT";
+	this.viewBindings = [];
 	this.compileChildren = true;
 	this.exportAs = null;
-	this.hostInjector = [];
+	this.bindings = [];
 	this.lifecycle = [];
 	this.host = new haxe_ds_StringMap();
 	this.events = [];
@@ -526,7 +554,7 @@ angular2haxe_ng_ComponentConstructorData.prototype = {
 var angular2haxe_ng_DirectiveConstructorData = function() {
 	this.compileChildren = true;
 	this.exportAs = null;
-	this.hostInjector = [];
+	this.bindings = [];
 	this.lifecycle = [];
 	this.host = null;
 	this.events = [];
@@ -541,7 +569,7 @@ angular2haxe_ng_DirectiveConstructorData.prototype = {
 var angular2haxe_ng_ViewConstructorData = function() {
 	this.styleUrls = [];
 	this.styles = [];
-	this.renderer = null;
+	this.encapsulation = null;
 	this.directives = [];
 	this.template = null;
 	this.templateUrl = null;
@@ -1227,12 +1255,12 @@ angular2haxe_Trace.logLevel = "ERROR";
 js_Boot.__toStr = {}.toString;
 test_ChildComponent.__meta__ = { obj : { Component : [{ selector : "child"}], View : [{ template : "<p>{{ message }}</p>"}]}};
 test_Dependency.__meta__ = { obj : { Directive : [{ selector : "[dependency]", properties : ["id: dependency"], lifecycle : ["onInit"]}]}};
-test_MyDirective.__meta__ = { obj : { Directive : [{ selector : "[my-directive]", lifecycle : ["onInit"], hostInjector : ["test.Dependency"]}]}};
+test_MyDirective.__meta__ = { obj : { Directive : [{ selector : "[my-directive]", lifecycle : ["onInit"], bindings : ["test.Dependency"]}]}};
 test_NgModelDirective.__meta__ = { obj : { Directive : [{ selector : "[ng-model]", properties : ["ngModel"]}]}};
 test_DependencyDisplayComponent.__meta__ = { obj : { Component : [{ selector : "dependency-display", compileChildren : true}], View : [{ directives : ["test.Dependency","test.MyDirective","test.NgModelDirective"], templateUrl : "templates/dependency.tpl.html"}]}};
-test_DisplayComponent.__meta__ = { obj : { Component : [{ selector : "display", hostInjector : ["test.FriendsService"]}], View : [{ directives : ["NgFor","NgIf"], template : "<p>My name: {{ myName }}</p><p>Friends:</p><ul><li *ng-for=\"#name of names\">{{ name }}</li></ul><p *ng-if=\"names.length > 3\">You have many friends!</p>"}]}};
-test_NeedsGreeter.__meta__ = { obj : { Directive : [{ selector : "needs-greeter", hostInjector : ["test.Greeter"]}]}};
-test_HelloWorld.__meta__ = { obj : { Component : [{ selector : "greet", hostInjector : ["test.Greeter"]}], View : [{ template : "<needs-greeter>{{ greeter.greet('World') }}</needs-greeter>", directives : ["test.NeedsGreeter"]}]}};
+test_DisplayComponent.__meta__ = { obj : { Component : [{ selector : "display", viewBindings : ["test.FriendsService"]}], View : [{ directives : ["NgFor","NgIf"], template : "<p>My name: {{ myName }}</p><p>Friends:</p><ul><li *ng-for=\"#name of names\">{{ name }}</li></ul><p *ng-if=\"names.length > 3\">You have many friends!</p>"}]}};
+test_NeedsGreeter.__meta__ = { obj : { Directive : [{ selector : "needs-greeter", bindings : ["test.Greeter"]}]}};
+test_HelloWorld.__meta__ = { obj : { Component : [{ selector : "greet", viewBindings : ["test.Greeter"]}], View : [{ template : "<needs-greeter>{{ greeter.greet('World') }}</needs-greeter>", directives : ["test.NeedsGreeter"]}]}};
 test_InputDirective.__meta__ = { obj : { Directive : [{ selector : "input", lifecycle : ["onInit","onChange","onAllChangesDone","onCheck"], host : { '@$__hx__(keyup)' : "onKeyUp($event)"}, exportAs : "input-directive"}]}};
 test_ParentComponent.__meta__ = { obj : { Component : [{ selector : "parent"}], View : [{ directives : ["test.ChildComponent"], template : "<h1>{{ message }}</h1><child></child>"}]}};
 test_TodoList.__meta__ = { obj : { Component : [{ selector : "todo-list", properties : ["lastValue","todos"], lifecycle : ["onInit","onChange","onAllChangesDone","onCheck"], changeDetection : "CHECK_ALWAYS"}], View : [{ directives : ["NgFor","NgIf","test.InputDirective"], template : "Last value: {{lastValue}}<ul><li *ng-for=\"#todo of todos\">{{ todo }}</li></ul><input #textbox (keyup)=\"doneTyping($event)\"><button (click)=\"addTodo(textbox.value)\">Add Todo</button>"}]}};
@@ -1244,28 +1272,28 @@ testcompile_Dependency.__meta__ = { obj : { Directive : [{ selector : "[c-depend
 testcompile_Dependency.annotations = [false ? new ng.ComponentAnnotation(null) : null,false ? new ng.ViewAnnotation(null) : null,true ? new ng.DirectiveAnnotation({ lifecycle : ["onInit"], selector : "[c-dependency]", properties : ["id: c-dependency"]}) : null];
 testcompile_Dependency.parameters = [];
 testcompile_Dependency.__alreadyConstructed = true;
-testcompile_MyDirective.__meta__ = { obj : { Directive : [{ selector : "[my-directive]", lifecycle : ["onInit"], hostInjector : ["testcompile.Dependency"]}]}};
-testcompile_MyDirective.annotations = [false ? new ng.ComponentAnnotation(null) : null,false ? new ng.ViewAnnotation(null) : null,true ? new ng.DirectiveAnnotation({ lifecycle : ["onInit"], selector : "[my-directive]", hostInjector : [testcompile_Dependency]}) : null];
+testcompile_MyDirective.__meta__ = { obj : { Directive : [{ selector : "[my-directive]", lifecycle : ["onInit"], bindings : ["testcompile.Dependency"]}]}};
+testcompile_MyDirective.annotations = [false ? new ng.ComponentAnnotation(null) : null,false ? new ng.ViewAnnotation(null) : null,true ? new ng.DirectiveAnnotation({ lifecycle : ["onInit"], selector : "[my-directive]", bindings : [testcompile_Dependency]}) : null];
 testcompile_MyDirective.parameters = [[testcompile_Dependency]];
 testcompile_MyDirective.__alreadyConstructed = true;
 testcompile_NgModelDirective.__meta__ = { obj : { Directive : [{ selector : "[ng-model]", properties : ["ngModel"]}]}};
 testcompile_NgModelDirective.annotations = [false ? new ng.ComponentAnnotation(null) : null,false ? new ng.ViewAnnotation(null) : null,true ? new ng.DirectiveAnnotation({ selector : "[ng-model]", properties : ["ngModel"]}) : null];
 testcompile_NgModelDirective.parameters = [];
 testcompile_NgModelDirective.__alreadyConstructed = true;
-testcompile_DependencyDisplayComponent.__meta__ = { obj : { Component : [{ selector : "c-dependency-display", compileChildren : true}], View : [{ directives : ["testcompile.Dependency","testcompile.MyDirective","testcompile.NgModelDirective"], templateUrl : "templates/dependency.tpl.html"}]}};
-testcompile_DependencyDisplayComponent.annotations = [true ? new ng.ComponentAnnotation({ selector : "c-dependency-display", compileChildren : haxe_macro_ExprDef.EConst(haxe_macro_Constant.CIdent("true"))}) : null,true ? new ng.ViewAnnotation({ directives : [testcompile_Dependency,testcompile_MyDirective,testcompile_NgModelDirective], templateUrl : "templates/dependency.tpl.html"}) : null,false ? new ng.DirectiveAnnotation(null) : null];
+testcompile_DependencyDisplayComponent.__meta__ = { obj : { Component : [{ selector : "c-dependency-display", compileChildren : true}], View : [{ directives : ["testcompile.Dependency","testcompile.MyDirective","testcompile.NgModelDirective"], templateUrl : "templates/dependency.tpl.html", encapsulation : "EMULATED"}]}};
+testcompile_DependencyDisplayComponent.annotations = [true ? new ng.ComponentAnnotation({ selector : "c-dependency-display", compileChildren : haxe_macro_ExprDef.EConst(haxe_macro_Constant.CIdent("true"))}) : null,true ? new ng.ViewAnnotation({ directives : [testcompile_Dependency,testcompile_MyDirective,testcompile_NgModelDirective], templateUrl : "templates/dependency.tpl.html", encapsulation : "EMULATED"}) : null,false ? new ng.DirectiveAnnotation(null) : null];
 testcompile_DependencyDisplayComponent.parameters = [];
 testcompile_DependencyDisplayComponent.__alreadyConstructed = true;
-testcompile_DisplayComponent.__meta__ = { obj : { Component : [{ selector : "c-display", hostInjector : ["testcompile.FriendsService"]}], View : [{ directives : ["NgFor","NgIf"], template : "<p>My name: {{ myName }}</p><p>Friends:</p><ul><li *ng-for=\"#name of names\">{{ name }}</li></ul><p *ng-if=\"names.length > 3\">You have many friends!</p>"}]}};
-testcompile_DisplayComponent.annotations = [true ? new ng.ComponentAnnotation({ selector : "c-display", hostInjector : [testcompile_FriendsService]}) : null,true ? new ng.ViewAnnotation({ template : "<p>My name: {{ myName }}</p><p>Friends:</p><ul><li *ng-for=\"#name of names\">{{ name }}</li></ul><p *ng-if=\"names.length > 3\">You have many friends!</p>", directives : ["NgFor","NgIf"]}) : null,false ? new ng.DirectiveAnnotation(null) : null];
+testcompile_DisplayComponent.__meta__ = { obj : { Component : [{ selector : "c-display", viewBindings : ["testcompile.FriendsService"]}], View : [{ directives : ["NgFor","NgIf"], template : "<p>My name: {{ myName }}</p><p>Friends:</p><ul><li *ng-for=\"#name of names\">{{ name }}</li></ul><p *ng-if=\"names.length > 3\">You have many friends!</p>"}]}};
+testcompile_DisplayComponent.annotations = [true ? new ng.ComponentAnnotation({ viewBindings : [testcompile_FriendsService], selector : "c-display"}) : null,true ? new ng.ViewAnnotation({ template : "<p>My name: {{ myName }}</p><p>Friends:</p><ul><li *ng-for=\"#name of names\">{{ name }}</li></ul><p *ng-if=\"names.length > 3\">You have many friends!</p>", directives : ["NgFor","NgIf"]}) : null,false ? new ng.DirectiveAnnotation(null) : null];
 testcompile_DisplayComponent.parameters = [[testcompile_FriendsService]];
 testcompile_DisplayComponent.__alreadyConstructed = true;
-testcompile_NeedsGreeter.__meta__ = { obj : { Directive : [{ selector : "c-needs-greeter", hostInjector : ["testcompile.Greeter"]}]}};
-testcompile_NeedsGreeter.annotations = [false ? new ng.ComponentAnnotation(null) : null,false ? new ng.ViewAnnotation(null) : null,true ? new ng.DirectiveAnnotation({ selector : "c-needs-greeter", hostInjector : [testcompile_Greeter]}) : null];
+testcompile_NeedsGreeter.__meta__ = { obj : { Directive : [{ selector : "c-needs-greeter", bindings : ["testcompile.Greeter"]}]}};
+testcompile_NeedsGreeter.annotations = [false ? new ng.ComponentAnnotation(null) : null,false ? new ng.ViewAnnotation(null) : null,true ? new ng.DirectiveAnnotation({ selector : "c-needs-greeter", bindings : [testcompile_Greeter]}) : null];
 testcompile_NeedsGreeter.parameters = [[testcompile_Greeter]];
 testcompile_NeedsGreeter.__alreadyConstructed = true;
-testcompile_HelloWorld.__meta__ = { obj : { Component : [{ selector : "c-greet", hostInjector : ["testcompile.Greeter"]}], View : [{ template : "<c-needs-greeter>{{ greeter.greet('World') }}</c-needs-greeter>", directives : ["testcompile.NeedsGreeter"]}]}};
-testcompile_HelloWorld.annotations = [true ? new ng.ComponentAnnotation({ selector : "c-greet", hostInjector : [testcompile_Greeter]}) : null,true ? new ng.ViewAnnotation({ template : "<c-needs-greeter>{{ greeter.greet('World') }}</c-needs-greeter>", directives : [testcompile_NeedsGreeter]}) : null,false ? new ng.DirectiveAnnotation(null) : null];
+testcompile_HelloWorld.__meta__ = { obj : { Component : [{ selector : "c-greet", viewBindings : ["testcompile.Greeter"]}], View : [{ template : "<c-needs-greeter>{{ greeter.greet('World') }}</c-needs-greeter>", directives : ["testcompile.NeedsGreeter"]}]}};
+testcompile_HelloWorld.annotations = [true ? new ng.ComponentAnnotation({ viewBindings : [testcompile_Greeter], selector : "c-greet"}) : null,true ? new ng.ViewAnnotation({ template : "<c-needs-greeter>{{ greeter.greet('World') }}</c-needs-greeter>", directives : [testcompile_NeedsGreeter]}) : null,false ? new ng.DirectiveAnnotation(null) : null];
 testcompile_HelloWorld.parameters = [[testcompile_Greeter]];
 testcompile_HelloWorld.__alreadyConstructed = true;
 testcompile_InputDirective.__meta__ = { obj : { Directive : [{ selector : "input", lifecycle : ["onInit","onChange","onAllChangesDone","onCheck"], host : { '@$__hx__(keyup)' : "onKeyUp($event)"}, exportAs : "input-directive"}]}};

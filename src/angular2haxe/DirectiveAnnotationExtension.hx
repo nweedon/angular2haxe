@@ -62,9 +62,9 @@ class DirectiveAnnotationExtension extends AnnotationExtension
 		// Resolve final input.
 		var output : DirectiveConstructorData = AnnotationExtension.resolveInputAnnotation(input, DirectiveConstructorData);
 		
-		if (parameters != null && output.hostInjector != null)
+		if (parameters != null && output.bindings != null)
 		{
-			AnnotationExtension.parseInjector(parameters, output.hostInjector);
+			AnnotationExtension.parseInjector(parameters, output.bindings);
 		}
 		
 		if (output.lifecycle != null)
@@ -79,15 +79,15 @@ class DirectiveAnnotationExtension extends AnnotationExtension
 	{
 		if (data != null)
 		{
-			if (data.hostInjector != null)
+			if (data.bindings != null)
 			{
 				var index : Int = 0;
 				
-				for (element in data.hostInjector)
+				for (element in data.bindings)
 				{
 					if (Std.is(element, String))
 					{
-						data.hostInjector[index] = AngularExtension.getAngularClass(element);
+						data.bindings[index] = AngularExtension.getAngularClass(element);
 					}
 					
 					index++;

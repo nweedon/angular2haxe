@@ -21,12 +21,12 @@ package angular2haxe.ng;
  */
 class ViewConstructorData
 {
-	public var templateUrl	: String			= null;
-	public var template		: String			= null;
-	public var directives	: Array<Dynamic>	= [];
-	public var renderer		: String			= null;
-	public var styles		: Array<String>		= [];
-	public var styleUrls	: Array<String>		= [];
+	public var templateUrl		: String			= null;
+	public var template			: String			= null;
+	public var directives		: Array<Dynamic>	= [];
+	public var encapsulation	: Dynamic			= null;
+	public var styles			: Array<String>		= [];
+	public var styleUrls		: Array<String>		= [];
 	
 	public function new() 
 	{ 

@@ -38,7 +38,7 @@ class Greeter
 
 @Directive({
 	selector: 'c-needs-greeter',
-	hostInjector: [
+	bindings: [
 		"testcompile.Greeter"
 	]
 })
@@ -58,7 +58,7 @@ class NeedsGreeter
 
 @Component({
 	selector: 'c-greet',
-	hostInjector: [
+	viewBindings: [
 		"testcompile.Greeter"
 	]
 })

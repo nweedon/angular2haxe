@@ -38,9 +38,14 @@ class ComponentAnnotationExtension extends AnnotationExtension
 		
 		// Transform appInjector to resolve to the
 		// correct JavaScript classes.
-		if (parameters != null && output.hostInjector != null)
+		if (parameters != null && output.viewBindings != null)
 		{
-			AnnotationExtension.parseInjector(parameters, output.hostInjector);
+			AnnotationExtension.parseInjector(parameters, output.viewBindings);
+		}
+		
+		if (parameters != null && output.bindings != null)
+		{
+			AnnotationExtension.parseInjector(parameters, output.bindings);
 		}
 		
 		AnnotationExtension.transformLifecycle(output.lifecycle);
@@ -51,18 +56,23 @@ class ComponentAnnotationExtension extends AnnotationExtension
 	{
 		if (data != null)
 		{
-			if (data.hostInjector != null)
+			var bindings : Array<Array<Dynamic>> = [data.viewBindings, data.bindings];
+			
+			for (binding in bindings)
 			{
-				var index : Int = 0;
-				
-				for (element in data.hostInjector)
+				if (binding != null)
 				{
-					if (Std.is(element, String))
-					{
-						data.hostInjector[index] = AngularExtension.getAngularClass(element);
-					}
+					var index : Int = 0;
 					
-					index++;
+					for (element in binding)
+					{
+						if (Std.is(element, String))
+						{
+							binding[index] = AngularExtension.getAngularClass(element);
+						}
+						
+						index++;
+					}
 				}
 			}
 		}

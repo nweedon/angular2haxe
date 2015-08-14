@@ -128,25 +128,25 @@ module.exports.spec = function(browser, expect, compiled) {
 			]);
 		});
 
-	  	// HostInjector conversion.
+	  	// Bindings conversion.
 	  	// Should be String -> Function mapping
-		it('hostInjector', function() {
+		it('bindings', function() {
 			// Original Metadata
 			if(!compiled) {
 				expect(meta["NeedsGreeter"].Directive.length).to.eql(1);
-				expect(meta["NeedsGreeter"].Directive[0].hostInjector.length).to.eql(1);
-				expect(meta["NeedsGreeter"].Directive[0].hostInjector[0]).to.be.a('string');
-				expect(meta["NeedsGreeter"].Directive[0].hostInjector[0]).to.eql('test.Greeter');
+				expect(meta["NeedsGreeter"].Directive[0].bindings.length).to.eql(1);
+				expect(meta["NeedsGreeter"].Directive[0].bindings[0]).to.be.a('string');
+				expect(meta["NeedsGreeter"].Directive[0].bindings[0]).to.eql('test.Greeter');
 			}
 
 			// Parsed data
-			var expectedName = meta["NeedsGreeter"].Directive[0].hostInjector[0].split('.');
+			var expectedName = meta["NeedsGreeter"].Directive[0].bindings[0].split('.');
 			expect(anno["NeedsGreeter"].length).to.eql(1);
 			expect(anno["NeedsGreeter"][0]).not.to.be(null);
-			expect(anno["NeedsGreeter"][0].hostInjector).not.to.be(null);
-			expect(anno["NeedsGreeter"][0].hostInjector.length).to.eql(1);
-			expect(anno["NeedsGreeter"][0].hostInjector[0]).to.be.a('function');
-			expect(anno["NeedsGreeter"][0].hostInjector[0].__name__).to.eql(expectedName);
+			expect(anno["NeedsGreeter"][0].bindings).not.to.be(null);
+			expect(anno["NeedsGreeter"][0].bindings.length).to.eql(1);
+			expect(anno["NeedsGreeter"][0].bindings[0]).to.be.a('function');
+			expect(anno["NeedsGreeter"][0].bindings[0].__name__).to.eql(expectedName);
 		});
 
 		// ExportAs conversion.

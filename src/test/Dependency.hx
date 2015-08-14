@@ -70,7 +70,7 @@ class Dependency
 @Directive({ 
 	selector: '[my-directive]',
 	lifecycle: ["onInit"],
-	hostInjector: ["test.Dependency"]
+	bindings: ["test.Dependency"]
 })
 @:expose
 class MyDirective
