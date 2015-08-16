@@ -4,9 +4,9 @@
 	"license" : "Apache",
 	"tags" : ["angular", "web", "language bindings"],
 	"description" : "Haxe language bindings for Angular 2",
-	"version" : "0.3.0-alpha",
+	"version" : "0.3.0",
 	"classpath" : "angular2haxe/",
-	"releasenote" : "Experimental build via @:build macro. View repo for more information.",
+	"releasenote" : "Build via @:build macro. View repo for more information.",
 	"contributors" : ["nweedon"],
 	"dependencies" : { }
 }

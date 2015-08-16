@@ -57,9 +57,7 @@ class Application
 			var className = Type.getClassName(component);
 			
 			if (Reflect.fields(component).indexOf('__alreadyConstructed') > -1)
-			{
-				Trace.warning('WARNING: ${className} is using experimental :build annotation feature.');
-				
+			{				
 				// Parse Angular Object in annotations field. This has to be done
 				// at runtime as all Angular Objects are external and do not resolve
 				// at compile-time.
