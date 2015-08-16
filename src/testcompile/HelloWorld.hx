@@ -65,7 +65,8 @@ class NeedsGreeter
 })
 @View({
 	template: "<c-needs-greeter>{{ greeter.greet('World') }}</c-needs-greeter>",
-	directives: ["testcompile.NeedsGreeter"]
+	directives: ["testcompile.NeedsGreeter"],
+	encapsulation: "NONE"
 })
 #if !macro
 @:build(angular2haxe.buildplugin.BuildPlugin.build())

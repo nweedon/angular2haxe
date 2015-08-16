@@ -468,9 +468,9 @@ var angular2haxe_ViewAnnotationExtension = function() {
 $hxClasses["angular2haxe.ViewAnnotationExtension"] = angular2haxe_ViewAnnotationExtension;
 angular2haxe_ViewAnnotationExtension.__name__ = ["angular2haxe","ViewAnnotationExtension"];
 angular2haxe_ViewAnnotationExtension.transform = function(input,annotations,parameters) {
-	if(input.encapsulation != null) input.encapsulation = angular2haxe_ViewEncapsulationExtension.toAngular(input.encapsulation);
 	var output = angular2haxe_AnnotationExtension.resolveInputAnnotation(input,angular2haxe_ng_ViewConstructorData);
 	var index = 0;
+	output.encapsulation = angular2haxe_ViewEncapsulationExtension.toAngular(output.encapsulation);
 	if(output.directives != null) {
 		var _g = 0;
 		var _g1 = output.directives;
@@ -503,7 +503,7 @@ angular2haxe_ViewAnnotationExtension.postCompileTransform = function(data) {
 				index++;
 			}
 		}
-		if(data.encapsulation != null) data.encapsulation = angular2haxe_ViewEncapsulationExtension.toAngular(data.encapsulation);
+		data.encapsulation = angular2haxe_ViewEncapsulationExtension.toAngular(data.encapsulation);
 	}
 };
 angular2haxe_ViewAnnotationExtension.__super__ = angular2haxe_AnnotationExtension;
@@ -826,7 +826,7 @@ test_NgModelDirective.prototype = {
 	}
 	,__class__: test_NgModelDirective
 };
-var test_DependencyDisplayComponent = function() {
+var test_DependencyDisplayComponent = $hx_exports.test.DependencyDisplayComponent = function() {
 };
 $hxClasses["test.DependencyDisplayComponent"] = test_DependencyDisplayComponent;
 test_DependencyDisplayComponent.__name__ = ["test","DependencyDisplayComponent"];
@@ -986,7 +986,7 @@ testcompile_NgModelDirective.prototype = {
 	}
 	,__class__: testcompile_NgModelDirective
 };
-var testcompile_DependencyDisplayComponent = function() {
+var testcompile_DependencyDisplayComponent = $hx_exports.testcompile.DependencyDisplayComponent = function() {
 };
 $hxClasses["testcompile.DependencyDisplayComponent"] = testcompile_DependencyDisplayComponent;
 testcompile_DependencyDisplayComponent.__name__ = ["testcompile","DependencyDisplayComponent"];
@@ -1130,7 +1130,7 @@ test_NgModelDirective.__meta__ = { obj : { Directive : [{ selector : "[ng-model]
 test_DependencyDisplayComponent.__meta__ = { obj : { Component : [{ selector : "dependency-display", compileChildren : true}], View : [{ directives : ["test.Dependency","test.MyDirective","test.NgModelDirective"], templateUrl : "templates/dependency.tpl.html"}]}};
 test_DisplayComponent.__meta__ = { obj : { Component : [{ selector : "display", viewBindings : ["test.FriendsService"]}], View : [{ directives : ["NgFor","NgIf"], template : "<p>My name: {{ myName }}</p><p>Friends:</p><ul><li *ng-for=\"#name of names\">{{ name }}</li></ul><p *ng-if=\"names.length > 3\">You have many friends!</p>"}]}};
 test_NeedsGreeter.__meta__ = { obj : { Directive : [{ selector : "needs-greeter", bindings : ["test.Greeter"]}]}};
-test_HelloWorld.__meta__ = { obj : { Component : [{ selector : "greet", viewBindings : ["test.Greeter"], exportAs : "componentGreet"}], View : [{ template : "<needs-greeter>{{ greeter.greet('World') }}</needs-greeter>", directives : ["test.NeedsGreeter"]}]}};
+test_HelloWorld.__meta__ = { obj : { Component : [{ selector : "greet", viewBindings : ["test.Greeter"], exportAs : "componentGreet"}], View : [{ template : "<needs-greeter>{{ greeter.greet('World') }}</needs-greeter>", directives : ["test.NeedsGreeter"], encapsulation : "NONE"}]}};
 test_InputDirective.__meta__ = { obj : { Directive : [{ selector : "input", lifecycle : ["onInit","onChange","onAllChangesDone","onCheck"], host : { '@$__hx__(keyup)' : "onKeyUp($event)"}, exportAs : "input-directive"}]}};
 test_ParentComponent.__meta__ = { obj : { Component : [{ selector : "parent"}], View : [{ directives : ["test.ChildComponent"], template : "<h1>{{ message }}</h1><child></child>"}]}};
 test_TodoList.__meta__ = { obj : { Component : [{ selector : "todo-list", properties : ["lastValue","todos"], lifecycle : ["onInit","onChange","onAllChangesDone","onCheck"], changeDetection : "CHECK_ALWAYS"}], View : [{ directives : ["NgFor","NgIf","test.InputDirective"], template : "Last value: {{lastValue}}<ul><li *ng-for=\"#todo of todos\">{{ todo }}</li></ul><input #textbox (keyup)=\"doneTyping($event)\"><button (click)=\"addTodo(textbox.value)\">Add Todo</button>"}]}};
@@ -1150,8 +1150,8 @@ testcompile_NgModelDirective.__meta__ = { obj : { Directive : [{ selector : "[ng
 testcompile_NgModelDirective.annotations = [false ? new ng.ComponentAnnotation(null) : null,false ? new ng.ViewAnnotation(null) : null,true ? new ng.DirectiveAnnotation({ selector : "[ng-model]", properties : ["ngModel"]}) : null];
 testcompile_NgModelDirective.parameters = [];
 testcompile_NgModelDirective.__alreadyConstructed = true;
-testcompile_DependencyDisplayComponent.__meta__ = { obj : { Component : [{ selector : "c-dependency-display", compileChildren : true}], View : [{ directives : ["testcompile.Dependency","testcompile.MyDirective","testcompile.NgModelDirective"], templateUrl : "templates/dependency.tpl.html", encapsulation : "EMULATED"}]}};
-testcompile_DependencyDisplayComponent.annotations = [true ? new ng.ComponentAnnotation({ selector : "c-dependency-display", compileChildren : true}) : null,true ? new ng.ViewAnnotation({ directives : [testcompile_Dependency,testcompile_MyDirective,testcompile_NgModelDirective], templateUrl : "templates/dependency.tpl.html", encapsulation : "EMULATED"}) : null,false ? new ng.DirectiveAnnotation(null) : null];
+testcompile_DependencyDisplayComponent.__meta__ = { obj : { Component : [{ selector : "c-dependency-display", compileChildren : true}], View : [{ directives : ["testcompile.Dependency","testcompile.MyDirective","testcompile.NgModelDirective"], templateUrl : "templates/dependency.tpl.html"}]}};
+testcompile_DependencyDisplayComponent.annotations = [true ? new ng.ComponentAnnotation({ selector : "c-dependency-display", compileChildren : true}) : null,true ? new ng.ViewAnnotation({ directives : [testcompile_Dependency,testcompile_MyDirective,testcompile_NgModelDirective], templateUrl : "templates/dependency.tpl.html"}) : null,false ? new ng.DirectiveAnnotation(null) : null];
 testcompile_DependencyDisplayComponent.parameters = [];
 testcompile_DependencyDisplayComponent.__alreadyConstructed = true;
 testcompile_DisplayComponent.__meta__ = { obj : { Component : [{ selector : "c-display", viewBindings : ["testcompile.FriendsService"]}], View : [{ directives : ["NgFor","NgIf"], template : "<p>My name: {{ myName }}</p><p>Friends:</p><ul><li *ng-for=\"#name of names\">{{ name }}</li></ul><p *ng-if=\"names.length > 3\">You have many friends!</p>"}]}};
@@ -1162,8 +1162,8 @@ testcompile_NeedsGreeter.__meta__ = { obj : { Directive : [{ selector : "c-needs
 testcompile_NeedsGreeter.annotations = [false ? new ng.ComponentAnnotation(null) : null,false ? new ng.ViewAnnotation(null) : null,true ? new ng.DirectiveAnnotation({ selector : "c-needs-greeter", bindings : [testcompile_Greeter]}) : null];
 testcompile_NeedsGreeter.parameters = [[testcompile_Greeter]];
 testcompile_NeedsGreeter.__alreadyConstructed = true;
-testcompile_HelloWorld.__meta__ = { obj : { Component : [{ selector : "c-greet", viewBindings : ["testcompile.Greeter"], exportAs : "componentGreet"}], View : [{ template : "<c-needs-greeter>{{ greeter.greet('World') }}</c-needs-greeter>", directives : ["testcompile.NeedsGreeter"]}]}};
-testcompile_HelloWorld.annotations = [true ? new ng.ComponentAnnotation({ viewBindings : [testcompile_Greeter], selector : "c-greet", exportAs : "componentGreet"}) : null,true ? new ng.ViewAnnotation({ template : "<c-needs-greeter>{{ greeter.greet('World') }}</c-needs-greeter>", directives : [testcompile_NeedsGreeter]}) : null,false ? new ng.DirectiveAnnotation(null) : null];
+testcompile_HelloWorld.__meta__ = { obj : { Component : [{ selector : "c-greet", viewBindings : ["testcompile.Greeter"], exportAs : "componentGreet"}], View : [{ template : "<c-needs-greeter>{{ greeter.greet('World') }}</c-needs-greeter>", directives : ["testcompile.NeedsGreeter"], encapsulation : "NONE"}]}};
+testcompile_HelloWorld.annotations = [true ? new ng.ComponentAnnotation({ viewBindings : [testcompile_Greeter], selector : "c-greet", exportAs : "componentGreet"}) : null,true ? new ng.ViewAnnotation({ template : "<c-needs-greeter>{{ greeter.greet('World') }}</c-needs-greeter>", directives : [testcompile_NeedsGreeter], encapsulation : "NONE"}) : null,false ? new ng.DirectiveAnnotation(null) : null];
 testcompile_HelloWorld.parameters = [[testcompile_Greeter]];
 testcompile_HelloWorld.__alreadyConstructed = true;
 testcompile_InputDirective.__meta__ = { obj : { Directive : [{ selector : "input", lifecycle : ["onInit","onChange","onAllChangesDone","onCheck"], host : { '@$__hx__(keyup)' : "onKeyUp($event)"}, exportAs : "input-directive"}]}};

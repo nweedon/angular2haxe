@@ -204,7 +204,7 @@ class BuildPlugin
 			access: [AStatic, APublic],
 			kind: FVar(macro : Array<Dynamic>, macro [ 
 				untyped __js__("{1} ? new ng.ComponentAnnotation({0}) : null", $v{ annotationData[annotationKeys.indexOf("Component")] }, $v{ annotationKeys.indexOf("Component") > -1 }), 
-				untyped __js__("{1} ? new ng.ViewAnnotation({0}) : null", $v { annotationData[annotationKeys.indexOf("View")] }, $v{ annotationKeys.indexOf("View") > -1 } ),
+				untyped __js__("{1} ? new ng.ViewAnnotation({0}) : null", $v{ annotationData[annotationKeys.indexOf("View")] }, $v{ annotationKeys.indexOf("View") > -1 } ),
 				untyped __js__("{1} ? new ng.DirectiveAnnotation({0}) : null", $v{ annotationData[annotationKeys.indexOf("Directive")] }, $v{ annotationKeys.indexOf("Directive") > -1 }), 
 			]),
 			pos: Context.currentPos()

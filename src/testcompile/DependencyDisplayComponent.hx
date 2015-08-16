@@ -30,12 +30,12 @@ import test.Dependency.MyDirective;
 })
 @View({ 
 	directives: ["testcompile.Dependency", "testcompile.MyDirective", "testcompile.NgModelDirective"],
-	templateUrl: "templates/dependency.tpl.html",
-	encapsulation: "EMULATED"
+	templateUrl: "templates/dependency.tpl.html"
 })
 #if !macro
 @:build(angular2haxe.buildplugin.BuildPlugin.build())
 #end
+@:expose
 class DependencyDisplayComponent
 {	
     public function new()

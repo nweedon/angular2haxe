@@ -34,7 +34,7 @@ const expect = require('expect.js');
 const connect = require('connect');
 const serveStatic = require('serve-static');
 const port = 8080;
-const specs = ['DirectiveAnnotation.spec.js', 'ComponentAnnotation.spec.js'];
+const specs = ['DirectiveAnnotation.spec.js', 'ComponentAnnotation.spec.js', 'ViewAnnotation.spec.js'];
 
 // Launch webserver. Will be shut down automatically
 // once mocha has finished.

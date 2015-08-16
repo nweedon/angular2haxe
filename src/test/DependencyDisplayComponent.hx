@@ -32,6 +32,7 @@ import test.Dependency.MyDirective;
 	directives: ["test.Dependency", "test.MyDirective", "test.NgModelDirective"],
 	templateUrl: "templates/dependency.tpl.html"
 })
+@:expose
 class DependencyDisplayComponent
 {	
     public function new()

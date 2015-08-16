@@ -62,7 +62,8 @@ class NeedsGreeter
 })
 @View({
 	template: "<needs-greeter>{{ greeter.greet('World') }}</needs-greeter>",
-	directives: ["test.NeedsGreeter"]
+	directives: ["test.NeedsGreeter"],
+	encapsulation: "NONE"
 })
 @:expose
 class HelloWorld

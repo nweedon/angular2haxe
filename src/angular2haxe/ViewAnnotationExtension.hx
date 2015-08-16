@@ -38,16 +38,13 @@ class ViewAnnotationExtension extends AnnotationExtension
 	 * @return Angular 2 view annotation constructor
 	 */
 	public static function transform(input : Dynamic, annotations : Array<Dynamic>, parameters : Array<Dynamic>) : ViewConstructorData
-	{
-		#if !macro
-			if (input.encapsulation != null)
-			{
-				input.encapsulation = ViewEncapsulationExtension.toAngular(input.encapsulation);
-			}
-		#end
-		
+	{		
 		var output : ViewConstructorData = AnnotationExtension.resolveInputAnnotation(input, ViewConstructorData);
 		var index : Int = 0;
+		
+		#if !macro
+			output.encapsulation = ViewEncapsulationExtension.toAngular(output.encapsulation);
+		#end
 		
 		// Transform directive names was field[0]
 		if (output.directives != null)
@@ -125,10 +122,7 @@ class ViewAnnotationExtension extends AnnotationExtension
 				}
 			}
 			
-			if (data.encapsulation != null)
-			{
-				data.encapsulation = ViewEncapsulationExtension.toAngular(data.encapsulation);
-			}
+			data.encapsulation = ViewEncapsulationExtension.toAngular(data.encapsulation);
 		}
 	}
 }

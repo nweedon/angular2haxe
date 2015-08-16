@@ -158,9 +158,19 @@ module.exports.spec = function(browser, expect, compiled) {
 		// CompileChildren conversion. (Defaults to "DEFAULT")
 		// Should be String -> String mapping
 		it('changeDetection', function() {
+			if(!compiled) {
+				expect(meta["TodoList"].Component.length).to.eql(1);
+				expect(meta["TodoList"].Component[0].changeDetection).not.to.be(null);
+				expect(meta["TodoList"].Component[0].changeDetection).to.be.a('string');
+				expect(meta["TodoList"].Component[0].changeDetection).to.eql('CHECK_ALWAYS');
+			}
+
 			expect(anno["HelloWorld"][0].changeDetection).not.to.be(null);
 			expect(anno["HelloWorld"][0].changeDetection).to.be.a('string');
 			expect(anno["HelloWorld"][0].changeDetection).to.eql('DEFAULT');
+			expect(anno["TodoList"][0].changeDetection).not.to.be(null);
+			expect(anno["TodoList"][0].changeDetection).to.be.a('string');
+			expect(anno["TodoList"][0].changeDetection).to.eql('CHECK_ALWAYS');
 		});
 	});
 
