@@ -16,11 +16,14 @@ limitations under the License.
 package angular2haxe;
 
 import haxe.rtti.Meta;
-import js.Lib;
 import angular2haxe.ng.Angular;
 import angular2haxe.ng.ComponentAnnotation;
 import angular2haxe.ng.DirectiveAnnotation;
 import angular2haxe.ng.ViewAnnotation;
+
+#if !macro
+import js.Lib;
+#end
 
 class Application
 {	
@@ -151,15 +154,17 @@ class Application
 			}
 			
 			// Add event listener for Angular Bootstrap
-			js.Browser.document.addEventListener("DOMContentLoaded", function()
-			{				
-				if (Reflect.fields(anno).indexOf("Component") >= 0)
-				{
-					Angular.bootstrap(component);
-				}
-				
-				Trace.log('=> Finished bootstrapping ${className}');
-			});
+			#if !macro
+				js.Browser.document.addEventListener("DOMContentLoaded", function()
+				{				
+					if (Reflect.fields(anno).indexOf("Component") >= 0)
+					{
+						Angular.bootstrap(component);
+					}
+					
+					Trace.log('=> Finished bootstrapping ${className}');
+				});
+			#end
 		}
 	}
 }

@@ -28,9 +28,6 @@ import angular2haxe.ng.Angular;
 @View({
 	template: '<p>{{ message }}</p>'
 })
-#if !macro
-@:build(angular2haxe.buildplugin.BuildPlugin.build())
-#end
 @:expose
 class ChildComponent
 {

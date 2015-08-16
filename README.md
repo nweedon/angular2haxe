@@ -12,8 +12,7 @@ I plan to expand this readme in the future, but below are a few pieces of info t
 * If you want to see the Haxe code which creates Angular 2 components, view 'src/Main.hx' and the code in the 'src/test' folder.
 
 ### Haxelib Installation
-* Stable: ```haxelib install angular2haxe 0.2.0```
-* Pre-release: ```haxelib install angular2haxe 0.3.0-alpha```
+* Stable: ```haxelib install angular2haxe 0.3.0```
 
 Also, add ```-lib angular2haxe``` to the build command of your project.
 
@@ -23,8 +22,8 @@ at build-time. All classes (except for Angular externs) will be resolved
 at build-time so that the component does not have to be fully resolved when
 the web page loads.
 
-All test components build correctly, although this feature is still experimental.
-If you find any problems, please let me know!
+*Change from 0.3.0-alpha*: All components can now be bootstrapped via the
+main class (see example below). The old way of compiling components will still work.
 
 *Note:* for class names to resolve at build-time, the class needs to be imported. To
 solve this, the library utilises a build registry, which holds all imports you want to
@@ -36,26 +35,16 @@ Finally, to use the build registry, include the following on the command line:
 
 Example:
 ```
-@Component({
-	selector: 'c-greet',
-	hostInjector: [
-		"testcompile.Greeter"
-	]
-})
-@View({
-	template: "<c-needs-greeter>{{ greeter.greet('World') }}</c-needs-greeter>",
-	directives: ["testcompile.NeedsGreeter"]
-})
-#if !macro
-@:build(angular2haxe.buildplugin.BuildPlugin.build())
-#end
-class HelloWorld
+@:build(angular2haxe.buildplugin.BuildPlugin.app([ 
+	"testcompile.DisplayComponent",
+	"testcompile.TodoList",
+	// ... other class names (as strings, fully qualified)
+]))
+class Main
 {
-	private var greeter : Greeter;
-	
-	public function new(greeter : Greeter) 
+    static function main()
 	{
-		this.greeter = greeter;
+		...
 	}
 }
 ```
@@ -100,7 +89,7 @@ Creating components is pretty much the same as it is in ES6/TypeScript, with a f
 ```
 @Component({ 
 	selector: 'display',
-	hostInjector: ["test.FriendsService"]
+	viewBindings: ["test.FriendsService"]
 })
 @View({ 
 	directives: ["angular.NgFor", "angular.NgIf"],
@@ -140,7 +129,7 @@ class Greeter
 
 @Directive({
 	selector: 'needs-greeter',
-	hostInjector: [
+	bindings: [
 		"test.Greeter"
 	]
 })

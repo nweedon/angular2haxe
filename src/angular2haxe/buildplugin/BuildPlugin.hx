@@ -25,6 +25,7 @@ import haxe.macro.Type.ClassType;
 import haxe.macro.MacroStringTools;
 #end
 
+import angular2haxe.Application;
 import angular2haxe.Trace;
 import angular2haxe.AngularExtension;
 
@@ -135,6 +136,84 @@ class BuildPlugin
 	}
 	
 	/**
+	 * Compile the modules in modulesExpr by adding
+	 * '@:build' metadata to them, which in turn triggers
+	 * BuildPlugin.build(). This function also updates the
+	 * main method so that the components are bootstrapped
+	 * at run-time.
+	 * @param	modulesExpr
+	 * @return
+	 */
+	macro public static function app(modulesExpr : Expr) : Array<Field>
+	{
+		var modules : Array<String> = extractValue(modulesExpr);
+		var moduleClasses : Array <Class<Dynamic>> = [];
+		var originalBlock : Array<Expr>;
+		var fields : Array<Field> = Context.getBuildFields();
+		var mainFieldName : String = "main";
+		
+		for (module in modules)
+		{
+			Trace.log('Adding build metadata for ${module}');
+			Compiler.addMetadata("@:build(angular2haxe.buildplugin.BuildPlugin.build())", module);
+			moduleClasses.push(resolveClass(module));
+		}
+		
+		var mainExists : Bool = Lambda.exists(fields, function(field : Field) : Bool 
+		{
+			return field.name == mainFieldName;	
+		});
+		
+		if (mainExists)
+		{
+			// Remove the main function, it will be replaced with a new one.
+			for (i in 0...fields.length)
+			{
+				if (fields[i].name == mainFieldName)
+				{
+					// Retrieve main function.
+					var func : haxe.macro.Expr.Function = switch(fields[i].kind)
+					{
+						case FFun(f): f;
+						default: null;
+					};
+					
+					// Retrieve original code block. If an original
+					// doesn't exist, create an empty block.
+					originalBlock = switch(func.expr.expr)
+					{
+						case EBlock(b): b;
+						default: [];
+					}
+					
+					// Remove original code block.
+					fields.splice(i, 1);
+				}
+			}
+		}
+		
+		// Add the new main function.
+		fields.push({
+			name: mainFieldName,
+			doc: null,
+			meta: [],
+			access: [AStatic, APublic],
+			kind: FieldType.FFun({ 
+				ret: macro : Void,
+				params: [],
+				expr: macro {
+					$b{originalBlock};
+					new angular2haxe.Application($v{moduleClasses});
+				},
+				args: []
+			}),
+			pos: Context.currentPos()
+		});
+		
+		return fields;
+	}
+	
+	/**
 	 * Compile data at build-time rather than run-time.
 	 * @return
 	 */
@@ -143,6 +222,15 @@ class BuildPlugin
 		var attachedClass : ClassType = Context.getLocalClass().get();
 		var attachedMetadata : Metadata = attachedClass.meta.get();
 		var fields : Array<Field> = Context.getBuildFields();
+		
+		// Exit if already built.
+		for (i in 0...fields.length)
+		{
+			if (fields[i].name == '__alreadyConstructed')
+			{
+				return null;
+			}
+		}
 		
 		// Use template strings to build final output code / macro
 		var validAnnotations : Map<String, Class<AnnotationExtension>> = [

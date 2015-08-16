@@ -35,9 +35,6 @@ import angular2haxe.Trace;
 	lifecycle: ["onInit"]
 })
 @:expose
-#if !macro
-@:build(angular2haxe.buildplugin.BuildPlugin.build())
-#end
 class Dependency
 {
 	public var id : String;
@@ -76,9 +73,6 @@ class Dependency
 	bindings: ["testcompile.Dependency"]
 })
 @:expose
-#if !macro
-@:build(angular2haxe.buildplugin.BuildPlugin.build())
-#end
 class MyDirective
 {
 	private var dependency : Dependency;
@@ -102,9 +96,6 @@ class MyDirective
 	properties: ['ngModel']
 })
 @:expose
-#if !macro
-@:build(angular2haxe.buildplugin.BuildPlugin.build())
-#end
 class NgModelDirective
 {
 	private var ngModel : String = "";

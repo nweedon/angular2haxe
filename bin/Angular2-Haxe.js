@@ -49,7 +49,8 @@ var Main = function() { };
 $hxClasses["Main"] = Main;
 Main.__name__ = ["Main"];
 Main.main = function() {
-	new angular2haxe_Application([test_DisplayComponent,test_TodoList,test_ParentComponent,test_ChildComponent,test_MyDirective,test_NgModelDirective,test_Dependency,test_DependencyDisplayComponent,test_Greeter,test_NeedsGreeter,test_HelloWorld,test_InputDirective,testcompile_DisplayComponent,testcompile_TodoList,testcompile_ParentComponent,testcompile_ChildComponent,testcompile_MyDirective,testcompile_NgModelDirective,testcompile_Dependency,testcompile_DependencyDisplayComponent,testcompile_Greeter,testcompile_NeedsGreeter,testcompile_HelloWorld,testcompile_InputDirective]);
+	new angular2haxe_Application([test_DisplayComponent,test_TodoList,test_ParentComponent,test_ChildComponent,test_MyDirective,test_NgModelDirective,test_Dependency,test_DependencyDisplayComponent,test_Greeter,test_NeedsGreeter,test_HelloWorld,test_InputDirective]);
+	new angular2haxe_Application([testcompile_DisplayComponent,testcompile_TodoList,testcompile_ParentComponent,testcompile_ChildComponent,testcompile_MyDirective,testcompile_NgModelDirective,testcompile_Dependency,testcompile_DependencyDisplayComponent,testcompile_Greeter,testcompile_NeedsGreeter,testcompile_HelloWorld,testcompile_InputDirective]);
 };
 Math.__name__ = ["Math"];
 var Reflect = function() { };
@@ -1158,6 +1159,9 @@ testcompile_DisplayComponent.__meta__ = { obj : { Component : [{ selector : "c-d
 testcompile_DisplayComponent.annotations = [true ? new ng.ComponentAnnotation({ viewBindings : [testcompile_FriendsService], selector : "c-display"}) : null,true ? new ng.ViewAnnotation({ template : "<p>My name: {{ myName }}</p><p>Friends:</p><ul><li *ng-for=\"#name of names\">{{ name }}</li></ul><p *ng-if=\"names.length > 3\">You have many friends!</p>", directives : ["NgFor","NgIf"]}) : null,false ? new ng.DirectiveAnnotation(null) : null];
 testcompile_DisplayComponent.parameters = [[testcompile_FriendsService]];
 testcompile_DisplayComponent.__alreadyConstructed = true;
+testcompile_Greeter.annotations = [false ? new ng.ComponentAnnotation(null) : null,false ? new ng.ViewAnnotation(null) : null,false ? new ng.DirectiveAnnotation(null) : null];
+testcompile_Greeter.parameters = [];
+testcompile_Greeter.__alreadyConstructed = true;
 testcompile_NeedsGreeter.__meta__ = { obj : { Directive : [{ selector : "c-needs-greeter", bindings : ["testcompile.Greeter"]}]}};
 testcompile_NeedsGreeter.annotations = [false ? new ng.ComponentAnnotation(null) : null,false ? new ng.ViewAnnotation(null) : null,true ? new ng.DirectiveAnnotation({ selector : "c-needs-greeter", bindings : [testcompile_Greeter]}) : null];
 testcompile_NeedsGreeter.parameters = [[testcompile_Greeter]];

@@ -12,6 +12,7 @@ import test.TodoList;
 import testcompile.ChildComponent;
 import testcompile.Dependency;
 import testcompile.DependencyDisplayComponent;
+import testcompile.DisplayComponent;
 import testcompile.FriendsService;
 import testcompile.HelloWorld;
 import testcompile.InputDirective;

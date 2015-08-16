@@ -1,4 +1,3 @@
-package;
 /*
 Copyright 2015 Niall Frederick Weedon
 
@@ -14,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+package;
 
 import angular2haxe.ng.Angular;
 import angular2haxe.Application;
@@ -27,15 +27,20 @@ import test.TodoList;
 import test.HelloWorld;
 import test.InputDirective;
 
-import testcompile.ChildComponent;
-import testcompile.Dependency;
-import testcompile.DependencyDisplayComponent;
-import testcompile.FriendsService;
-import testcompile.HelloWorld;
-import testcompile.InputDirective;
-import testcompile.ParentComponent;
-import testcompile.TodoList;
-
+@:build(angular2haxe.buildplugin.BuildPlugin.app([ 
+	"testcompile.DisplayComponent",
+	"testcompile.TodoList",
+	"testcompile.ParentComponent",
+	"testcompile.ChildComponent",
+	"testcompile.MyDirective",			
+	"testcompile.NgModelDirective",			
+	"testcompile.Dependency",
+	"testcompile.DependencyDisplayComponent",
+	"testcompile.Greeter",
+	"testcompile.NeedsGreeter",
+	"testcompile.HelloWorld",
+	"testcompile.InputDirective"
+]))
 class Main
 {
     static function main()
@@ -62,31 +67,7 @@ class Main
 			test.NeedsGreeter,
 			test.HelloWorld,
 		
-			test.InputDirective,
-			
-			// ------------------------
-			// Compiled Versions
-			// ------------------------
-			
-			testcompile.DisplayComponent,
-			testcompile.TodoList,
-			testcompile.ParentComponent,
-			testcompile.ChildComponent,
-			
-			// --- Dependency.hx ---
-			testcompile.MyDirective,			
-			testcompile.NgModelDirective,			
-			testcompile.Dependency,
-			
-			// --- DependencyDisplayComponent.hx --
-			testcompile.DependencyDisplayComponent,
-			
-			// --- HelloWorld.hx ---
-			testcompile.Greeter,
-			testcompile.NeedsGreeter,
-			testcompile.HelloWorld,
-		
-			testcompile.InputDirective
+			test.InputDirective
 			
 		]);
     }

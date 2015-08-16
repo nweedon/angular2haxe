@@ -29,9 +29,6 @@ import angular2haxe.ng.Angular;
 	directives: ["testcompile.ChildComponent"],
 	template: '<h1>{{ message }}</h1><c-child></c-child>'
 })
-#if !macro
-@:build(angular2haxe.buildplugin.BuildPlugin.build())
-#end
 class ParentComponent 
 {
 	private var message = "I am the parent.";
