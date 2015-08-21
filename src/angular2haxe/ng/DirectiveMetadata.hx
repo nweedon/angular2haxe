@@ -16,8 +16,8 @@ limitations under the License.
 package angular2haxe.ng;
 import angular2haxe.Annotation;
 
-@:native('ng.DirectiveAnnotation')
-extern class DirectiveAnnotation extends Annotation
+@:native('ng.DirectiveMetadata')
+extern class DirectiveMetadata extends Annotation
 {
 	function new(data : DirectiveConstructorData);
 }

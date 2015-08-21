@@ -28,18 +28,18 @@ import test.HelloWorld;
 import test.InputDirective;
 
 @:build(angular2haxe.buildplugin.BuildPlugin.app([ 
-	"testcompile.DisplayComponent",
-	"testcompile.TodoList",
-	"testcompile.ParentComponent",
-	"testcompile.ChildComponent",
-	"testcompile.MyDirective",			
-	"testcompile.NgModelDirective",			
-	"testcompile.Dependency",
-	"testcompile.DependencyDisplayComponent",
-	"testcompile.Greeter",
-	"testcompile.NeedsGreeter",
-	"testcompile.HelloWorld",
-	"testcompile.InputDirective"
+	testcompile.DisplayComponent,
+	testcompile.TodoList,
+	testcompile.ParentComponent,
+	testcompile.ChildComponent,
+	testcompile.MyDirective,			
+	testcompile.NgModelDirective,			
+	testcompile.Dependency,
+	testcompile.DependencyDisplayComponent,
+	testcompile.Greeter,
+	testcompile.NeedsGreeter,
+	testcompile.HelloWorld,
+	testcompile.InputDirective
 ]))
 class Main
 {

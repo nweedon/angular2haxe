@@ -36,9 +36,9 @@ Finally, to use the build registry, include the following on the command line:
 Example:
 ```
 @:build(angular2haxe.buildplugin.BuildPlugin.app([ 
-	"testcompile.DisplayComponent",
-	"testcompile.TodoList",
-	// ... other class names (as strings, fully qualified)
+	testcompile.DisplayComponent,
+	testcompile.TodoList,
+	// ... other class names (as strings or class names, fully qualified)
 ]))
 class Main
 {

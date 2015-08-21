@@ -108,6 +108,8 @@ class BuildPlugin
 						return true;
 					case CIdent("false"):
 						return false;
+					case CIdent(s):
+						return s;
 					default:
 				}
 			case EBlock([]):
@@ -119,6 +121,9 @@ class BuildPlugin
 				return object;
 			case EArrayDecl(exprs):
 				return [for (e in exprs) extractValue(e)];
+			case EField(e, f):
+				var pack = extractValue(e);
+				return '${pack}.${f}';
 			default:
 		}
 		throw new Error("Invalid JSON expression", e.pos);
@@ -291,9 +296,9 @@ class BuildPlugin
 			meta: [],
 			access: [AStatic, APublic],
 			kind: FVar(macro : Array<Dynamic>, macro [ 
-				untyped __js__("{1} ? new ng.ComponentAnnotation({0}) : null", $v{ annotationData[annotationKeys.indexOf("Component")] }, $v{ annotationKeys.indexOf("Component") > -1 }), 
-				untyped __js__("{1} ? new ng.ViewAnnotation({0}) : null", $v{ annotationData[annotationKeys.indexOf("View")] }, $v{ annotationKeys.indexOf("View") > -1 } ),
-				untyped __js__("{1} ? new ng.DirectiveAnnotation({0}) : null", $v{ annotationData[annotationKeys.indexOf("Directive")] }, $v{ annotationKeys.indexOf("Directive") > -1 }), 
+				untyped __js__("{1} ? new ng.ComponentMetadata({0}) : null", $v{ annotationData[annotationKeys.indexOf("Component")] }, $v{ annotationKeys.indexOf("Component") > -1 }), 
+				untyped __js__("{1} ? new ng.ViewMetadata({0}) : null", $v{ annotationData[annotationKeys.indexOf("View")] }, $v{ annotationKeys.indexOf("View") > -1 } ),
+				untyped __js__("{1} ? new ng.DirectiveMetadata({0}) : null", $v{ annotationData[annotationKeys.indexOf("Directive")] }, $v{ annotationKeys.indexOf("Directive") > -1 }), 
 			]),
 			pos: Context.currentPos()
 		});

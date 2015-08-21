@@ -40,6 +40,13 @@ const specs = ['DirectiveAnnotation.spec.js', 'ComponentAnnotation.spec.js', 'Vi
 // once mocha has finished.
 connect().use(serveStatic(__dirname + "/bin/")).listen(port);
 
+// As of Angular 2.0.0-alpha.35, the following message is displayed:
+// TypeError: Array.prototype.slice called on null or undefined
+// This is due to ZombieJS not refreshing its own DOM structure. Once
+// Angular compiles its' children, it expects that they should be present
+// in the DOM, however, as ZombieJS doesn't refresh the DOM, they
+// don't exist.
+zombie.silent = true;
 zombie.localhost('localhost', port);
 
 // Run tests.

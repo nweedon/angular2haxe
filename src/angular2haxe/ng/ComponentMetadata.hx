@@ -14,11 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 package angular2haxe.ng;
-import angular2haxe.Annotation;
-import angular2haxe.ng.ViewConstructorData;
 
-@:native('ng.ViewAnnotation')
-extern class ViewAnnotation extends Annotation
+import angular2haxe.ng.ComponentConstructorData;
+import angular2haxe.Annotation;
+
+@:native('ng.ComponentMetadata')
+extern class ComponentMetadata extends Annotation
 {
-	function new(data : ViewConstructorData);
+	function new(data : ComponentConstructorData);
 }

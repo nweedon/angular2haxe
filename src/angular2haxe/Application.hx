@@ -17,9 +17,9 @@ package angular2haxe;
 
 import haxe.rtti.Meta;
 import angular2haxe.ng.Angular;
-import angular2haxe.ng.ComponentAnnotation;
-import angular2haxe.ng.DirectiveAnnotation;
-import angular2haxe.ng.ViewAnnotation;
+import angular2haxe.ng.ComponentMetadata;
+import angular2haxe.ng.DirectiveMetadata;
+import angular2haxe.ng.ViewMetadata;
 
 #if !macro
 import js.Lib;
@@ -46,9 +46,9 @@ class Application
 	{		
 		var showDataInTrace : Bool = false;
 		var validAnnotations : Map<String, AnnotationPair> = [
-			"Component" => { annotation: ComponentAnnotation, extension: ComponentAnnotationExtension },
-			"Directive" => { annotation: DirectiveAnnotation, extension: DirectiveAnnotationExtension },
-			"View" 		=> { annotation: ViewAnnotation, extension: ViewAnnotationExtension },
+			"Component" => { annotation: ComponentMetadata, extension: ComponentAnnotationExtension },
+			"Directive" => { annotation: DirectiveMetadata, extension: DirectiveAnnotationExtension },
+			"View" 		=> { annotation: ViewMetadata, extension: ViewAnnotationExtension },
 		];
 		
 		for (component in components)
