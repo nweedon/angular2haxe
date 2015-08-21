@@ -12,7 +12,7 @@ I plan to expand this readme in the future, but below are a few pieces of info t
 * If you want to see the Haxe code which creates Angular 2 components, view 'src/Main.hx' and the code in the 'src/test' folder.
 
 ### Haxelib Installation
-* Stable: ```haxelib install angular2haxe 0.3.0```
+* Stable: ```haxelib install angular2haxe 0.3.1```
 
 Also, add ```-lib angular2haxe``` to the build command of your project.
 
