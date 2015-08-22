@@ -3,4 +3,5 @@ node_js:
   - "iojs"
 before_install:
   - "npm install mocha -g"
+  - chmod +x ./build.sh
 script: ./build.sh
