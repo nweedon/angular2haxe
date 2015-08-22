@@ -3,9 +3,8 @@ node_js:
   - "iojs"
 before_install:
   - "npm install mocha -g"
-  - mkdir ~/haxe3.2
   - curl http://haxe.org/website-content/downloads/3.2.0/downloads/haxe-3.2.0-linux64.tar.gz > haxe.tar.gz
-  - tar -xvzf haxe.tar.gz -C ~/haxe3.2
+  - tar -xzf haxe.tar.gz -C ~
   - chmod +x ./build.sh
-  - chmod +x ~/haxe3.2/haxe
+  - chmod +x ~/haxe-3.2.0/haxe
 script: ./build.sh
