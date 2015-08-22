@@ -16,6 +16,7 @@ limitations under the License.
 package test;
 
 @:expose
+@:keep
 class FriendsService
 {
 	public var names : Array<String>;

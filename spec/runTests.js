@@ -38,7 +38,7 @@ const specs = ['DirectiveAnnotation.spec.js', 'ComponentAnnotation.spec.js', 'Vi
 
 // Launch webserver. Will be shut down automatically
 // once mocha has finished.
-connect().use(serveStatic(__dirname + "/bin/")).listen(port);
+connect().use(serveStatic(__dirname + "/../bin/")).listen(port);
 
 // As of Angular 2.0.0-alpha.35, the following message is displayed:
 // TypeError: Array.prototype.slice called on null or undefined
@@ -59,6 +59,6 @@ for(var spec of specs) {
 			runScripts: true
 		});
 
-		require('./spec/' + spec).spec(browser, expect, b);
+		require('./' + spec).spec(browser, expect, b);
 	}
 }

@@ -16,13 +16,11 @@ limitations under the License.
 package testcompile;
 
 @:expose
-@:keep
-class FriendsService
-{
-	public var names : Array<String>;
-	
-	public function new() 
+class Greeter
+{	
+	public function new() { }
+	public function greet(name : String)
 	{
-		names = ["Aarav", "Martín", "Shannon", "Ariana", "Kai"];		
-	}	
+		return 'Hello ${name}!';
+	}
 }

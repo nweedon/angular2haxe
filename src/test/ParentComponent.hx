@@ -29,6 +29,7 @@ import angular2haxe.ng.Angular;
 	directives: ["test.ChildComponent"],
 	template: '<h1>{{ message }}</h1><child></child>'
 })
+@:keep
 class ParentComponent 
 {
 	private var message = "I am the parent.";

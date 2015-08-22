@@ -29,6 +29,7 @@ import angular2haxe.ng.Angular;
 	template: '<p>{{ message }}</p>'
 })
 @:expose
+@:keep
 class ChildComponent
 {
 	private var message = "I am the child.";

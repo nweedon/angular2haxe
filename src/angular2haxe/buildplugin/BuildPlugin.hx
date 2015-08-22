@@ -161,6 +161,7 @@ class BuildPlugin
 		{
 			Trace.log('Adding build metadata for ${module}');
 			Compiler.addMetadata("@:build(angular2haxe.buildplugin.BuildPlugin.build())", module);
+			Compiler.addMetadata("@:keep", module);
 			moduleClasses.push(resolveClass(module));
 		}
 		
@@ -243,7 +244,7 @@ class BuildPlugin
 			"Directive" => DirectiveAnnotationExtension,
 			"View" 		=> ViewAnnotationExtension
 		];
-
+		
 		// Set default values for annotations and parameters fields.
 		var annotationData : Array<Dynamic> = [];
 		var annotationKeys : Array<String> = [];
@@ -289,11 +290,17 @@ class BuildPlugin
 			}
 		}
 		
+		var keepMeta : MetadataEntry = {
+			pos: Context.currentPos(),
+			params: [],
+			name: ':keep'
+		};
+		
 		// Create annotations and parameters fields
 		fields.push({
 			name: 'annotations',
 			doc: null,
-			meta: [],
+			meta: [keepMeta],
 			access: [AStatic, APublic],
 			kind: FVar(macro : Array<Dynamic>, macro [ 
 				untyped __js__("{1} ? new ng.ComponentMetadata({0}) : null", $v{ annotationData[annotationKeys.indexOf("Component")] }, $v{ annotationKeys.indexOf("Component") > -1 }), 
@@ -306,7 +313,7 @@ class BuildPlugin
 		fields.push({
 			name: 'parameters',
 			doc: null,
-			meta: [],
+			meta: [keepMeta],
 			access: [AStatic, APublic],
 			kind: FVar(macro : Array<Dynamic>, Context.makeExpr(parameters, Context.currentPos())),
 			pos: Context.currentPos()
@@ -317,7 +324,7 @@ class BuildPlugin
 		fields.push({
 			name: '__alreadyConstructed',
 			doc: null,
-			meta: [],
+			meta: [keepMeta],
 			access: [AStatic, APublic],
 			kind: FVar(macro : Bool, macro true),
 			pos: Context.currentPos()

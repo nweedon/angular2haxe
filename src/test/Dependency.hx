@@ -35,6 +35,7 @@ import angular2haxe.Trace;
 	lifecycle: ["onInit"]
 })
 @:expose
+@:keep
 class Dependency
 {
 	public var id : String;
@@ -73,6 +74,7 @@ class Dependency
 	bindings: ["test.Dependency"]
 })
 @:expose
+@:keep
 class MyDirective
 {
 	private var dependency : Dependency;
@@ -96,6 +98,7 @@ class MyDirective
 	properties: ['ngModel']
 })
 @:expose
+@:keep
 class NgModelDirective
 {
 	private var ngModel : String = "";

@@ -21,6 +21,7 @@ import haxe.ds.StringMap;
  * 		https://angular.io/docs/js/latest/api/annotations/DirectiveAnnotation-class.html
  * 		https://github.com/angular/angular/blob/master/modules/angular2/src/core/annotations_impl/annotations.ts
  */
+@:keep
 class DirectiveConstructorData
 {
 	public var selector 		: String 				= null;

@@ -33,6 +33,7 @@ import test.Dependency.MyDirective;
 	templateUrl: "templates/dependency.tpl.html"
 })
 @:expose
+@:keep
 class DependencyDisplayComponent
 {	
     public function new()

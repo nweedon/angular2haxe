@@ -23,6 +23,7 @@ package angular2haxe.ng;
  * 		- 'exportAs' is included in the constructor, but according to the source (25 July 2015),
  * 		doesn't do anything yet.
  */
+@:keep
 class ComponentConstructorData
 {
 	public var selector 		: String 				= null;

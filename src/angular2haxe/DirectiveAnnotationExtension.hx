@@ -34,6 +34,7 @@ class DirectiveAnnotationExtension extends AnnotationExtension
 	 * @param	parameters		- parameters static field present in angular component
 	 * @return Angular 2 directive annotation constructor
 	 */
+	@:keep
 	public static function transform(input : Dynamic, annotations : Array<Dynamic>, parameters : Array<Dynamic>) : DirectiveConstructorData
 	{
 		#if !macro
@@ -77,6 +78,7 @@ class DirectiveAnnotationExtension extends AnnotationExtension
 		return output;
 	}
 	
+	@:keep
 	public static function postCompileTransform(data : DirectiveConstructorData)
 	{
 		if (data != null)

@@ -18,6 +18,10 @@ import testcompile.HelloWorld;
 import testcompile.InputDirective;
 import testcompile.ParentComponent;
 import testcompile.TodoList;
+import testcompile.MyDirective;
+import testcompile.NgModelDirective;
+import testcompile.NeedsGreeter;
+import testcompile.Greeter;
 
 /**
  * Dummy build registry to demonstrate

@@ -15,14 +15,28 @@ limitations under the License.
 */
 package testcompile;
 
+import angular2haxe.Trace;
+
+@Directive({ 
+	selector: '[my-directive]',
+	lifecycle: ["onInit"],
+	bindings: ["testcompile.Dependency"]
+})
 @:expose
-@:keep
-class FriendsService
+class MyDirective
 {
-	public var names : Array<String>;
+	private var dependency : Dependency;
 	
-	public function new() 
+    public function new(?dependency : Dependency)
+    {
+		if (dependency != null)
+		{
+			this.dependency = dependency;
+		}
+    }
+	
+	public function onInit()
 	{
-		names = ["Aarav", "Martín", "Shannon", "Ariana", "Kai"];		
-	}	
+		Trace.log('MyDirective Dependency:\n${dependency}');
+	}
 }

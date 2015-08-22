@@ -15,14 +15,19 @@ limitations under the License.
 */
 package testcompile;
 
+@Directive({
+	selector: 'c-needs-greeter',
+	bindings: [
+		"testcompile.Greeter"
+	]
+})
 @:expose
-@:keep
-class FriendsService
+class NeedsGreeter
 {
-	public var names : Array<String>;
+	private var greeter : Greeter;
 	
-	public function new() 
+	public function new(greeter : Greeter)
 	{
-		names = ["Aarav", "Martín", "Shannon", "Ariana", "Kai"];		
-	}	
+		this.greeter = greeter;
+	}
 }

@@ -19,6 +19,7 @@ package angular2haxe.ng;
  * Reference: 
  * 		https://angular.io/docs/js/latest/api/annotations/ViewAnnotation-class.html
  */
+@:keep
 class ViewConstructorData
 {
 	public var templateUrl		: String			= null;

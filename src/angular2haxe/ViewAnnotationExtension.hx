@@ -37,6 +37,7 @@ class ViewAnnotationExtension extends AnnotationExtension
 	 * @param	parameters		- parameters static field present in angular component
 	 * @return Angular 2 view annotation constructor
 	 */
+	@:keep
 	public static function transform(input : Dynamic, annotations : Array<Dynamic>, parameters : Array<Dynamic>) : ViewConstructorData
 	{		
 		var output : ViewConstructorData = AnnotationExtension.resolveInputAnnotation(input, ViewConstructorData);
@@ -103,6 +104,7 @@ class ViewAnnotationExtension extends AnnotationExtension
 		return output;
 	}	
 	
+	@:keep
 	public static function postCompileTransform(data : ViewConstructorData)
 	{
 		if (data != null)

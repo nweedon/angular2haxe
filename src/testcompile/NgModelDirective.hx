@@ -15,14 +15,26 @@ limitations under the License.
 */
 package testcompile;
 
+import angular2haxe.ng.EventEmitter;
+import angular2haxe.Trace;
+
+@Directive({
+	selector: '[ng-model]',
+	properties: ['ngModel']
+})
 @:expose
-@:keep
-class FriendsService
+class NgModelDirective
 {
-	public var names : Array<String>;
+	private var ngModel : String = "";
+	private var ngModelChanged : EventEmitter = new EventEmitter();
 	
-	public function new() 
+	public function new()
 	{
-		names = ["Aarav", "Martín", "Shannon", "Ariana", "Kai"];		
-	}	
+	}
+	
+	public function modelChanged(event : Dynamic)
+	{
+		Trace.log(event);
+		ngModelChanged.next(event.target.value);
+	}
 }

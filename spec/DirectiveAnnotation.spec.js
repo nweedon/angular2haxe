@@ -27,6 +27,7 @@ module.exports.spec = function(browser, expect, compiled) {
 		let meta = { };
 		let anno = { };
 		let params = { };
+		let alreadyConstructed = { };
 
 		before(function(done) {
 			browser.visit('/index.html', { debug: false }, function() {
@@ -36,11 +37,12 @@ module.exports.spec = function(browser, expect, compiled) {
 				if(compiled) {
 					ns += 'compile';
 				}
-				
+
 				for(var pack of packs) {
-					meta[pack] 		= browser.window[ns][pack].__meta__.obj;
-					anno[pack] 		= browser.window[ns][pack].annotations;
-					params[pack] 	= browser.window[ns][pack].parameters;
+					meta[pack] 					= browser.window[ns][pack].__meta__.obj;
+					anno[pack] 					= browser.window[ns][pack].annotations;
+					params[pack] 				= browser.window[ns][pack].parameters;
+					alreadyConstructed[pack] 	= browser.window[ns][pack].__alreadyConstructed;
 				}
 
 				done();
@@ -52,6 +54,10 @@ module.exports.spec = function(browser, expect, compiled) {
 	  	it('selector', function() {
 	  		if(!compiled) {
 				expect(meta["NeedsGreeter"].Directive.length).to.eql(1);
+			} else {
+				// Check the component actually built properly at run-time.
+				expect(alreadyConstructed["NeedsGreeter"]).to.be.a('boolean');
+				expect(alreadyConstructed["NeedsGreeter"]).to.eql(true);
 			}
 
 			expect(anno["NeedsGreeter"].length).to.eql(1);
@@ -67,7 +73,10 @@ module.exports.spec = function(browser, expect, compiled) {
 	  			expect(meta["Dependency"].Directive[0].properties).not.to.be(null);
 	  			expect(meta["Dependency"].Directive[0].properties).to.be.an('array');
 	  			expect(meta["Dependency"].Directive[0].properties).to.eql([ "id: dependency" ]);
-	  		}
+	  		} else {
+				expect(alreadyConstructed["Dependency"]).to.be.a('boolean');
+				expect(alreadyConstructed["Dependency"]).to.eql(true);
+			}
 
 	  		expect(anno["Dependency"][0].properties).not.to.be(null);
   			expect(anno["Dependency"][0].properties).to.be.an('array');
@@ -89,6 +98,9 @@ module.exports.spec = function(browser, expect, compiled) {
 				expect(meta["InputDirective"].Directive[0].host).not.to.be(null);
 				expect(meta["InputDirective"].Directive[0].host['(keyup)']).not.to.be(null);
 				expect(meta["InputDirective"].Directive[0].host['(keyup)']).to.eql('onKeyUp($event)');
+			} else {
+				expect(alreadyConstructed["InputDirective"]).to.be.a('boolean');
+				expect(alreadyConstructed["InputDirective"]).to.eql(true);
 			}
 
 			expect(anno["InputDirective"]).not.to.be(null);
@@ -112,6 +124,9 @@ module.exports.spec = function(browser, expect, compiled) {
 					"onAllChangesDone", 
 					"onCheck"
 				]);
+			} else {
+				expect(alreadyConstructed["InputDirective"]).to.be.a('boolean');
+				expect(alreadyConstructed["InputDirective"]).to.eql(true);
 			}
 
 			// Annotation checks
@@ -137,6 +152,9 @@ module.exports.spec = function(browser, expect, compiled) {
 				expect(meta["NeedsGreeter"].Directive[0].bindings.length).to.eql(1);
 				expect(meta["NeedsGreeter"].Directive[0].bindings[0]).to.be.a('string');
 				expect(meta["NeedsGreeter"].Directive[0].bindings[0]).to.eql('test.Greeter');
+			} else {
+				expect(alreadyConstructed["NeedsGreeter"]).to.be.a('boolean');
+				expect(alreadyConstructed["NeedsGreeter"]).to.eql(true);
 			}
 
 			// Parsed data
@@ -156,6 +174,9 @@ module.exports.spec = function(browser, expect, compiled) {
 				expect(meta["InputDirective"].Directive[0].exportAs).not.to.be(null);
 				expect(meta["InputDirective"].Directive[0].exportAs).to.be.a('string');
 				expect(meta["InputDirective"].Directive[0].exportAs).to.eql('input-directive');
+			} else {
+				expect(alreadyConstructed["InputDirective"]).to.be.a('boolean');
+				expect(alreadyConstructed["InputDirective"]).to.eql(true);
 			}
 
 			expect(anno["InputDirective"][0].exportAs).not.to.be(null);

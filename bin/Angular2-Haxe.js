@@ -8,25 +8,9 @@ function $extend(from, fields) {
 	if( fields.toString !== Object.prototype.toString ) proto.toString = fields.toString;
 	return proto;
 }
-var BuildRegistry = function() {
-};
-$hxClasses["BuildRegistry"] = BuildRegistry;
-BuildRegistry.__name__ = ["BuildRegistry"];
-BuildRegistry.prototype = {
-	__class__: BuildRegistry
-};
 var HxOverrides = function() { };
 $hxClasses["HxOverrides"] = HxOverrides;
 HxOverrides.__name__ = ["HxOverrides"];
-HxOverrides.substr = function(s,pos,len) {
-	if(pos != null && pos != 0 && len != null && len < 0) return "";
-	if(len == null) len = s.length;
-	if(pos < 0) {
-		pos = s.length + pos;
-		if(pos < 0) pos = 0;
-	} else if(len < 0) len = s.length + len - pos;
-	return s.substr(pos,len);
-};
 HxOverrides.indexOf = function(a,obj,i) {
 	var len = a.length;
 	if(i < 0) {
@@ -135,46 +119,19 @@ Type.createInstance = function(cl,args) {
 	}
 	return null;
 };
-var angular2haxe_AngularExtension = function() {
-};
+var angular2haxe_AngularExtension = function() { };
 $hxClasses["angular2haxe.AngularExtension"] = angular2haxe_AngularExtension;
 angular2haxe_AngularExtension.__name__ = ["angular2haxe","AngularExtension"];
-angular2haxe_AngularExtension.getAngularClasses = function() {
-	return angular2haxe_AngularExtension.angularClasses;
-};
 angular2haxe_AngularExtension.getAngularClass = function(name) {
 	if(angular2haxe_AngularExtension.angularClasses.exists(name)) return angular2haxe_AngularExtension.angularClasses.get(name);
 	return null;
 };
-angular2haxe_AngularExtension.isAngularClass = function(name) {
-	if(HxOverrides.substr(name,0,3) == "ng." || HxOverrides.substr(name,0,8) == "angular.") name = angular2haxe_AngularExtension.getFullyQualifiedName(name);
-	return angular2haxe_AngularExtension.angularClasses.exists(name);
-};
-angular2haxe_AngularExtension.getBareName = function(name) {
-	if(HxOverrides.substr(name,0,3) == "ng.") return name; else if(HxOverrides.substr(name,0,8) == "angular.") return HxOverrides.substr(name,8,null);
-	return name;
-};
-angular2haxe_AngularExtension.getFullyQualifiedName = function(name) {
-	if(angular2haxe_AngularExtension.isAngularClass(name)) return name;
-	return "ng." + angular2haxe_AngularExtension.getBareName(name);
-};
-angular2haxe_AngularExtension.prototype = {
-	__class__: angular2haxe_AngularExtension
-};
-var angular2haxe_Annotation = function(data) {
-};
+var angular2haxe_Annotation = function() { };
 $hxClasses["angular2haxe.Annotation"] = angular2haxe_Annotation;
 angular2haxe_Annotation.__name__ = ["angular2haxe","Annotation"];
-angular2haxe_Annotation.prototype = {
-	__class__: angular2haxe_Annotation
-};
-var angular2haxe_AnnotationExtension = function() {
-};
+var angular2haxe_AnnotationExtension = function() { };
 $hxClasses["angular2haxe.AnnotationExtension"] = angular2haxe_AnnotationExtension;
 angular2haxe_AnnotationExtension.__name__ = ["angular2haxe","AnnotationExtension"];
-angular2haxe_AnnotationExtension.transform = function(input,annotations,parameters) {
-	return input;
-};
 angular2haxe_AnnotationExtension.resolveInputAnnotation = function(input,outputType) {
 	var output;
 	output = Type.createInstance(outputType,[]);
@@ -233,9 +190,6 @@ angular2haxe_AnnotationExtension.transformLifecycle = function(lifecycle) {
 		lifecycle[index] = angular2haxe_LifecycleEventExtension.toAngular(js_Boot.__cast(lifecycle[index] , String));
 		index++;
 	}
-};
-angular2haxe_AnnotationExtension.prototype = {
-	__class__: angular2haxe_AnnotationExtension
 };
 var angular2haxe_Application = function(components) {
 	window.angular = window.ng;
@@ -323,9 +277,7 @@ angular2haxe_Application.prototype = {
 	}
 	,__class__: angular2haxe_Application
 };
-var angular2haxe_ComponentAnnotationExtension = function() {
-	angular2haxe_AnnotationExtension.call(this);
-};
+var angular2haxe_ComponentAnnotationExtension = function() { };
 $hxClasses["angular2haxe.ComponentAnnotationExtension"] = angular2haxe_ComponentAnnotationExtension;
 angular2haxe_ComponentAnnotationExtension.__name__ = ["angular2haxe","ComponentAnnotationExtension"];
 angular2haxe_ComponentAnnotationExtension.transform = function(input,annotations,parameters) {
@@ -360,9 +312,7 @@ angular2haxe_ComponentAnnotationExtension.__super__ = angular2haxe_AnnotationExt
 angular2haxe_ComponentAnnotationExtension.prototype = $extend(angular2haxe_AnnotationExtension.prototype,{
 	__class__: angular2haxe_ComponentAnnotationExtension
 });
-var angular2haxe_DirectiveAnnotationExtension = function() {
-	angular2haxe_AnnotationExtension.call(this);
-};
+var angular2haxe_DirectiveAnnotationExtension = function() { };
 $hxClasses["angular2haxe.DirectiveAnnotationExtension"] = angular2haxe_DirectiveAnnotationExtension;
 angular2haxe_DirectiveAnnotationExtension.__name__ = ["angular2haxe","DirectiveAnnotationExtension"];
 angular2haxe_DirectiveAnnotationExtension.transform = function(input,annotations,parameters) {
@@ -406,17 +356,14 @@ angular2haxe_DirectiveAnnotationExtension.__super__ = angular2haxe_AnnotationExt
 angular2haxe_DirectiveAnnotationExtension.prototype = $extend(angular2haxe_AnnotationExtension.prototype,{
 	__class__: angular2haxe_DirectiveAnnotationExtension
 });
-var angular2haxe_KeyboardEvent = function(typeArg,keyboardEventInitDict) {
-	KeyboardEvent.call(this,typeArg,keyboardEventInitDict);
-};
+var angular2haxe_KeyboardEvent = function() { };
 $hxClasses["angular2haxe.KeyboardEvent"] = angular2haxe_KeyboardEvent;
 angular2haxe_KeyboardEvent.__name__ = ["angular2haxe","KeyboardEvent"];
 angular2haxe_KeyboardEvent.__super__ = KeyboardEvent;
 angular2haxe_KeyboardEvent.prototype = $extend(KeyboardEvent.prototype,{
 	__class__: angular2haxe_KeyboardEvent
 });
-var angular2haxe_LifecycleEventExtension = function() {
-};
+var angular2haxe_LifecycleEventExtension = function() { };
 $hxClasses["angular2haxe.LifecycleEventExtension"] = angular2haxe_LifecycleEventExtension;
 angular2haxe_LifecycleEventExtension.__name__ = ["angular2haxe","LifecycleEventExtension"];
 angular2haxe_LifecycleEventExtension.init = function() {
@@ -443,28 +390,16 @@ angular2haxe_LifecycleEventExtension.toAngular = function(lifecycleEvent) {
 		return lifecycleEvent;
 	}
 };
-angular2haxe_LifecycleEventExtension.prototype = {
-	__class__: angular2haxe_LifecycleEventExtension
-};
-var angular2haxe_Trace = function() {
-};
+var angular2haxe_Trace = function() { };
 $hxClasses["angular2haxe.Trace"] = angular2haxe_Trace;
 angular2haxe_Trace.__name__ = ["angular2haxe","Trace"];
 angular2haxe_Trace.error = function(info) {
 	console.error(info);
 };
-angular2haxe_Trace.warning = function(info) {
-	if(angular2haxe_Trace.logLevel == "WARN" || angular2haxe_Trace.logLevel == "ALL") console.warn(info);
-};
 angular2haxe_Trace.log = function(info) {
 	if(angular2haxe_Trace.logLevel == "ALL") console.log(info);
 };
-angular2haxe_Trace.prototype = {
-	__class__: angular2haxe_Trace
-};
-var angular2haxe_ViewAnnotationExtension = function() {
-	angular2haxe_AnnotationExtension.call(this);
-};
+var angular2haxe_ViewAnnotationExtension = function() { };
 $hxClasses["angular2haxe.ViewAnnotationExtension"] = angular2haxe_ViewAnnotationExtension;
 angular2haxe_ViewAnnotationExtension.__name__ = ["angular2haxe","ViewAnnotationExtension"];
 angular2haxe_ViewAnnotationExtension.transform = function(input,annotations,parameters) {
@@ -510,8 +445,7 @@ angular2haxe_ViewAnnotationExtension.__super__ = angular2haxe_AnnotationExtensio
 angular2haxe_ViewAnnotationExtension.prototype = $extend(angular2haxe_AnnotationExtension.prototype,{
 	__class__: angular2haxe_ViewAnnotationExtension
 });
-var angular2haxe_ViewEncapsulationExtension = function() {
-};
+var angular2haxe_ViewEncapsulationExtension = function() { };
 $hxClasses["angular2haxe.ViewEncapsulationExtension"] = angular2haxe_ViewEncapsulationExtension;
 angular2haxe_ViewEncapsulationExtension.__name__ = ["angular2haxe","ViewEncapsulationExtension"];
 angular2haxe_ViewEncapsulationExtension.toAngular = function(name) {
@@ -525,16 +459,6 @@ angular2haxe_ViewEncapsulationExtension.toAngular = function(name) {
 	default:
 		return ng.ViewEncapsulation.NONE;
 	}
-};
-angular2haxe_ViewEncapsulationExtension.prototype = {
-	__class__: angular2haxe_ViewEncapsulationExtension
-};
-var angular2haxe_buildplugin_BuildPlugin = function() {
-};
-$hxClasses["angular2haxe.buildplugin.BuildPlugin"] = angular2haxe_buildplugin_BuildPlugin;
-angular2haxe_buildplugin_BuildPlugin.__name__ = ["angular2haxe","buildplugin","BuildPlugin"];
-angular2haxe_buildplugin_BuildPlugin.prototype = {
-	__class__: angular2haxe_buildplugin_BuildPlugin
 };
 var angular2haxe_ng_ComponentConstructorData = function() {
 	this.changeDetection = "DEFAULT";

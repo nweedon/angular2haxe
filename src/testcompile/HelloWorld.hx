@@ -26,33 +26,6 @@ import angular2haxe.buildplugin.BuildPlugin;
  * 		Component => hostInjector
  */
 
-@:expose
-class Greeter
-{	
-	public function new() { }
-	public function greet(name : String)
-	{
-		return 'Hello ${name}!';
-	}
-}
-
-@Directive({
-	selector: 'c-needs-greeter',
-	bindings: [
-		"testcompile.Greeter"
-	]
-})
-@:expose
-class NeedsGreeter
-{
-	private var greeter : Greeter;
-	
-	public function new(greeter : Greeter)
-	{
-		this.greeter = greeter;
-	}
-}
-
 @Component({
 	selector: 'c-greet',
 	viewBindings: [

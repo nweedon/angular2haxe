@@ -27,6 +27,7 @@ module.exports.spec = function(browser, expect, compiled) {
 		let meta = { };
 		let anno = { };
 		let params = { };
+		let alreadyConstructed = { };
 
 		before(function(done) {
 			browser.visit('/index.html', { debug: false }, function() {
@@ -38,9 +39,10 @@ module.exports.spec = function(browser, expect, compiled) {
 				}
 				
 				for(var pack of packs) {
-					meta[pack] 		= browser.window[ns][pack].__meta__.obj;
-					anno[pack] 		= browser.window[ns][pack].annotations;
-					params[pack] 	= browser.window[ns][pack].parameters;
+					meta[pack] 					= browser.window[ns][pack].__meta__.obj;
+					anno[pack] 					= browser.window[ns][pack].annotations;
+					params[pack] 				= browser.window[ns][pack].parameters;
+					alreadyConstructed[pack] 	= browser.window[ns][pack].__alreadyConstructed;
 				}
 
 				done();
@@ -55,6 +57,9 @@ module.exports.spec = function(browser, expect, compiled) {
 				expect(meta["DependencyDisplayComponent"].View[0].templateUrl).not.to.be(null);
 				expect(meta["DependencyDisplayComponent"].View[0].templateUrl).to.be.a('string');
 				expect(meta["DependencyDisplayComponent"].View[0].templateUrl).to.eql("templates/dependency.tpl.html");
+			} else {
+				expect(alreadyConstructed["DependencyDisplayComponent"]).to.be.a('boolean');
+				expect(alreadyConstructed["DependencyDisplayComponent"]).to.eql(true);
 			}
 
 			expect(anno["DependencyDisplayComponent"].length).to.eql(2);
@@ -72,6 +77,9 @@ module.exports.spec = function(browser, expect, compiled) {
 				expect(meta["HelloWorld"].View[0].template).not.to.be(null);
 				expect(meta["HelloWorld"].View[0].template).to.be.a('string');
 				expect(meta["HelloWorld"].View[0].template).to.eql("<needs-greeter>{{ greeter.greet('World') }}</needs-greeter>");
+			} else {
+				expect(alreadyConstructed["HelloWorld"]).to.be.a('boolean');
+				expect(alreadyConstructed["HelloWorld"]).to.eql(true);
 			}
 
 			expect(anno["HelloWorld"].length).to.eql(2);
@@ -98,6 +106,8 @@ module.exports.spec = function(browser, expect, compiled) {
 				expect(meta["DependencyDisplayComponent"].View[0].directives).to.eql(expectedNames);
 	  		} else {
 	  			expectedNames = ["testcompile.Dependency", "testcompile.MyDirective", "testcompile.NgModelDirective"];
+				expect(alreadyConstructed["DependencyDisplayComponent"]).to.be.a('boolean');
+				expect(alreadyConstructed["DependencyDisplayComponent"]).to.eql(true);
 	  		}
 
 	  		for(var name in expectedNames) {
@@ -123,6 +133,11 @@ module.exports.spec = function(browser, expect, compiled) {
 				expect(meta["HelloWorld"].View[0].encapsulation).not.to.be(null);
 				expect(meta["HelloWorld"].View[0].encapsulation).to.be.a('string');
 				expect(meta["HelloWorld"].View[0].encapsulation).to.eql("NONE");
+			} else {
+				expect(alreadyConstructed["DependencyDisplayComponent"]).to.be.a('boolean');
+				expect(alreadyConstructed["DependencyDisplayComponent"]).to.eql(true);
+				expect(alreadyConstructed["HelloWorld"]).to.be.a('boolean');
+				expect(alreadyConstructed["HelloWorld"]).to.eql(true);
 			}
 
 			expect(anno["DependencyDisplayComponent"].length).to.eql(2);

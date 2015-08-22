@@ -27,6 +27,7 @@ module.exports.spec = function(browser, expect, compiled) {
 		let meta = { };
 		let anno = { };
 		let params = { };
+		let alreadyConstructed = { };
 
 		before(function(done) {
 			browser.visit('/index.html', { debug: false }, function() {
@@ -38,9 +39,10 @@ module.exports.spec = function(browser, expect, compiled) {
 				}
 				
 				for(var pack of packs) {
-					meta[pack] 		= browser.window[ns][pack].__meta__.obj;
-					anno[pack] 		= browser.window[ns][pack].annotations;
-					params[pack] 	= browser.window[ns][pack].parameters;
+					meta[pack] 					= browser.window[ns][pack].__meta__.obj;
+					anno[pack] 					= browser.window[ns][pack].annotations;
+					params[pack] 				= browser.window[ns][pack].parameters;
+					alreadyConstructed[pack] 	= browser.window[ns][pack].__alreadyConstructed;
 				}
 
 				done();
@@ -52,6 +54,9 @@ module.exports.spec = function(browser, expect, compiled) {
 	  	it('selector', function() {
 	  		if(!compiled) {
 				expect(meta["HelloWorld"].Component.length).to.eql(1);
+			} else {
+				expect(alreadyConstructed["HelloWorld"]).to.be.a('boolean');
+				expect(alreadyConstructed["HelloWorld"]).to.eql(true);
 			}
 
 			expect(anno["HelloWorld"].length).to.eql(2);
@@ -67,7 +72,10 @@ module.exports.spec = function(browser, expect, compiled) {
 	  			expect(meta["TodoList"].Component[0].properties).not.to.be(null);
 	  			expect(meta["TodoList"].Component[0].properties).to.be.an('array');
 	  			expect(meta["TodoList"].Component[0].properties).to.eql([ "lastValue", "todos" ]);
-	  		}
+	  		} else {
+				expect(alreadyConstructed["TodoList"]).to.be.a('boolean');
+				expect(alreadyConstructed["TodoList"]).to.eql(true);
+			}
 
 	  		expect(anno["TodoList"][0].properties).not.to.be(null);
   			expect(anno["TodoList"][0].properties).to.be.an('array');
@@ -94,6 +102,9 @@ module.exports.spec = function(browser, expect, compiled) {
 					"onAllChangesDone", 
 					"onCheck"
 				]);
+			} else {
+				expect(alreadyConstructed["TodoList"]).to.be.a('boolean');
+				expect(alreadyConstructed["TodoList"]).to.eql(true);
 			}
 
 			// Annotation checks
@@ -121,6 +132,9 @@ module.exports.spec = function(browser, expect, compiled) {
 				expect(meta["HelloWorld"].Component[0].exportAs).not.to.be(null);
 				expect(meta["HelloWorld"].Component[0].exportAs).to.be.a('string');
 				expect(meta["HelloWorld"].Component[0].exportAs).to.eql('componentGreet');
+			} else {
+				expect(alreadyConstructed["HelloWorld"]).to.be.a('boolean');
+				expect(alreadyConstructed["HelloWorld"]).to.eql(true);
 			}
 
 			expect(anno["HelloWorld"][0].exportAs).not.to.be(null);
@@ -143,6 +157,9 @@ module.exports.spec = function(browser, expect, compiled) {
 				expect(meta["HelloWorld"].Component[0].viewBindings.length).to.eql(1);
 				expect(meta["HelloWorld"].Component[0].viewBindings[0]).to.be.a('string');
 				expect(meta["HelloWorld"].Component[0].viewBindings[0]).to.eql('test.Greeter');
+			} else {
+				expect(alreadyConstructed["HelloWorld"]).to.be.a('boolean');
+				expect(alreadyConstructed["HelloWorld"]).to.eql(true);
 			}
 
 			// Parsed data
@@ -163,6 +180,9 @@ module.exports.spec = function(browser, expect, compiled) {
 				expect(meta["TodoList"].Component[0].changeDetection).not.to.be(null);
 				expect(meta["TodoList"].Component[0].changeDetection).to.be.a('string');
 				expect(meta["TodoList"].Component[0].changeDetection).to.eql('CHECK_ALWAYS');
+			} else {
+				expect(alreadyConstructed["TodoList"]).to.be.a('boolean');
+				expect(alreadyConstructed["TodoList"]).to.eql(true);
 			}
 
 			expect(anno["HelloWorld"][0].changeDetection).not.to.be(null);

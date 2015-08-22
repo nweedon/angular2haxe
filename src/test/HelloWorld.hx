@@ -27,6 +27,7 @@ import angular2haxe.buildplugin.BuildPlugin;
  */
 
 @:expose
+@:keep
 class Greeter
 {	
 	public function new() { }
@@ -43,6 +44,7 @@ class Greeter
 	]
 })
 @:expose
+@:keep
 class NeedsGreeter
 {
 	private var greeter : Greeter;
@@ -66,6 +68,7 @@ class NeedsGreeter
 	encapsulation: "NONE"
 })
 @:expose
+@:keep
 class HelloWorld
 {
 	private var greeter : Greeter;

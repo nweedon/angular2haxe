@@ -25,6 +25,7 @@ import angular2haxe.KeyboardEvent;
 	exportAs: 'input-directive'
 })
 @:expose
+@:keep
 class InputDirective
 {
 	public function new() 
