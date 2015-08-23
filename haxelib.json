@@ -4,9 +4,9 @@
 	"license" : "Apache",
 	"tags" : ["angular", "web", "language bindings"],
 	"description" : "Haxe language bindings for Angular 2",
-	"version" : "0.3.1",
+	"version" : "0.3.2",
 	"classpath" : "angular2haxe/",
-	"releasenote" : "Support Angular 2.0.0-alpha.35, can use class names as well as strings in app build macro.",
+	"releasenote" : "Improve code block modification at build-time for app compilation.",
 	"contributors" : ["nweedon"],
 	"dependencies" : { }
 }

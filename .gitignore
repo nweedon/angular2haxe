@@ -1,6 +1,10 @@
 *.zip
 node_modules/
 bin/angular.sfx.dev.js
+bin/angular2haxe.js
+bin/Angular2-Haxe.js
+bin/angular2haxe.js.map
+bin/Angular2-Haxe.js.map
 
 # Windows image file caches
 Thumbs.db

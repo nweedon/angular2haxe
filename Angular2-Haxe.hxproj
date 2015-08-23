@@ -4,7 +4,7 @@
   <output>
     <movie outputType="Application" />
     <movie input="" />
-    <movie path="bin\Angular2-Haxe.js" />
+    <movie path="bin\angular2haxe.js" />
     <movie fps="0" />
     <movie width="0" />
     <movie height="0" />

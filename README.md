@@ -3,18 +3,21 @@ Haxe Language Bindings for Angular 2
 [![Build Status](https://travis-ci.org/nweedon/angular2haxe.svg?branch=master)](https://travis-ci.org/nweedon/angular2haxe)
 [![Haxelib](https://img.shields.io/github/tag/nweedon/angular2haxe.svg?style=flat&label=haxelib)](http://lib.haxe.org/p/angular2haxe/)
 
-I plan to expand this readme in the future, but below are a few pieces of info to let you know where I am currently at with the project:
-
-* Currently working with version: alpha.35
+* Supported Angular 2 version: alpha.35
 * Heavily work-in-progress, API is subject to change as the Angular 2 API goes through development.
-* View 'bin/index.html' (with a webserver) to see the current examples which work with these language bindings.
-* The Haxe components required are in the 'src/angular2haxe' folders. Alternatively, install via haxelib.
-* If you want to see the Haxe code which creates Angular 2 components, view 'src/Main.hx' and the code in the 'src/test' folder.
 
 ### Haxelib Installation
-* Stable: ```haxelib install angular2haxe 0.3.1```
+* Stable: ```haxelib install angular2haxe 0.3.2```
 
 Also, add ```-lib angular2haxe``` to the build command of your project.
+
+### Building the demo project
+Run ```build.bat``` on Windows or ```./build.sh``` on Linux. This will build a demo project and run
+the current suite of tests. You can then launch a webserver targetting the build folder and visit
+the servers' configured address to view a selection of demo components.
+
+*Note:* Currently, you must have an active internet connection for the tests to run correctly,
+as the demo webpage accesses the Angular 2 library files.
 
 ### Building components at build-time *(as of 0.3.0)*
 Use the ```@:build``` component metadata to build the component

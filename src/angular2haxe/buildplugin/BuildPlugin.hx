@@ -152,10 +152,11 @@ class BuildPlugin
 	macro public static function app(modulesExpr : Expr) : Array<Field>
 	{
 		var modules : Array<String> = extractValue(modulesExpr);
-		var moduleClasses : Array <Class<Dynamic>> = [];
+		var moduleClasses : Array<Class<Dynamic>> = [];
 		var originalBlock : Array<Expr>;
 		var fields : Array<Field> = Context.getBuildFields();
 		var mainFieldName : String = "main";
+		var blockModified : Bool = false;
 		
 		for (module in modules)
 		{
@@ -192,29 +193,83 @@ class BuildPlugin
 						default: [];
 					}
 					
-					// Remove original code block.
-					fields.splice(i, 1);
+					// If we don't have an empty block, search through it
+					// for an application statement and update the array of
+					// components to be bootstrapped.
+					if (originalBlock.length > 0)
+					{
+						for (expr in originalBlock)
+						{
+							// Only search for ENew expressions, as an application is created
+							// as such:
+							// new angular2haxe.Application([ ... ]);
+							// Retrieve the type and params used in the ENew expression.
+							var appInitParams = switch(expr.expr)
+							{
+								case ENew(tp, params): { type: tp, params: params };								
+								default: null;
+							}
+							
+							if (appInitParams != null)
+							{
+								// Search for ENew({ name => Application, pack => [], params => [] }, ... )
+								// or pack == [angular2haxe]
+								if (appInitParams.type.name == "Application" && (appInitParams.type.pack.length == 0 || appInitParams.type.pack == ["angular2haxe"]))
+								{
+									// Strip out the EArrayDecl values so the resulting
+									// array can be added to.
+									var arrayDecl = switch(appInitParams.params[0].expr)
+									{
+										case EArrayDecl(v): v;
+										default: null;
+									}
+									
+									if (arrayDecl != null)
+									{
+										// Add module classes to current declaration. As arrayDecl
+										// etc. are references and not values, there is no need to
+										// reconstruct the block.
+										for (cl in moduleClasses)
+										{
+											arrayDecl.push(Context.makeExpr(cl, Context.currentPos()));
+										}
+										
+										blockModified = true;
+									}
+								}
+							}
+						}
+					}
+					
+					// If the original block was not modified, update the
+					// current block which creates a new application.
+					if (!blockModified)
+					{					
+						// Remove original code block.
+						fields.splice(i, 1);
+		
+						// Add the new main function, with the new call to
+						// bootstrap all provided modules / classes.
+						fields.push({
+							name: mainFieldName,
+							doc: null,
+							meta: [],
+							access: [AStatic, APublic],
+							kind: FieldType.FFun({ 
+								ret: macro : Void,
+								params: [],
+								expr: macro {
+									$b{originalBlock};
+									new angular2haxe.Application($v{moduleClasses});
+								},
+								args: []
+							}),
+							pos: Context.currentPos()
+						});
+					}
 				}
 			}
 		}
-		
-		// Add the new main function.
-		fields.push({
-			name: mainFieldName,
-			doc: null,
-			meta: [],
-			access: [AStatic, APublic],
-			kind: FieldType.FFun({ 
-				ret: macro : Void,
-				params: [],
-				expr: macro {
-					$b{originalBlock};
-					new angular2haxe.Application($v{moduleClasses});
-				},
-				args: []
-			}),
-			pos: Context.currentPos()
-		});
 		
 		return fields;
 	}
