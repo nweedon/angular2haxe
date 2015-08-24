@@ -17,7 +17,7 @@ limitations under the License.
 module.exports = { };
 
 module.exports.spec = function(browser, expect, compiled) {
-	let desc = 'DirectiveAnnotation parsing';
+	let desc = 'DirectiveMetadata parsing';
 
 	if(compiled) {
 		desc += ' (Compiled)';
@@ -39,10 +39,13 @@ module.exports.spec = function(browser, expect, compiled) {
 				}
 
 				for(var pack of packs) {
-					meta[pack] 					= browser.window[ns][pack].__meta__.obj;
 					anno[pack] 					= browser.window[ns][pack].annotations;
 					params[pack] 				= browser.window[ns][pack].parameters;
 					alreadyConstructed[pack] 	= browser.window[ns][pack].__alreadyConstructed;
+
+					if(!compiled) {
+						meta[pack] = browser.window[ns][pack].__meta__.obj;
+					}
 				}
 
 				done();
@@ -63,7 +66,12 @@ module.exports.spec = function(browser, expect, compiled) {
 			expect(anno["NeedsGreeter"].length).to.eql(1);
 			expect(anno["NeedsGreeter"][0]).not.to.be(null);
 			expect(anno["NeedsGreeter"][0].selector).not.to.be(null);
-	  		expect(meta["NeedsGreeter"].Directive[0].selector).to.eql(anno["NeedsGreeter"][0].selector);
+
+			if(!compiled) {
+	  			expect(anno["NeedsGreeter"][0].selector).to.eql('needs-greeter');
+	  		} else {
+	  			expect(anno["NeedsGreeter"][0].selector).to.eql('c-needs-greeter');
+	  		}
 	  	});
 
 	  	// Properties conversion.
@@ -134,7 +142,7 @@ module.exports.spec = function(browser, expect, compiled) {
 			expect(anno["InputDirective"].length).to.eql(1);
 			expect(anno["InputDirective"][0]).not.to.be(null);
 			expect(anno["InputDirective"][0].lifecycle).not.to.be(null);
-			expect(anno["InputDirective"][0].lifecycle.length).to.eql(meta["InputDirective"].Directive[0].lifecycle.length);
+			expect(anno["InputDirective"][0].lifecycle.length).to.eql(4);
 			expect(anno["InputDirective"][0].lifecycle).to.eql([
 				browser.window.ng.LifecycleEvent.onInit,
 				browser.window.ng.LifecycleEvent.onChange,
@@ -146,19 +154,20 @@ module.exports.spec = function(browser, expect, compiled) {
 	  	// Bindings conversion.
 	  	// Should be String -> Function mapping
 		it('bindings', function() {
+			var expectedName;
 			// Original Metadata
 			if(!compiled) {
 				expect(meta["NeedsGreeter"].Directive.length).to.eql(1);
 				expect(meta["NeedsGreeter"].Directive[0].bindings.length).to.eql(1);
 				expect(meta["NeedsGreeter"].Directive[0].bindings[0]).to.be.a('string');
 				expect(meta["NeedsGreeter"].Directive[0].bindings[0]).to.eql('test.Greeter');
+				expectedName = ["test", "Greeter"];
 			} else {
 				expect(alreadyConstructed["NeedsGreeter"]).to.be.a('boolean');
 				expect(alreadyConstructed["NeedsGreeter"]).to.eql(true);
+				expectedName = ["testcompile", "Greeter"];
 			}
 
-			// Parsed data
-			var expectedName = meta["NeedsGreeter"].Directive[0].bindings[0].split('.');
 			expect(anno["NeedsGreeter"].length).to.eql(1);
 			expect(anno["NeedsGreeter"][0]).not.to.be(null);
 			expect(anno["NeedsGreeter"][0].bindings).not.to.be(null);

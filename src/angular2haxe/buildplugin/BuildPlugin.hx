@@ -342,6 +342,8 @@ class BuildPlugin
 				
 				annotationData.push(data);
 				annotationKeys.push(annotationName);
+				// Clear annotation as it is not needed.
+				attachedClass.meta.remove(annotationName);
 			}
 		}
 		

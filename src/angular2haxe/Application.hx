@@ -55,6 +55,7 @@ class Application
 		{
 			var anno = Meta.getType(component);			
 			var className = Type.getClassName(component);
+			var hasComponentAnnotation = false;
 			
 			if (Reflect.fields(component).indexOf('__alreadyConstructed') > -1)
 			{				
@@ -74,6 +75,13 @@ class Application
 					{
 						if (data != null)
 						{
+							// Set hasComponentAnnotation to true to
+							// trigger Angular bootstrap process.
+							if (index == 0)
+							{
+								hasComponentAnnotation = true;
+							}
+							
 							// Call Annotation extension function to 
 							// transform all string representations 
 							// to Angular Object data
@@ -139,6 +147,8 @@ class Application
 						}
 					}
 					
+					hasComponentAnnotation = Reflect.fields(anno).indexOf("Component") >= 0;
+					
 					if (showDataInTrace)
 					{
 						Trace.log('Annotations:\n${annotations}');
@@ -155,9 +165,10 @@ class Application
 			#if !macro
 				js.Browser.document.addEventListener("DOMContentLoaded", function()
 				{				
-					if (Reflect.fields(anno).indexOf("Component") >= 0)
+					if (hasComponentAnnotation)
 					{
 						Angular.bootstrap(component);
+						Reflect.setField(component, "__bootstrapped", true);
 					}
 					
 					Trace.log('=> Finished bootstrapping ${className}');

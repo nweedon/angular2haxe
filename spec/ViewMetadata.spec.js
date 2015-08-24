@@ -17,7 +17,7 @@ limitations under the License.
 module.exports = { };
 
 module.exports.spec = function(browser, expect, compiled) {
-	let desc = 'ViewAnnotation parsing';
+	let desc = 'ViewMetadata parsing';
 
 	if(compiled) {
 		desc += ' (Compiled)';
@@ -39,10 +39,13 @@ module.exports.spec = function(browser, expect, compiled) {
 				}
 				
 				for(var pack of packs) {
-					meta[pack] 					= browser.window[ns][pack].__meta__.obj;
 					anno[pack] 					= browser.window[ns][pack].annotations;
 					params[pack] 				= browser.window[ns][pack].parameters;
 					alreadyConstructed[pack] 	= browser.window[ns][pack].__alreadyConstructed;
+					
+					if(!compiled) {
+						meta[pack] = browser.window[ns][pack].__meta__.obj;
+					}
 				}
 
 				done();

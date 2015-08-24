@@ -17,7 +17,7 @@ limitations under the License.
 module.exports = { };
 
 module.exports.spec = function(browser, expect, compiled) {
-	let desc = 'ComponentAnnotation parsing';
+	let desc = 'ComponentMetadata parsing';
 
 	if(compiled) {
 		desc += ' (Compiled)';
@@ -39,10 +39,13 @@ module.exports.spec = function(browser, expect, compiled) {
 				}
 				
 				for(var pack of packs) {
-					meta[pack] 					= browser.window[ns][pack].__meta__.obj;
 					anno[pack] 					= browser.window[ns][pack].annotations;
 					params[pack] 				= browser.window[ns][pack].parameters;
 					alreadyConstructed[pack] 	= browser.window[ns][pack].__alreadyConstructed;
+
+					if(!compiled) {
+						meta[pack] = browser.window[ns][pack].__meta__.obj;
+					}
 				}
 
 				done();
@@ -52,17 +55,21 @@ module.exports.spec = function(browser, expect, compiled) {
 		// Selector conversion.
 		// Should be one-to-one mapping (String -> String)
 	  	it('selector', function() {
+	  		var expectedSelector;
+
 	  		if(!compiled) {
 				expect(meta["HelloWorld"].Component.length).to.eql(1);
+				expectedSelector = 'greet';
 			} else {
 				expect(alreadyConstructed["HelloWorld"]).to.be.a('boolean');
 				expect(alreadyConstructed["HelloWorld"]).to.eql(true);
+				expectedSelector = 'c-greet';
 			}
 
 			expect(anno["HelloWorld"].length).to.eql(2);
 			expect(anno["HelloWorld"][0]).not.to.be(null);
 			expect(anno["HelloWorld"][0].selector).not.to.be(null);
-	  		expect(meta["HelloWorld"].Component[0].selector).to.eql(anno["HelloWorld"][0].selector);
+	  		expect(anno["HelloWorld"][0].selector).to.eql(expectedSelector);
 	  	});
 
 	  	// Properties conversion.
@@ -112,7 +119,7 @@ module.exports.spec = function(browser, expect, compiled) {
 			expect(anno["TodoList"].length).to.eql(2);
 			expect(anno["TodoList"][0]).not.to.be(null);
 			expect(anno["TodoList"][0].lifecycle).not.to.be(null);
-			expect(anno["TodoList"][0].lifecycle.length).to.eql(meta["TodoList"].Component[0].lifecycle.length);
+			expect(anno["TodoList"][0].lifecycle.length).to.eql(4);
 			expect(anno["TodoList"][0].lifecycle).to.eql([
 				browser.window.ng.LifecycleEvent.onInit,
 				browser.window.ng.LifecycleEvent.onChange,
@@ -151,19 +158,21 @@ module.exports.spec = function(browser, expect, compiled) {
 		});
 
 		it('viewBindings', function() {
+			var expectedName;
+
 			// Original Metadata
 			if(!compiled) {
 				expect(meta["HelloWorld"].Component.length).to.eql(1);
 				expect(meta["HelloWorld"].Component[0].viewBindings.length).to.eql(1);
 				expect(meta["HelloWorld"].Component[0].viewBindings[0]).to.be.a('string');
 				expect(meta["HelloWorld"].Component[0].viewBindings[0]).to.eql('test.Greeter');
+				expectedName = ["test", "Greeter"];
 			} else {
 				expect(alreadyConstructed["HelloWorld"]).to.be.a('boolean');
 				expect(alreadyConstructed["HelloWorld"]).to.eql(true);
+				expectedName = ["testcompile", "Greeter"];
 			}
 
-			// Parsed data
-			var expectedName = meta["HelloWorld"].Component[0].viewBindings[0].split('.');
 			expect(anno["HelloWorld"].length).to.eql(2);
 			expect(anno["HelloWorld"][0]).not.to.be(null);
 			expect(anno["HelloWorld"][0].viewBindings).not.to.be(null);
