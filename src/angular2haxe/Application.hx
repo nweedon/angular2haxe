@@ -29,9 +29,13 @@ class Application
 {	
 	public function new(components : Array<Class<Dynamic>>) 
 	{
-		// Backwards compatibility. After alpha.28, the window
-		// variable was named 'ng' instead of 'angular'.
-		untyped window.angular = window.ng;
+		// Patch for Angular 2 issue #3890:
+		// https://github.com/angular/angular/issues/3890
+		// angular2haxe issue #6:
+		// https://github.com/nweedon/angular2haxe/issues/6
+		untyped window.assert = function() { return true; };
+		
+		// Bootstrap all components
 		bootstrap(components);
 	}
 	

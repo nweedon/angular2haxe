@@ -18,7 +18,7 @@ package angular2haxe.ng;
 /**
  * Haxe representation of Angular 2.0
  */
-@:native('angular')
+@:native('ng')
 extern class Angular
 {
     function new();
