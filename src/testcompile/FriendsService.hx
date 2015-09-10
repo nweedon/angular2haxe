@@ -16,13 +16,13 @@ limitations under the License.
 package testcompile;
 
 @:expose
-@:keep
 class FriendsService
 {
 	public var names : Array<String>;
 	
+	@:keep
 	public function new() 
 	{
-		names = ["Aarav", "Martín", "Shannon", "Ariana", "Kai"];		
+		names = ["Aarav", "Martín", "Shannon", "Ariana", "Kai"];
 	}	
 }
