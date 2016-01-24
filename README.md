@@ -37,7 +37,7 @@ Finally, to use the build registry, include the following on the command line:
 ```-D using_registry```
 
 Example:
-```
+```haxe
 @:build(angular2haxe.buildplugin.BuildPlugin.app([ 
 	testcompile.DisplayComponent,
 	testcompile.TodoList,
@@ -54,8 +54,8 @@ class Main
 
 ### Creating an application
 Creating an application this way allows you to import and bootstrap all of your components with ease. All data transformation (from Haxe metadata to Angular annotations) is done under the hood! (See 'src/Main.hx').
-```
-import angular2haxe.Application
+```haxe
+import angular2haxe.Application;
 
 class Main
 {
@@ -89,7 +89,7 @@ Creating components is pretty much the same as it is in ES6/TypeScript, with a f
 * template
 * templateUrl
 
-```
+```haxe
 @Component({ 
 	selector: 'display',
 	viewBindings: ["test.FriendsService"]
@@ -119,7 +119,7 @@ Creating a directive is again similar to the way components and views are create
 **Implemented but untested metadata for @Directive annotation:**
 * lifecycle (onChange, onDestroy)
 
-```
+```haxe
 @:expose
 class Greeter
 {
