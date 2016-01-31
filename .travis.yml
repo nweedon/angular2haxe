@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - "stable"
+  - "iojs"
 before_install:
   - chmod +x travis/setup.sh
   - source travis/setup.sh
