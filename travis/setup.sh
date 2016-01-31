@@ -23,8 +23,9 @@ npm install mocha -g
 npm install
 
 # Retrieve Angular 2.0.0-beta.0 ES5 libraries
-mkdir -p ${TRAVIS_BUILD_DIR}/bin/lib
-cd ${TRAVIS_BUILD_DIR}/bin/lib
+LIBRARY_DIR=${TRAVIS_BUILD_DIR}/bin/lib/2.0.0-beta.0
+mkdir -p ${LIBRARY_DIR}
+cd ${LIBRARY_DIR}
 
 wget https://code.angularjs.org/2.0.0-beta.0/Rx.umd.js
 wget https://code.angularjs.org/2.0.0-beta.0/angular2-all.umd.dev.js
