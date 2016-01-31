@@ -25,6 +25,6 @@ npm install mocha -g
 mkdir -p ${TRAVIS_BUILD_DIR}/bin/lib
 cd ${TRAVIS_BUILD_DIR}/bin/lib
 
-curl https://code.angularjs.org/2.0.0-beta.0/Rx.umd.js
-curl https://code.angularjs.org/2.0.0-beta.0/angular2-all.umd.dev.js
-curl https://code.angularjs.org/2.0.0-beta.0/angular2-polyfills.js
+wget https://code.angularjs.org/2.0.0-beta.0/Rx.umd.js
+wget https://code.angularjs.org/2.0.0-beta.0/angular2-all.umd.dev.js
+wget https://code.angularjs.org/2.0.0-beta.0/angular2-polyfills.js

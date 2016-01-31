@@ -6,4 +6,4 @@ neko: "2.0.0"
 install:
   - chmod +x travis/setup.sh
   - source travis/setup.sh
-script: cd travis && haxe js.hxml
+script: cd ${TRAVIS_BUILD_DIR}/travis && haxe js.hxml
