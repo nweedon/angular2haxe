@@ -1,6 +1,6 @@
 Haxe Language Bindings for Angular 2
 ===
-[![Build Status](https://travis-ci.org/nweedon/angular2haxe.svg?branch=master)](https://travis-ci.org/nweedon/angular2haxe)
+[![Build Status](https://travis-ci.org/nweedon/angular2haxe.svg?branch=rewrite-with-hxdecorate)](https://travis-ci.org/nweedon/angular2haxe)
 [![Haxelib](https://img.shields.io/github/tag/nweedon/angular2haxe.svg?style=flat&label=haxelib)](http://lib.haxe.org/p/angular2haxe/)
 
 * Supported Angular 2 version: beta.0
