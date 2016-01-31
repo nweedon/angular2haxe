@@ -32,10 +32,6 @@ limitations under the License.
         if(Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'onclick') === undefined) {
             Object.defineProperty(HTMLElement.prototype, 'onclick', { configurable: true, writable: true });
         }
-
-        if(window.KeyboardEvent === undefined) {
-            window.KeyboardEvent = function() { }
-        }
     </script>
     <script src="lib/2.0.0-beta.0/Rx.umd.js"></script>
     <script src="lib/2.0.0-beta.0/angular2-polyfills.js"></script>

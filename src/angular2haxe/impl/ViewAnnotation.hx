@@ -16,8 +16,9 @@ limitations under the License.
 package angular2haxe.impl;
 
 class ViewAnnotation {
-
-    public static function create(metadata : Array<Dynamic>, caller : Dynamic /* TODO: Have base class? */) : Dynamic {
+    
+    /* TODO: Have base class? */
+    public static function create(metadata : Array<Dynamic>, caller : Dynamic) : Dynamic {
         if(Reflect.hasField(Type.getClass(caller), 'annotations')) {
             Reflect.field(Type.getClass(caller), 'annotations').push(new angular2haxe.angular.ViewAnnotation(metadata[0]));
         } else {

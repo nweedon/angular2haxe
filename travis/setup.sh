@@ -20,6 +20,7 @@ haxelib install hxdecorate
 # Install Node.js 5.0.x
 nvm install 5.0
 npm install mocha -g
+npm install
 
 # Retrieve Angular 2.0.0-beta.0 ES5 libraries
 mkdir -p ${TRAVIS_BUILD_DIR}/bin/lib

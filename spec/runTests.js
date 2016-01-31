@@ -34,7 +34,7 @@ const expect = require('expect.js');
 const connect = require('connect');
 const serveStatic = require('serve-static');
 const port = 8080;
-const specs = ['CompiledComponents.test.js', 'DirectiveMetadata.spec.js', 'ComponentMetadata.spec.js', 'ViewMetadata.spec.js'];
+const specs = ['ComponentMetadata.spec.js'];
 
 // Launch webserver. Will be shut down automatically
 // once mocha has finished.
@@ -51,14 +51,11 @@ zombie.localhost('localhost', port);
 
 // Run spec tests.
 for(var spec of specs) {
-	// Test compiled and non-compiled.
-	for(var b of [false, true]) {
-		const browser = new zombie({ 
-			waitFor: 2000,
-			loadCSS: false,
-			runScripts: true
-		});
+    const browser = new zombie({
+        waitFor: 2000,
+        loadCSS: false,
+        runScripts: true
+    });
 
-		require('./' + spec).spec(browser, expect, b);
-	}
+    require('./' + spec).spec(browser, expect);
 }

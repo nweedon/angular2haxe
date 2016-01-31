@@ -20,7 +20,8 @@ import angular2haxe.logger.Logger;
 
 class ComponentAnnotation {
 
-public static function create(input : Array<Dynamic>, caller : Dynamic /* TODO: Have base class? */) : Dynamic {
+    /* TODO: Have base class? */
+    public static function create(input : Array<Dynamic>, caller : Dynamic) : Dynamic {
         var metadata = new ComponentMetadata(input[0]);
 
         if(Reflect.hasField(Type.getClass(caller), 'annotations')) {
