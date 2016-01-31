@@ -14,17 +14,11 @@
 # limitations under the License.
 set -e
 
-# Install Haxe 3.2
-curl http://haxe.org/website-content/downloads/3.2.0/downloads/haxe-3.2.0-linux64.tar.gz > haxe.tar.gz
-tar -xzf haxe.tar.gz -C ~
-chmod +x ~/haxe-3.2.0/haxe
-
-export HAXE_STD_PATH=~/haxe-3.2.0/std
-export HAXE_HOME=~/haxe-3.2.0
-export PATH=${PATH}:${HAXE_HOME}
-
 # Install Haxe and npm dependencies
 haxelib install hxdecorate
+
+# Install Node.js 5.0.x
+nvm install 5.0
 npm install mocha -g
 
 # Retrieve Angular 2.0.0-beta.0 ES5 libraries

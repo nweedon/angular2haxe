@@ -1,7 +1,9 @@
-language: node_js
-node_js:
-  - "iojs"
-before_install:
+language: haxe
+haxe:
+  - "3.2.0"
+  - "3.2.1"
+neko: "2.0.0"
+install:
   - chmod +x travis/setup.sh
   - source travis/setup.sh
 script: cd travis && haxe js.hxml
