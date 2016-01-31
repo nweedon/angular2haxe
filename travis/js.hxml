@@ -1,0 +1,6 @@
+-lib hxdecorate
+--each
+-cp ../src
+-js ../bin/angular2haxe.js
+-main Main
+#-dce full

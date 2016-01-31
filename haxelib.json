@@ -1,13 +1,14 @@
 {
-	"name" : "angular2haxe",
-	"url" : "https://github.com/nweedon/angular2haxe",
-	"license" : "Apache",
-	"tags" : ["angular", "web", "language bindings"],
-	"description" : "Haxe language bindings for Angular 2",
-	"version" : "0.3.2",
-	"classpath" : "angular2haxe/",
-	"releasenote" : "Improve code block modification at build-time for app compilation.",
-	"contributors" : ["nweedon"],
-	"dependencies" : { }
+    "name" : "angular2haxe",
+    "url" : "https://github.com/nweedon/angular2haxe",
+    "license" : "Apache",
+    "tags" : ["angular", "web", "language bindings"],
+    "description" : "Haxe language bindings for Angular 2",
+    "version" : "TO-UPDATE",
+    "classPath" : "angular2haxe/",
+    "releasenote" : "Rewrite with hxdecorate as a dependency.",
+    "contributors" : ["nweedon"],
+    "dependencies" : {
+        "hxdecorate" : "0.0.1"
+    }
 }
-	

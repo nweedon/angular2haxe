@@ -13,9 +13,20 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package angular2haxe;
+package test;
 
-class Annotation
-{
-	private function new(data : Dynamic) { }
+@Component({
+    selector: 'test-app',
+    directives: ['test.HelloWorld'],
+    templateUrl: 'templates/test-app.tpl.html'
+})
+@:keep
+class TestApp {
+
+    private static var annotations : Array<Dynamic> = [];
+
+    public function new() {
+        if(annotations.length > 0) { return; }
+    }
+
 }

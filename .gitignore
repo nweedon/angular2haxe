@@ -6,6 +6,7 @@ bin/angular2haxe.js
 bin/Angular2-Haxe.js
 bin/angular2haxe.js.map
 bin/Angular2-Haxe.js.map
+bin/lib
 
 # Windows image file caches
 Thumbs.db

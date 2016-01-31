@@ -15,60 +15,29 @@ limitations under the License.
 */
 package;
 
-import angular2haxe.ng.Angular;
-import angular2haxe.Application;
-
-import test.ChildComponent;
-import test.Dependency;
-import test.DependencyDisplayComponent;
-import test.DisplayComponent;
-import test.ParentComponent;
-import test.TodoList;
+import angular2haxe.angular.ComponentAnnotation;
+import hxdecorate.Decorator;
 import test.HelloWorld;
-import test.InputDirective;
+import test.TestApp;
 
-@:build(angular2haxe.buildplugin.BuildPlugin.app([ 
-	testcompile.DisplayComponent,
-	testcompile.TodoList,
-	testcompile.ParentComponent,
-	testcompile.ChildComponent,
-	testcompile.MyDirective,			
-	testcompile.NgModelDirective,			
-	testcompile.Dependency,
-	testcompile.DependencyDisplayComponent,
-	testcompile.Greeter,
-	testcompile.NeedsGreeter,
-	testcompile.HelloWorld,
-	testcompile.InputDirective
+@:build(hxdecorate.Decorator.build({
+    'Component' : 'angular2haxe.impl.ComponentAnnotation#create',
+    'View' : 'angular2haxe.impl.ViewAnnotation#create'
+}, [
+    'test.TestApp',
+    'test.HelloWorld'
 ]))
-class Main
-{
-    static function main()
-	{
-		// Create a new application, bootstrapping the
-		// listed classes in the process.
-		new Application([
-			
-			test.DisplayComponent,
-			test.TodoList,
-			test.ParentComponent,
-			test.ChildComponent,
-			
-			// --- Dependency.hx ---
-			test.MyDirective,			
-			test.NgModelDirective,			
-			test.Dependency,
-			
-			// --- DependencyDisplayComponent.hx --
-			test.DependencyDisplayComponent,
-			
-			// --- HelloWorld.hx ---
-			test.Greeter,
-			test.NeedsGreeter,
-			test.HelloWorld,
-		
-			test.InputDirective
-			
-		]);
+class Main {
+
+    static function main() {
+        new HelloWorld();
+        new TestApp();
+
+        untyped {
+            document.addEventListener('DOMContentLoaded', function() {
+                ng.platform.browser.bootstrap(TestApp);
+            });
+        }
     }
+
 }

@@ -13,13 +13,17 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package angular2haxe.ng;
+package angular2haxe.impl;
 
-import angular2haxe.ng.ComponentConstructorData;
-import angular2haxe.Annotation;
+class ViewAnnotation {
 
-@:native('ng.ComponentMetadata')
-extern class ComponentMetadata extends Annotation
-{
-	function new(data : ComponentConstructorData);
+    public static function create(metadata : Array<Dynamic>, caller : Dynamic /* TODO: Have base class? */) : Dynamic {
+        if(Reflect.hasField(Type.getClass(caller), 'annotations')) {
+            Reflect.field(Type.getClass(caller), 'annotations').push(new angular2haxe.angular.ViewAnnotation(metadata[0]));
+        } else {
+            trace('Caller class does not have static annotations field!');
+        }
+        return caller;
+    }
+
 }

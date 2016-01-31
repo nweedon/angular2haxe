@@ -8,7 +8,7 @@ body
 	margin: 0px;
 	color: #000000;
 	font-family: 'Open Sans', sans-serif;
-	
+
 	/* Reference: haxe.org */
 	background-color: rgb(168,75,56);
 	background-repeat: no-repeat;
@@ -33,7 +33,7 @@ body > div
 	padding: 8px;
 }
 
-body > .examples > div > *:nth-child(2)
+.examples > div > *:nth-child(2)
 {
 	margin: 8px;
 	padding: 8px;
@@ -49,7 +49,7 @@ div.titlebar
 	color: #FFFFFF;
 }
 
-/* 
+/*
 Force div elements to surround
 their children. (Clearfix)
 Reference: https://css-tricks.com/snippets/css/clear-fix/

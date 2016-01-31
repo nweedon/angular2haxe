@@ -13,21 +13,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package testcompile;
+package angular2haxe.angular;
 
-@Directive({
-	selector: 'c-needs-greeter',
-	bindings: [
-		"testcompile.Greeter"
-	]
-})
-@:expose
-class NeedsGreeter
-{
-	private var greeter : Greeter;
-	
-	public function new(greeter : Greeter)
-	{
-		this.greeter = greeter;
-	}
+import angular2haxe.impl.ComponentMetadata;
+
+@:native('ng.core.Component')
+extern class ComponentAnnotation {
+
+    public function new(metadata : ComponentMetadata);
+
 }

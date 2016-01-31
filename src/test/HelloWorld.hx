@@ -15,66 +15,17 @@ limitations under the License.
 */
 package test;
 
-import angular2haxe.buildplugin.BuildPlugin;
-
-/**
- * Reference(s): 
- * 		https://angular.io/docs/js/latest/api/annotations/DirectiveAnnotation-class.html
- * 
- * Uses:
- * 		Directive => hostInjector
- * 		Component => hostInjector
- */
-
-@:expose
-@:keep
-class Greeter
-{	
-	public function new() { }
-	public function greet(name : String)
-	{
-		return 'Hello ${name}!';
-	}
-}
-
-@Directive({
-	selector: 'needs-greeter',
-	bindings: [
-		"test.Greeter"
-	]
-})
-@:expose
-@:keep
-class NeedsGreeter
-{
-	private var greeter : Greeter;
-	
-	public function new(greeter : Greeter)
-	{
-		this.greeter = greeter;
-	}
-}
-
 @Component({
-	selector: 'greet',
-	viewBindings: [
-		"test.Greeter"
-	],
-	exportAs: 'componentGreet'
+    selector: 'greet',
+    template: "<p>Hello World!</p>"
 })
-@View({
-	template: "<needs-greeter>{{ greeter.greet('World') }}</needs-greeter>",
-	directives: ["test.NeedsGreeter"],
-	encapsulation: "NONE"
-})
-@:expose
 @:keep
-class HelloWorld
-{
-	private var greeter : Greeter;
-	
-	public function new(greeter : Greeter) 
-	{
-		this.greeter = greeter;
-	}
+class HelloWorld {
+
+    private static var annotations : Array<Dynamic> = [];
+
+    public function new() {
+
+    }
+
 }

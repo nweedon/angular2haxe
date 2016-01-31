@@ -13,17 +13,24 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package angular2haxe.ng;
+package angular2haxe.logger;
 
-@:native('ng.ViewEncapsulation')
-extern class ViewEncapsulation
-{
-	@:native('EMULATED')
-	public static var EMULATED : Int;
-	@:native('NATIVE')
-	public static var NATIVE : Int;
-	@:native('NONE')
-	public static var NONE : Int;
-	
-	private function new() { }
+class Logger {
+
+    public static function log(input : String) {
+        trace(input);
+    }
+
+    public static function warn(input : String) {
+        #if js
+            untyped console.warn(input);
+        #end
+    }
+
+    public static function error(input : String) {
+        #if js
+            untyped console.error(input);
+        #end
+    }
+
 }

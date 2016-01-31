@@ -13,15 +13,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package angular2haxe.ng;
+package angular2haxe.angular;
 
-@:native('ng.NgIf')
-extern class NgIf
-{	
-	// TODO: Original Constructor
-	// viewContainer: ViewContainerRef, templateRef: TemplateRef
-	public function new(viewContainer : Dynamic, templateRef : Dynamic) 
-	{
-		
-	}
+@:native('ng.core.View')
+extern class ViewAnnotation {
+
+    public function new(metadata : Dynamic);
+
 }
