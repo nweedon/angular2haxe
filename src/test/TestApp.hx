@@ -23,10 +23,8 @@ package test;
 @:keep
 class TestApp {
 
-    private static var annotations : Array<Dynamic> = [];
-
     public function new() {
-        if(annotations.length > 0) { return; }
+        
     }
 
 }

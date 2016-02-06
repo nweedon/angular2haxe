@@ -14,6 +14,8 @@
 # limitations under the License.
 set -e
 
+echo "Testing against Angular v${NG_VERSION}"
+
 # Install Haxe and npm dependencies
 haxelib install hxdecorate
 
@@ -23,10 +25,10 @@ npm install mocha -g
 npm install
 
 # Retrieve Angular 2.0.0-beta.0 ES5 libraries
-LIBRARY_DIR=${TRAVIS_BUILD_DIR}/bin/lib/2.0.0-beta.0
+LIBRARY_DIR=${TRAVIS_BUILD_DIR}/bin/lib/angular
 mkdir -p ${LIBRARY_DIR}
 cd ${LIBRARY_DIR}
 
-wget https://code.angularjs.org/2.0.0-beta.0/Rx.umd.js
-wget https://code.angularjs.org/2.0.0-beta.0/angular2-all.umd.dev.js
-wget https://code.angularjs.org/2.0.0-beta.0/angular2-polyfills.js
+wget https://code.angularjs.org/${NG_VERSION}/Rx.umd.js
+wget https://code.angularjs.org/${NG_VERSION}/angular2-all.umd.dev.js
+wget https://code.angularjs.org/${NG_VERSION}/angular2-polyfills.js

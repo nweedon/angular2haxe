@@ -16,9 +16,9 @@ limitations under the License.
 package;
 
 import angular2haxe.angular.ComponentAnnotation;
-import hxdecorate.Decorator;
-import test.HelloWorld;
+import angular2haxe.impl.Angular;
 import test.TestApp;
+import test.HelloWorld;
 
 @:build(hxdecorate.Decorator.build({
     'Component' : 'angular2haxe.impl.ComponentAnnotation#create',
@@ -30,14 +30,7 @@ import test.TestApp;
 class Main {
 
     static function main() {
-        new HelloWorld();
-        new TestApp();
-
-        untyped {
-            document.addEventListener('DOMContentLoaded', function() {
-                ng.platform.browser.bootstrap(TestApp);
-            });
-        }
+        Angular.bootstrap(TestApp);
     }
 
 }

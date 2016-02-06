@@ -24,12 +24,7 @@ class ComponentAnnotation {
     public static function create(input : Array<Dynamic>, caller : Dynamic) : Dynamic {
         var metadata = new ComponentMetadata(input[0]);
 
-        if(Reflect.hasField(Type.getClass(caller), 'annotations')) {
-            Reflect.field(Type.getClass(caller), 'annotations').push(new angular2haxe.angular.ComponentAnnotation(metadata));
-        } else {
-            Logger.error('Caller class does not have static annotations field!');
-        }
-
+        Reflect.field(Type.getClass(caller), 'annotations').push(new angular2haxe.angular.ComponentAnnotation(metadata));
         return caller;
     }
 
