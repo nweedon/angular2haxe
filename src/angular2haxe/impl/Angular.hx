@@ -52,8 +52,10 @@ class Angular {
 
                             var localJsClassName : String = StringTools.replace(directive, ".", "_");
                             Reflect.setField(directiveClass, 'angular2haxe_className', localJsClassName);
-
-                            Type.createInstance(directiveClass, []);
+                            
+                            if(Reflect.field(directiveClass, 'annotations').length == 0) {
+                                Type.createInstance(directiveClass, []);
+                            }
                         } else {
                             Logger.error('Cannot resolve class: "${directive}". Make sure the class has been imported.');
                         }

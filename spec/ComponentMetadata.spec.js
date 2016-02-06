@@ -27,7 +27,7 @@ module.exports.spec = function(browser, expect) {
         });
 
         it('Basic Test', function() {
-            expect(browser.window.test.HelloWorld.annotations.length).to.eql(1);
+            expect(browser.window.test.HelloWorld.annotations.length).to.be.greaterThan(0);
         });
 
     });
