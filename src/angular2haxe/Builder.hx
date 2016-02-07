@@ -13,24 +13,24 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package;
+package angular2haxe;
 
-import angular2haxe.impl.Angular;
-import test.TestApp;
-import test.HelloWorld;
-import test.BadClass;
-import test.BadClass2;
+#if macro
+import hxdecorate.Decorator;
+import haxe.macro.Expr;
+import haxe.macro.Expr.Field;
 
-@:build(angular2haxe.Builder.build([
-    'test.TestApp',
-    'test.HelloWorld',
-    'test.BadClass',
-    'test.BadClass2'
-]))
-class Main {
+using hxdecorate.ExprExtension;
 
-    static function main() {
-        Angular.bootstrap(TestApp);
+class Builder {
+
+    macro public static function build(classesToDecorate : Expr) : Array<Field> {
+        var classes : Array<String> = classesToDecorate.value();
+        return Decorator.proxyBuild({
+            'Component' : 'angular2haxe.impl.core.ComponentAnnotation#create',
+            'View' : 'angular2haxe.impl.core.ViewAnnotation#create'
+        }, classes);
     }
 
 }
+#end

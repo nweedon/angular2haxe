@@ -8,3 +8,29 @@ Haxe Language Bindings for Angular 2
 
 ### Haxelib Installation
 This branch is not currently available via haxelib.
+
+### Use
+```haxe
+import angular2haxe.impl.Angular;
+import test.TestApp;
+import test.HelloWorld;
+import test.BadClass;
+import test.BadClass2;
+
+// Call the builder to configure the application
+// at build-time.
+@:build(angular2haxe.Builder.build([
+    'test.TestApp',
+    'test.HelloWorld',
+    'test.BadClass',
+    'test.BadClass2'
+]))
+class Main {
+
+    static function main() {
+        // Bootstrap your application class
+        Angular.bootstrap(TestApp);
+    }
+
+}
+```

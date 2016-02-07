@@ -9,6 +9,6 @@
     "releasenote" : "Rewrite with hxdecorate as a dependency.",
     "contributors" : ["nweedon"],
     "dependencies" : {
-        "hxdecorate" : "0.0.1"
+        "hxdecorate" : "1.1.0"
     }
 }
