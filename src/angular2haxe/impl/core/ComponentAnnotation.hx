@@ -13,13 +13,19 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package angular2haxe.angular;
+package angular2haxe.impl.core;
 
-import angular2haxe.impl.ComponentMetadata;
+import angular2haxe.impl.core.ComponentMetadata;
+import angular2haxe.logger.Logger;
 
-@:native('ng.core.Component')
-extern class ComponentAnnotation {
+class ComponentAnnotation {
 
-    public function new(metadata : ComponentMetadata);
+    /* TODO: Have base class? */
+    public static function create(input : Array<Dynamic>, caller : Dynamic) : Dynamic {
+        var metadata = new ComponentMetadata(input[0]);
+
+        Reflect.field(Type.getClass(caller), 'annotations').push(new angular2haxe.angular.core.ComponentAnnotation(metadata));
+        return caller;
+    }
 
 }

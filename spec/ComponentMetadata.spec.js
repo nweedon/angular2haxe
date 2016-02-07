@@ -19,15 +19,58 @@ module.exports = { };
 module.exports.spec = function(browser, expect) {
 
     describe('ComponentMetadata', function() {
+        var ng;
+        var HelloWorld, TestApp, BadClass, BadClass2;
 
         before(function(done) {
             browser.visit('/index.html', { debug: false }, function() {
+                ng = browser.window.ng;
+                HelloWorld = browser.window.test.HelloWorld;
+                TestApp = browser.window.test.TestApp;
+                BadClass = browser.window.test.BadClass;
+                BadClass2 = browser.window.test.BadClass2;
                 done();
             });
         });
 
-        it('Basic Test', function() {
-            expect(browser.window.test.HelloWorld.annotations.length).to.be.greaterThan(0);
+        it('maps ChangeDetectionStrategy to correctly when changeDetection is specified', function() {
+            expect(TestApp.annotations.length).to.be.greaterThan(0);
+            expect(TestApp.annotations[0].changeDetection).to.eql(ng.core.ChangeDetectionStrategy.CheckAlways);
+        });
+
+        it('maps ChangeDetectionStrategy to Default when not specified', function() {
+            expect(HelloWorld.annotations.length).to.be.greaterThan(0);
+            expect(HelloWorld.annotations[0].changeDetection).to.eql(ng.core.ChangeDetectionStrategy.Default);
+        });
+
+        it('maps ChangeDetectionStrategy to Default when an invalid key is used', function() {
+            expect(BadClass.annotations.length).to.be.greaterThan(0);
+            expect(BadClass.annotations[0].changeDetection).to.eql(ng.core.ChangeDetectionStrategy.Default);
+        });
+
+        it('maps ChangeDetectionStrategy to Default when an invalid value is used', function() {
+            expect(BadClass2.annotations.length).to.be.greaterThan(0);
+            expect(BadClass2.annotations[0].changeDetection).to.eql(ng.core.ChangeDetectionStrategy.Default);
+        });
+
+        it('maps ViewEncapsulation to correctly when encapsulation is specified', function() {
+            expect(TestApp.annotations.length).to.be.greaterThan(0);
+            expect(TestApp.annotations[0].encapsulation).to.eql(ng.core.ViewEncapsulation.Emulated);
+        });
+
+        it('maps ViewEncapsulation to None when not specified', function() {
+            expect(HelloWorld.annotations.length).to.be.greaterThan(0);
+            expect(HelloWorld.annotations[0].encapsulation).to.eql(ng.core.ViewEncapsulation.None);
+        });
+
+        it('maps ViewEncapsulation to None when an invalid key is used', function() {
+            expect(BadClass.annotations.length).to.be.greaterThan(0);
+            expect(BadClass.annotations[0].encapsulation).to.eql(ng.core.ViewEncapsulation.None);
+        });
+
+        it('maps ViewEncapsulation to None when an invalid value is used', function() {
+            expect(BadClass2.annotations.length).to.be.greaterThan(0);
+            expect(BadClass2.annotations[0].encapsulation).to.eql(ng.core.ViewEncapsulation.None);
         });
 
     });

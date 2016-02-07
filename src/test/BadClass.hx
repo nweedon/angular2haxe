@@ -16,13 +16,12 @@ limitations under the License.
 package test;
 
 @Component({
-    selector: 'test-app',
-    directives: ['test.HelloWorld', 'test.BadClass', 'test.BadClass2'],
-    templateUrl: 'templates/test-app.tpl.html',
-    changeDetection: 'CheckAlways',
-    encapsulation: 'Emulated'
+    selector: 'bad-class',
+    template: "Bad class :(",
+    changeDetection: 'moose',
+    encapsulation: 'matrix'
 })
-class TestApp {
+class BadClass {
 
     public function new() {
 

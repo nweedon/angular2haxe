@@ -13,14 +13,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package angular2haxe.impl;
+package test;
 
-class ViewAnnotation {
+@Component({
+    selector: 'bad-class-two',
+    template: "Bad class 2 :(",
+    changeDetection: -7,
+    encapsulation: 1337
+})
+class BadClass2 {
 
-    /* TODO: Have base class? */
-    public static function create(metadata : Array<Dynamic>, caller : Dynamic) : Dynamic {
-        Reflect.field(Type.getClass(caller), 'annotations').push(new angular2haxe.angular.ViewAnnotation(metadata[0]));
-        return caller;
+    public function new() {
+
     }
 
 }

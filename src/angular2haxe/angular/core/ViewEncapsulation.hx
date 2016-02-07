@@ -13,19 +13,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package angular2haxe.impl;
+package angular2haxe.angular.core;
 
-import angular2haxe.impl.ComponentMetadata;
-import angular2haxe.logger.Logger;
+@:native('ng.core.ViewEncapsulation')
+extern class ViewEncapsulation {
 
-class ComponentAnnotation {
+    @:native('Emulated')
+    public static var Emulated;
 
-    /* TODO: Have base class? */
-    public static function create(input : Array<Dynamic>, caller : Dynamic) : Dynamic {
-        var metadata = new ComponentMetadata(input[0]);
+    @:native('Native')
+    public static var Native;
 
-        Reflect.field(Type.getClass(caller), 'annotations').push(new angular2haxe.angular.ComponentAnnotation(metadata));
-        return caller;
-    }
+    @:native('None')
+    public static var None;
 
 }

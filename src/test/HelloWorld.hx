@@ -19,7 +19,6 @@ package test;
     selector: 'greet',
     template: "<p>Hello World!</p>"
 })
-@:keep
 class HelloWorld {
 
     public function new() {

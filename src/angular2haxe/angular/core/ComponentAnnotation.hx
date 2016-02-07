@@ -13,11 +13,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package angular2haxe.angular;
+package angular2haxe.angular.core;
 
-@:native('ng.core.View')
-extern class ViewAnnotation {
+import angular2haxe.impl.core.ComponentMetadata;
 
-    public function new(metadata : Dynamic);
+@:native('ng.core.Component')
+extern class ComponentAnnotation {
+
+    public function new(metadata : ComponentMetadata);
 
 }

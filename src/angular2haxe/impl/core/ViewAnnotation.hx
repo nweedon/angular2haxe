@@ -13,19 +13,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package test;
+package angular2haxe.impl.core;
 
-@Component({
-    selector: 'test-app',
-    directives: ['test.HelloWorld', 'test.BadClass', 'test.BadClass2'],
-    templateUrl: 'templates/test-app.tpl.html',
-    changeDetection: 'CheckAlways',
-    encapsulation: 'Emulated'
-})
-class TestApp {
+class ViewAnnotation {
 
-    public function new() {
-
+    /* TODO: Have base class? */
+    public static function create(metadata : Array<Dynamic>, caller : Dynamic) : Dynamic {
+        Reflect.field(Type.getClass(caller), 'annotations').push(new angular2haxe.angular.ViewAnnotation(metadata[0]));
+        return caller;
     }
 
 }

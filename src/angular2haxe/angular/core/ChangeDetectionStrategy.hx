@@ -13,19 +13,30 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package test;
+package angular2haxe.angular.core;
 
-@Component({
-    selector: 'test-app',
-    directives: ['test.HelloWorld', 'test.BadClass', 'test.BadClass2'],
-    templateUrl: 'templates/test-app.tpl.html',
-    changeDetection: 'CheckAlways',
-    encapsulation: 'Emulated'
-})
-class TestApp {
+@:native('ng.core.ChangeDetectionStrategy')
+extern class ChangeDetectionStrategy {
 
-    public function new() {
+    @:native('CheckOnce')
+    public static var CheckOnce;
 
-    }
+    @:native('Checked')
+    public static var Checked;
+
+    @:native('CheckAlways')
+    public static var CheckAlways;
+
+    @:native('Detached')
+    public static var Detached;
+
+    @:native('OnPush')
+    public static var OnPush;
+
+    @:native('Default')
+    public static var Default;
+
+    @:native('OnPushObserve')
+    public static var OnPushObserve;
 
 }

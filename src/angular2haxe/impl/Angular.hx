@@ -16,6 +16,7 @@ limitations under the License.
 package angular2haxe.impl;
 
 import angular2haxe.logger.Logger;
+import Type.ValueType;
 
 class Angular {
 
@@ -52,7 +53,7 @@ class Angular {
 
                             var localJsClassName : String = StringTools.replace(directive, ".", "_");
                             Reflect.setField(directiveClass, 'angular2haxe_className', localJsClassName);
-                            
+
                             if(Reflect.field(directiveClass, 'annotations').length == 0) {
                                 Type.createInstance(directiveClass, []);
                             }
@@ -73,4 +74,42 @@ class Angular {
         }
     }
 
+    public static function mapEnumToInt(valueToMap : Dynamic, mapClass : Class<Dynamic>, defaultValue : Int, maxValue : Int, ?context : String) : Int {
+        var result : Int = defaultValue;
+        var className : String;
+
+        if(context != null) {
+            className = context;
+        } else {
+            className = Type.getClassName(mapClass);
+        }
+
+        if(Type.getClass(valueToMap) == String) {
+            if(Reflect.hasField(mapClass, valueToMap)) {
+                result = Reflect.field(mapClass, valueToMap);
+            } else {
+                Logger.warn('"${className}.${valueToMap}" is invalid, using default value "${defaultValue}".');
+            }
+        } else {
+            var isInvalid : Bool = false;
+
+            switch(Type.typeof(valueToMap)) {
+                case ValueType.TInt:
+                    var valueInt : Int = cast(valueToMap, Int);
+
+                    if(valueInt < 0 || valueInt > maxValue) {
+                        isInvalid = true;
+                    }
+
+                default:
+                    isInvalid = true;
+            }
+
+            if(isInvalid) {
+                Logger.warn('${className} value "${valueToMap}" is invalid, using default value "${defaultValue}".');
+            }
+        }
+
+        return result;
+    }
 }

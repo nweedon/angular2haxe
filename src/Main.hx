@@ -15,17 +15,20 @@ limitations under the License.
 */
 package;
 
-import angular2haxe.angular.ComponentAnnotation;
 import angular2haxe.impl.Angular;
 import test.TestApp;
 import test.HelloWorld;
+import test.BadClass;
+import test.BadClass2;
 
 @:build(hxdecorate.Decorator.build({
-    'Component' : 'angular2haxe.impl.ComponentAnnotation#create',
-    'View' : 'angular2haxe.impl.ViewAnnotation#create'
+    'Component' : 'angular2haxe.impl.core.ComponentAnnotation#create',
+    'View' : 'angular2haxe.impl.core.ViewAnnotation#create'
 }, [
     'test.TestApp',
-    'test.HelloWorld'
+    'test.HelloWorld',
+    'test.BadClass',
+    'test.BadClass2'
 ]))
 class Main {
 
