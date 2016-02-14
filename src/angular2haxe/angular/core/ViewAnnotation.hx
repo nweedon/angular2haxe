@@ -15,9 +15,11 @@ limitations under the License.
 */
 package angular2haxe.angular.core
 
+import angular2haxe.impl.core.ViewMetadata;
+
 @:native('ng.core.View')
 extern class ViewAnnotation {
 
-    public function new(metadata : Dynamic);
+    public function new(metadata : ViewMetadata);
 
 }

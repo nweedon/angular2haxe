@@ -15,11 +15,15 @@ limitations under the License.
 */
 package angular2haxe.impl.core;
 
+import angular2haxe.impl.core.ViewMetadata;
+
 class ViewAnnotation {
 
     /* TODO: Have base class? */
-    public static function create(metadata : Array<Dynamic>, caller : Dynamic) : Dynamic {
-        Reflect.field(Type.getClass(caller), 'annotations').push(new angular2haxe.angular.ViewAnnotation(metadata[0]));
+    public static function create(input : Array<Dynamic>, caller : Dynamic) : Dynamic {
+        var metadata : ViewMetadata = new ViewMetadata(input[0]);
+
+        Reflect.field(Type.getClass(caller), 'annotations').push(new angular2haxe.angular.ViewAnnotation(metadata));
         return caller;
     }
 

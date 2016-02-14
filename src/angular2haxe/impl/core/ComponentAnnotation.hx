@@ -22,7 +22,7 @@ class ComponentAnnotation {
 
     /* TODO: Have base class? */
     public static function create(input : Array<Dynamic>, caller : Dynamic) : Dynamic {
-        var metadata = new ComponentMetadata(input[0]);
+        var metadata : ComponentMetadata = new ComponentMetadata(input[0]);
 
         Reflect.field(Type.getClass(caller), 'annotations').push(new angular2haxe.angular.core.ComponentAnnotation(metadata));
         return caller;
